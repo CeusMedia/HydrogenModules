@@ -38,7 +38,7 @@ $(document).ready(function(){
 		<h2>'.$words['index']['heading'].'</h2>
 		'.$position.'<br/>
 <!--		<h3>Fachbereiche</h3>-->
-		<small>Bitte wählen Sie einen Fachbereich aus, um dessen Serien und Veröffentlichungen zu sehen.</small><br/>
+		<small>'.$words['index']['hint_select'].'</small><br/>
 		<br/>
 		<div class="column">
 			'.$list1.'

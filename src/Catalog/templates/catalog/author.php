@@ -15,7 +15,7 @@ $w		= (object) $words['author'];
 $language	= $env->getLanguage()->getLanguage();
 $helper		= new View_Helper_Catalog( $env );
 
-$list		= '<div><em class="muted">Bisher keine Veröffentlichungen.</em></div><br/>';
+$list		= '<div><em class="muted">'.$w->no_entries.'</em></div><br/>';
 if( $articles ){
 	$list	= [];
 	foreach( $articles as $article )
@@ -43,7 +43,7 @@ if( $author->reference ){
 		$href	= $author->reference;
 		$link	= HtmlTag::create( 'a', $label, ['href' => $href, 'target' => '_blank'] );
 	}
-	$link	= '<b>Adresse: '.$link.'</b>';
+	$link	= '<b>'.$w->address.' '.$link.'</b>';
 }
 if( $author->image ){
 	$image	= '<img class="img-polaroid" src="contents/authors/'.$id.'_'.$author->image.'"/>';

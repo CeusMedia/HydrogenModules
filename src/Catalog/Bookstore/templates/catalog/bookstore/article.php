@@ -23,7 +23,7 @@ $panelRelations	= $view->loadTemplateFile( 'catalog/bookstore/article/relations.
 
 $linkBack		= '';
 if( isset( $from ) && strlen( $from ) )
-	$linkBack		= HtmlTag::create( 'a', $iconBack.' zurück', [
+	$linkBack		= HtmlTag::create( 'a', $iconBack.' '.$w->buttonBack, [
 		'href'	=> './'.$from,
 		'class'	=> 'btn btn-small',
 	] );

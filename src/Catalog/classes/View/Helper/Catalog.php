@@ -287,7 +287,7 @@ class View_Helper_Catalog
 
 			$link	= $this->renderCategoryLink( $category, $language );
 			if( !empty( $category->label_former ) )
-				$link	.= '<br/><small>vormals <em>'.$category->label_former.'</em></small>';
+				$link	.= '<br/><small>'.$this->language->getSection( 'catalog', 'index' )['former'].' <em>'.$category->label_former.'</em></small>';
 			$list[]	= HtmlElements::ListItem( $area.$link.$sub, 0, ['class' => 'branch'] );
 		}
 		return HtmlElements::unorderedList( $list, 0, ['class' => 'branches'] );

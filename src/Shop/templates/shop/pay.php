@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['payment'];
+$wModal		= (object) $words['modal-loading-payment'];
 
 $list	= [];
 foreach( $paymentBackends->getAll() as $paymentBackend ){
@@ -18,26 +22,24 @@ ksort( $list );
 $list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled payment-method-list'] );
 
 $tabContent	= '
-<h3>Bezahlmethode</h3>
+<h3>'.$w->heading.'</h3>
 <p>
-	Bitte wählen Sie nun aus, mit welcher Methode Sie Ihre Bestellung bezahlen möchten!
+	'.$w->textTop.'
 </p>
 '.$list.'
 <br/>
 <div id="modalLoadingPayment" class="modal hide not-fade">
   <div class="modal-header">
-	<h4>Weiterleitung</h4>
+	<h4>'.$wModal->heading.'</h4>
   </div>
   <div class="modal-body">
-	<big><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> Einen Moment bitte…</big>
+	<big><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> '.$wModal->title.'</big>
 	<br/>
 	<br/>
 	<p>
-		Sie werden nun zum Bezahlanbieter weitergeleitet.<br/>
-		Das kann ein paar Sekunden dauern.<br/>
-		Bitte warten Sie einen kleinen Moment.
+		'.$wModal->message.'
 	</p>
-	<p><strong>Vielen Dank!</strong></p>
+	<p><strong>'.$wModal->slogan.'</strong></p>
 	<br/>
   </div>
 </div>

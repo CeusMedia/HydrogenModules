@@ -72,7 +72,7 @@ class Controller_Shop_Payment_Bank extends Controller
 		$modelCart			= new Model_Shop_Cart( $this->env );
 		$this->orderId		= $modelCart->get( 'orderId' );
 		if( !$this->orderId ){
-			$this->messenger->noteError( 'Invalid order' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidOrder'] );
 			$this->restart( 'shop' );
 		}
 		$this->order		= $this->logicShop->getOrder( $this->orderId );

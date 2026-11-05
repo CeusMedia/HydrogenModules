@@ -7,6 +7,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var Logic_Catalog_Provision $logic */
 /** @var object[] $licenses */
 
+$w	= (object) $env->getLanguage()->getSection( 'catalog/provision', 'product.view' );
+
 $iconCart		= HtmlTag::create( 'i', '', ['class' => 'shopping-cart'] );
 $iconProduct	= HtmlTag::create( 'i', '', ['class' => 'arrow-right'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
@@ -15,7 +17,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconProducts	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cubes'] );
 }
 
-$list	= HtmlTag::create( 'div', 'Keine Lizenzen vorhanden.', ['class' => 'alert alert-notice'] );
+$list	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-notice'] );
 if( $licenses ){
 	$list	= [];
 	foreach( $licenses as $license ){
@@ -23,13 +25,13 @@ if( $licenses ){
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'h4', $license->title ),
 				HtmlTag::create( 'p', $license->description ),
-				HtmlTag::create( 'a', $iconLicense.'&nbsp;weiter', [
+				HtmlTag::create( 'a', $iconLicense.'&nbsp;'.$w->buttonNext, [
 //					'href'		=> './catalog/provision/product/license/'.$license->productLicenseId,
 					'href'		=> $logic->getProductLicenseUri( $license ),
 					'class'		=> 'btn btn-large',
 				] ),
 				'&nbsp',
-				HtmlTag::create( 'a', $iconCart.'&nbsp;in den Warenkorb', [
+				HtmlTag::create( 'a', $iconCart.'&nbsp;'.$w->buttonAddToCart, [
 					'href'		=> './shop/addArticle/1/'.$license->productLicenseId,
 				 	'class'		=> 'btn btn-large',
 				] ),
@@ -43,7 +45,7 @@ extract( $view->populateTexts( ['top', 'bottom'], 'catalog/provision/product/vie
 if( !$textTop )
 	$textTop	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'h2', [
- 			HtmlTag::create( 'a', $iconProducts.'&nbsp;Produkt: ', [
+ 			HtmlTag::create( 'a', $iconProducts.'&nbsp;'.$w->labelProduct, [
 				'href'		=> "catalog/provision/product",
 				'class'		=> "muted",
 			] ),

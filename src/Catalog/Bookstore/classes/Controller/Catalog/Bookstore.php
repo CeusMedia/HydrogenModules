@@ -82,7 +82,8 @@ class Controller_Catalog_Bookstore extends Controller
 			$this->callHook( 'App', 'onMeasure', $this, $measurement );
 		}
 		catch( Throwable ){
-			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorArticleInvalid );
 			$this->restart( NULL, TRUE );
 		}
 	}

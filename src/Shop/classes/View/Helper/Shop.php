@@ -62,7 +62,7 @@ class View_Helper_Shop
 		$helper->setPositions( $positions );
 //		$helper->setPaymentBackend(...);
 		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML );
-		return '<h4>Warenkorb</h4>'.$helper->render();
+		return '<h4>'.$this->words['panel-cart']['heading'].'</h4>'.$helper->render();
 	}
 
 	/**

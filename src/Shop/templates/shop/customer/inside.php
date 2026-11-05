@@ -20,7 +20,7 @@ $iconCancel			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] 
 $iconHeaderDelivery	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-truck'] );
 $iconHeaderBilling	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-euro'] );
 
-$hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
+$hint		= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonBackToSelection, [
 	'href'		=> './shop/customer/reset',
 	'class'		=> 'btn btn-small',
 ] );

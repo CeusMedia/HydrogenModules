@@ -44,7 +44,7 @@ foreach( $relatedArticles as $relation ){
 
 return '
 <div id="related-articles" class="">
-	<h3>Ähnliche Veröffentlichungen </h3>
+	<h3>'.$words['article']['relations_heading'].'</h3>
 <!--	<small>
 		Weitere Veröffentlichungen <small class="muted">(insgesamt '.$total.')</small> zu den Schlagworten: '.$tagList.'
 	</small>-->

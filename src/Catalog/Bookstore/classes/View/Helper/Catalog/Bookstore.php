@@ -351,8 +351,10 @@ class View_Helper_Catalog_Bookstore
 			$area	= '<span class="hitarea '.( $sub ? 'closed' : 'empty' ).'"></span>';
 
 			$link	= $this->renderCategoryLink( $category, $language );
-			if( !empty( $category->label_former ) )
-				$link	.= '<br/><small>vormals <em>'.$category->label_former.'</em></small>';
+			if( !empty( $category->label_former ) ){
+				$words	= $this->language->getWords( 'catalog/bookstore' );
+				$link	.= '<br/><small>'.$words['category']['labelFormer'].' <em>'.$category->label_former.'</em></small>';
+			}
 			$list[]	= HtmlElements::ListItem( $area.$link.$sub, 0, ['class' => 'branch'] );
 		}
 		return HtmlElements::unorderedList( $list, 0, ['class' => 'branches'] );

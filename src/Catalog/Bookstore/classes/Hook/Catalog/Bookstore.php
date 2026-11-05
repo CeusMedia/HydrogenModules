@@ -63,6 +63,7 @@ class Hook_Catalog_Bookstore extends Hook
 		$modelCategory	= new Model_Catalog_Bookstore_Category( $this->env );
 		$words			= $this->env->getLanguage()->getWords( 'search' );
 		$categories		= (object) $words['result-categories'];
+		$wordsRss		= $this->env->getLanguage()->getSection( 'catalog/bookstore', 'rss' );
 		foreach( $this->payload['documents'] as $resultDocument  ){
 			if( !preg_match( "@^catalog/bookstore/@", $resultDocument->path ) )
 				continue;
@@ -120,7 +121,7 @@ class Hook_Catalog_Bookstore extends Hook
 				$title		= $resultDocument->title;
 				$resultDocument->facts	= (object) [
 					'category'		=> $categories->news,
-					'title'			=> 'Neuerscheinungen',
+					'title'			=> $wordsRss['description'],
 					'link'			=> $resultDocument->path,
 					'image'			=> NULL,
 				];

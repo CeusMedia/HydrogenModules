@@ -49,10 +49,11 @@ class Controller_Catalog_Gallery extends Controller
 	 */
 	public function category( $categoryId, $arg2 = NULL, $arg3 = NULL ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 //		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
 		if( !$category ){
-			$this->messenger->noteError( 'Invalid category ID "'.$categoryId.'".' );
+			$this->messenger->noteError( sprintf( $words->errorInvalidCategoryId, htmlentities( (string) $categoryId, ENT_QUOTES, 'UTF-8' ) ) );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'category', $category );
@@ -62,19 +63,20 @@ class Controller_Catalog_Gallery extends Controller
 
 	public function downloadOrder( $orderId ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$logic	= new Logic_Shop( $this->env );
 		$order	= $logic->getOrder( $orderId, TRUE );
 		if( !$order ){
-			$this->messenger->noteError( 'Invalid order ID.' );
+			$this->messenger->noteError( $words->errorInvalidOrderId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $order->status < 3 ){
-			$this->messenger->noteError( 'Order not payed.' );
+			$this->messenger->noteError( $words->errorOrderNotPayed );
 			$this->restart( NULL, TRUE );
 		}
 		$duration	= $this->env->getConfig()->get( 'module.catalog_gallery.download.duration' ) * 3600;
 		if( $order->createdAt < ( time() - $duration ) ){
-			$this->messenger->noteError( 'Download-Link is expired.' );
+			$this->messenger->noteError( $words->errorDownloadExpired );
 			$this->restart( NULL, TRUE );
 		}
 		$pathImages	= $this->logic->pathImages.'original/';
@@ -94,7 +96,7 @@ class Controller_Catalog_Gallery extends Controller
 			}
 		}
 		$archive->close();
-		HttpDownload::sendFile( $archiveFileName, 'Bestellung_'.$orderId.'.zip', FALSE );
+		HttpDownload::sendFile( $archiveFileName, sprintf( $this->getWords( 'download' )['archiveFileName'], $orderId ), FALSE );
 		unlink( $archiveFileName );
 		$logic->setOrderStatus( $orderId, Model_Shop_Order::STATUS_DELIVERED );				//  set order status to 'delivered'
 		exit;
@@ -102,10 +104,11 @@ class Controller_Catalog_Gallery extends Controller
 
 	public function image( $imageId = NULL, $arg2 = NULL, $arg3 = NULL ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$imageId	= (int) $imageId;
 		$image	= $this->logic->getImage( $imageId );
 		if( !$image ){
-			$this->messenger->noteError( 'Invalid image ID "'.$imageId.'".' );
+			$this->messenger->noteError( sprintf( $words->errorInvalidImageId, htmlentities( (string) $imageId, ENT_QUOTES, 'UTF-8' ) ) );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'image', $image );
@@ -124,9 +127,10 @@ class Controller_Catalog_Gallery extends Controller
 	 */
 	public function order( string $imageId ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$image	= $this->modelImage->get( $imageId );
 		if( !$image ){
-			$this->messenger->noteError( 'Invalid image ID "'.$imageId.'".' );
+			$this->messenger->noteError( sprintf( $words->errorInvalidImageId, htmlentities( (string) $imageId, ENT_QUOTES, 'UTF-8' ) ) );
 			$this->restart( NULL, TRUE );
 		}
 		$forwardUrl	= urlencode( $this->logic->pathModule.'category/'.$image->galleryCategoryId );

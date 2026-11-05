@@ -25,6 +25,7 @@ class View_Helper_Shop_FinishPanel_Bank
 	protected string $heading;
 	protected ?object $order;
 	protected ?object $payment;
+	protected object $words;
 
 	/**
 	 *	@param		Environment		$env
@@ -35,7 +36,8 @@ class View_Helper_Shop_FinishPanel_Bank
 		$this->env			= $env;
 //		$this->modelPayment	= new Model_Shop_Payment_Bank( $env );
 		$this->modelOrder	= new Model_Shop_Order( $env );
-		$this->heading		= 'Bezahlvorgang';
+		$this->words		= (object) $env->getLanguage()->getSection( 'shop/payment/bank', 'finish-panel' );
+		$this->heading		= $this->words->heading;
 		$this->config		= $env->getConfig()->getAll( 'module.shop_payment_bank.', TRUE );
 	}
 
@@ -89,12 +91,12 @@ class View_Helper_Shop_FinishPanel_Bank
 		$bank		= $this->config->getAll( 'bank.', TRUE );
 
 		$facts		= new View_Helper_Mail_Facts();
-		$facts->add( 'Methode', 'per Vorkasse' );
-		$facts->add( 'Bank', $bank->get( 'name' ) );
-		$facts->add( 'Inhaber', $bank->get( 'holder' ) );
-		$facts->add( 'IBAN', HtmlTag::create( 'tt', $bank->get( 'iban' ) ) );
-		$facts->add( 'BIC', HtmlTag::create( 'tt', $bank->get( 'bic' ) ) );
-		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( $this->words->labelMethod, $this->words->valueMethodTransfer );
+		$facts->add( $this->words->labelBank, $bank->get( 'name' ) );
+		$facts->add( $this->words->labelHolder, $bank->get( 'holder' ) );
+		$facts->add( $this->words->labelIban, HtmlTag::create( 'tt', $bank->get( 'iban' ) ) );
+		$facts->add( $this->words->labelBic, HtmlTag::create( 'tt', $bank->get( 'bic' ) ) );
+		$facts->add( $this->words->labelPrice, number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 
 		if( self::OUTPUT_FORMAT_HTML === $this->outputFormat )
 			return HtmlTag::create( 'div', [

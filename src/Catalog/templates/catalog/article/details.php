@@ -25,8 +25,8 @@ $a->description	= View_Helper_Text::applyLinks( $a->description );
 $a->recension	= View_Helper_Text::applyLinks( $a->recension );
 
 $a->price			= $helper->formatPrice( $a->price )."&nbsp;&euro;";
-$a->description		= View_Helper_Text::applyExpandable( $a->description, 200, '...<br/><span class="btn btn-mini">mehr</span>', '<br/><span class="btn btn-mini">weniger</span>' );
-$a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span class="btn btn-mini">mehr</span>', '<span class="btn btn-mini">weniger</span>' );
+$a->description		= View_Helper_Text::applyExpandable( $a->description, 200, '...<br/><span class="btn btn-mini">'.$w->more.'</span>', '<br/><span class="btn btn-mini">'.$w->less.'</span>' );
+$a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span class="btn btn-mini">'.$w->more.'</span>', '<span class="btn btn-mini">'.$w->less.'</span>' );
 $a->volume			= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $a->status			= HtmlTag::create( 'span', $words['status'][$article->status], ['class' => 'status_'.$article->status] );
 
@@ -45,7 +45,7 @@ foreach( explode( ',', $a->language ) as $language )
 $a->languages		= implode( ', ', $languages );
 
 
-$a->documents		= '<small class="muted"><em>keine</em></small>';
+$a->documents		= '<small class="muted"><em>'.$w->no_documents.'</em></small>';
 if( $documents ){
 	$list	= [];
 	foreach( $documents as $document ){

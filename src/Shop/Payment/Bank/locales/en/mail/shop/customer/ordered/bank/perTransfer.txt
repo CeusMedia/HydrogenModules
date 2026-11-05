@@ -1,0 +1,13 @@
+
+Payment
+==============================================================================
+Please transfer the amount to the following account:
+
+        Account holder:  <%?module.shop_payment_bank.bank.holder%>
+                  IBAN:  <%?module.shop_payment_bank.bank.iban%>
+                   BIC:  <%?module.shop_payment_bank.bank.bic%>
+                  Bank:  <%?module.shop_payment_bank.bank.name%>
+          Order number:  <%?module.shop_payment_bank.bank.name%>
+
+The invoice will be enclosed with the goods.
+------------------------------------------------------------------------------

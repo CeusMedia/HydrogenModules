@@ -8,6 +8,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var object $product */
 /** @var object $license */
 
+$w	= (object) $env->getLanguage()->getSection( 'catalog/provision', 'product.license' );
+
 $iconCart		= HtmlTag::create( 'i', '', ['class' => 'shopping-cart'] );
 $iconProduct	= HtmlTag::create( 'i', '', ['class' => 'arrow-right'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
@@ -17,11 +19,11 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 }
 
 $details	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', $product->title.' Lizenzen' ),
+	HtmlTag::create( 'h3', sprintf( $w->headingLicenses, $product->title ) ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'h4', $license->title ),
 		HtmlTag::create( 'p', $license->description ),
-		HtmlTag::create( 'a', $iconCart.'&nbsp;in den Warenkorb', [
+		HtmlTag::create( 'a', $iconCart.'&nbsp;'.$w->buttonAddToCart, [
 			'href'		=> './shop/addArticle/1/'.$license->productLicenseId,
 		 	'class'		=> 'btn btn-large',
 		] ),
@@ -32,14 +34,14 @@ extract( $view->populateTexts( ['top', 'bottom'], 'catalog/provision/product/lic
 if( !$textTop )
 	$textTop	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'h2', [
- 			HtmlTag::create( 'a', $iconProducts.'&nbsp;Produkt: ', [
+ 			HtmlTag::create( 'a', $iconProducts.'&nbsp;'.$w->labelProduct, [
 				'href'		=> "catalog/provision/product",
 				'class'		=> "muted",
 			] ),
 			$product->title,
 		] ),
 		HtmlTag::create( 'h3', [
-			HtmlTag::create( 'a', $iconLicense.'&nbsp;Lizenz: ', [
+			HtmlTag::create( 'a', $iconLicense.'&nbsp;'.$w->labelLicense, [
 				'href'	=> 'catalog/provision/product/'.$product->productId,
 				'class'	=>	"muted",
 			] ),

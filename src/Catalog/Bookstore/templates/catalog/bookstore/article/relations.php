@@ -8,6 +8,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var object[] $tags */
 /** @var object[] $relatedArticles */
 
+$w	= (object) $words['article-relations'];
+
 if( !$env->getRequest()->has( 'testing123' ) )
 	return '';
 
@@ -44,9 +46,9 @@ foreach( $relatedArticles as $relation ){
 
 return '
 <div id="related-articles" class="">
-	<h3>Ähnliche Veröffentlichungen </h3>
+	<h3>'.$w->heading.'</h3>
 <!--	<small>
-		Weitere Veröffentlichungen <small class="muted">(insgesamt '.$total.')</small> zu den Schlagworten: '.$tagList.'
+		'.sprintf( $w->moreByTags, $total, $tagList ).'
 	</small>-->
 	<div class="related-articles-slider">
 		<div class="related-articles-container">

@@ -28,8 +28,8 @@ $a->recension	= View_Helper_Text::applyLinks( $a->recension );
 $a->price			= $helper->formatPrice( $a->price )."&nbsp;&euro;";
 $a->title			= View_Helper_Text::applyFormat( $a->title );
 $a->subtitle		= View_Helper_Text::applyFormat( $a->subtitle );
-$a->description		= View_Helper_Text::applyExpandable( $a->description, 200, '...<br/><span class="btn btn-mini">mehr</span>', '<br/><span class="btn btn-mini">weniger</span>' );
-$a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span class="btn btn-mini">mehr</span>', '<span class="btn btn-mini">weniger</span>' );
+$a->description		= View_Helper_Text::applyExpandable( $a->description, 200, '...<br/><span class="btn btn-mini">'.$w->buttonMore.'</span>', '<br/><span class="btn btn-mini">'.$w->buttonLess.'</span>' );
+$a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span class="btn btn-mini">'.$w->buttonMore.'</span>', '<span class="btn btn-mini">'.$w->buttonLess.'</span>' );
 $a->volume			= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $a->status			= HtmlTag::create( 'span', $words['status'][$article->status], ['class' => 'status_'.$article->status] );
 
@@ -48,7 +48,7 @@ foreach( explode( ',', $a->language ) as $language )
 $a->languages		= implode( ', ', $languages );
 
 
-$a->documents		= '<small class="muted"><em>keine</em></small>';
+$a->documents		= '<small class="muted"><em>'.$w->noDocuments.'</em></small>';
 if( $documents ){
 	$list	= [];
 	foreach( $documents as $document ){
@@ -129,7 +129,7 @@ if( $uriCoverLarge ){
 	$image		= HtmlTag::create( 'a', $image, [
 		'href'		=> $uriCoverLarge,
 		'class'		=> 'fancybox',
-		'title'		=> 'Cover: '.$article->title,
+		'title'		=> $w->labelCover.': '.$article->title,
 	] );
 }
 

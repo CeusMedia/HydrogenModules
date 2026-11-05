@@ -35,7 +35,7 @@ foreach( $paymentBackends->getAll() as $paymentBackend ){
 	$costs  = '';
 	if( NULL !== $fees ){
 		$fees  = number_format( $fees, 2, ',', '.' );
-		$costs  = HtmlTag::create( 'div', 'Gebühr: '.$fees.'€', ['class' => 'item-fees'] );
+		$costs  = HtmlTag::create( 'div', sprintf( $w->labelFees, $fees ), ['class' => 'item-fees'] );
 	}
 
 	$desc   = '';

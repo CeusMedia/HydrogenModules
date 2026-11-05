@@ -33,6 +33,7 @@ class View_Helper_Shop_FinishPanel_Stripe
 	protected ?object $order			= NULL;
 
 	protected string $heading;
+	protected object $words;
 
 	/**
 	 *	@param		Environment		$env
@@ -43,7 +44,8 @@ class View_Helper_Shop_FinishPanel_Stripe
 		$this->env			= $env;
 		$this->modelPayment	= new Model_Shop_Payment_Stripe( $env );
 		$this->modelOrder	= new Model_Shop_Order( $env );
-		$this->heading		= 'Bezahlvorgang';
+		$this->words		= (object) $env->getLanguage()->getSection( 'shop/payment/stripe', 'finish-panel' );
+		$this->heading		= $this->words->heading;
 	}
 
 	public function render(): string
@@ -115,9 +117,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 	protected function renderCreditCard(): string
 	{
 		$facts		= new View_Helper_Mail_Facts();
-		$facts->add( 'Methode', 'per Kreditkarte' );
-		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
-		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
+		$facts->add( $this->words->labelMethod, $this->words->methodCreditCard );
+		$facts->add( $this->words->labelPrice, number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( $this->words->labelStatus, $this->words->statusReceived );
 
 		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
 			return HtmlTag::create( 'div', [
@@ -139,9 +141,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 	protected function renderGiropay(): string
 	{
 		$facts		= new View_Helper_Mail_Facts();
-		$facts->add( 'Methode', 'per GiroPay' );
-		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
-		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
+		$facts->add( $this->words->labelMethod, $this->words->methodGiropay );
+		$facts->add( $this->words->labelPrice, number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( $this->words->labelStatus, $this->words->statusReceived );
 
 		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
 			return HtmlTag::create( 'div', [
@@ -163,9 +165,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 	protected function renderSofort(): string
 	{
 		$facts		= new View_Helper_Mail_Facts();
-		$facts->add( 'Methode', 'per Sofortüberweisung' );
-		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
-		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
+		$facts->add( $this->words->labelMethod, $this->words->methodSofort );
+		$facts->add( $this->words->labelPrice, number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( $this->words->labelStatus, $this->words->statusReceived );
 
 		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
 			return HtmlTag::create( 'div', [
