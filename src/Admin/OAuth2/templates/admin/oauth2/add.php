@@ -12,21 +12,23 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $provider */
 /** @var object[] $providersIndex */
 
+$w	= (object) $words['add'];
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'		=> './admin/oauth2',
 	'class'		=> 'btn',
 ] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 ] );
 
 $providerMap	= [];
-$optProvider	= ['' => '- keine -'];
+$optProvider	= ['' => $w->optionNone];
 foreach( $providersIndex as $indexItem ){
 	$key	= preg_replace( '~/~', '__', $indexItem->package );
 	$providerMap[$key]	= $indexItem;
@@ -40,7 +42,7 @@ $optProvider	= HtmlElements::Options( $optProvider );
 $form			= HtmlTag::create( 'form', [
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Provider-Vorlage', ['for' => 'input_providerKey'] ),
+			HtmlTag::create( 'label', $w->labelProviderKey, ['for' => 'input_providerKey'] ),
 			HtmlTag::create( 'select', $optProvider, [
 				'name'			=> 'providerKey',
 				'id'			=> 'input_providerKey',
@@ -48,7 +50,7 @@ $form			= HtmlTag::create( 'form', [
 			] ),
 		], ['class' => 'span3'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Titel', ['for' => 'input_title', 'class' => 'required mandatory'] ),
+			HtmlTag::create( 'label', $w->labelTitle, ['for' => 'input_title', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'title',
@@ -59,7 +61,7 @@ $form			= HtmlTag::create( 'form', [
 			] ),
 		], ['class' => 'span5'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Icon', ['for' => 'input_icon'] ),
+			HtmlTag::create( 'label', $w->labelIcon, ['for' => 'input_icon'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'icon',
@@ -70,7 +72,7 @@ $form			= HtmlTag::create( 'form', [
 			] ),
 		], ['class' => 'span3 optional providerKey providerKey-'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Rang', ['for' => 'input_rank'] ),
+			HtmlTag::create( 'label', $w->labelRank, ['for' => 'input_rank'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'rank',
@@ -82,7 +84,7 @@ $form			= HtmlTag::create( 'form', [
 	], ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Client-ID', ['for' => 'input_clientId', 'class' => 'required mandatory'] ),
+			HtmlTag::create( 'label', $w->labelClientId, ['for' => 'input_clientId', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'clientId',
@@ -93,7 +95,7 @@ $form			= HtmlTag::create( 'form', [
 			] ),
 		], ['class' => 'span5'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Client-Secret', ['for' => 'input_clientSecret', 'class' => 'required mandatory'] ),
+			HtmlTag::create( 'label', $w->labelClientSecret, ['for' => 'input_clientSecret', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'clientSecret',
@@ -106,7 +108,7 @@ $form			= HtmlTag::create( 'form', [
 	], ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Provider-Klasse', ['for' => 'input_className', 'class' => 'required mandatory'] ),
+			HtmlTag::create( 'label', $w->labelClassName, ['for' => 'input_className', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'className',
@@ -118,7 +120,7 @@ $form			= HtmlTag::create( 'form', [
 			] ),
 		], ['class' => 'span7'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Composer-Paket', ['for' => 'input_composerPackage'] ),
+			HtmlTag::create( 'label', $w->labelComposerPackage, ['for' => 'input_composerPackage'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'composerPackage',
@@ -131,7 +133,7 @@ $form			= HtmlTag::create( 'form', [
 	], ['class' => 'row-fluid optional providerKey providerKey-'] ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Provider-Optionen <small class="muted">(als JSON)</small>', ['for' => 'input_options', 'class' => '', 'title' => 'JSON-Objekt, wie {"key":"value"}'] ),
+			HtmlTag::create( 'label', $w->labelOptions.' <small class="muted">'.$w->labelOptions_suffix.'</small>', ['for' => 'input_options', 'class' => '', 'title' => $w->labelOptions_title] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'options',
@@ -141,7 +143,7 @@ $form			= HtmlTag::create( 'form', [
 			] ),
 		], ['class' => 'span5'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'label', 'Privilegien <small class="muted">(kommagetrennt)</small>', ['for' => 'input_scopes'] ),
+			HtmlTag::create( 'label', $w->labelScopes.' <small class="muted">'.$w->labelScopes_suffix.'</small>', ['for' => 'input_scopes'] ),
 			HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'scopes',
@@ -161,7 +163,7 @@ $form			= HtmlTag::create( 'form', [
 ] );
 
 $panelForm	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'neuer Anbieter' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$form,
 	], ['class' => 'content-panel-inner'] ),

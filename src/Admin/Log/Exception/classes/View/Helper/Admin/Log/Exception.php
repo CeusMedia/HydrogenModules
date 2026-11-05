@@ -16,6 +16,7 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 	protected ?Dictionary $envDictionary					= NULL;
 	protected ?Dictionary $sessionDictionary				= NULL;
 	protected ?Dictionary $headerDictionary					= NULL;
+	protected ?object $words								= NULL;
 
 	public function getExceptionRequestHeaders(): Dictionary
 	{
@@ -173,6 +174,13 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 	//  --  PROTECTED  --  //
 
 
+	protected function getViewWords(): object
+	{
+		if( NULL === $this->words )
+			$this->words	= (object) $this->getWords( 'view.facts', 'admin/log/exception' );
+		return $this->words;
+	}
+
 	protected function renderFactsSection(): string
 	{
 		if( NULL === $this->exceptionEntity )
@@ -195,25 +203,26 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 		$date		= date( 'Y.m.d', $this->exceptionEntity->createdAt );
 		$time		= date( 'H:i:s', $this->exceptionEntity->createdAt );
 
+		$w		= $this->getViewWords();
 		$facts	= [];
 		/** @noinspection HtmlDeprecatedTag */
 		/** @noinspection XmlDeprecatedElement */
-		$facts['Message']	= '<big><strong>'.$this->exceptionEntity->message.'</strong></big>';
+		$facts[$w->labelMessage]	= '<big><strong>'.$this->exceptionEntity->message.'</strong></big>';
 		if( 0 != (int) $this->exceptionEntity->code )
-			$facts['Code']	= $this->exceptionEntity->code;
-		$facts['File (Line)']	= $file.' ('.$this->exceptionEntity->line.')';
-		$facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
-		$facts['Request Method']	= $this->getExceptionRequestMethod();
-		$facts['Request Path']	= $requestedPath;
-		$facts['App Name']		= $exceptionEnv->get( 'appName' );
-		$facts['Base URL']		= $exceptionEnv->get( 'url' );
-		$facts['Environment']	= $exceptionEnv->get( 'class' );
-		$facts['Error Type']	= $this->exceptionEntity->type;
+			$facts[$w->labelCode]	= $this->exceptionEntity->code;
+		$facts[$w->labelFile]	= $file.' ('.$this->exceptionEntity->line.')';
+		$facts[$w->labelDate]	= $date.' <small class="muted">('.$time.')</small>';
+		$facts[$w->labelRequestMethod]	= $this->getExceptionRequestMethod();
+		$facts[$w->labelRequestPath]	= $requestedPath;
+		$facts[$w->labelAppName]		= $exceptionEnv->get( 'appName' );
+		$facts[$w->labelBaseUrl]		= $exceptionEnv->get( 'url' );
+		$facts[$w->labelEnvironment]	= $exceptionEnv->get( 'class' );
+		$facts[$w->labelErrorType]	= $this->exceptionEntity->type;
 
 		if( is_a( $this->exceptionEntity->type, IoException::class, TRUE ) && '' !== trim( $this->exceptionEntity->resource ?? '' ) )
-			$facts['Resource']	= $this->exceptionEntity->resource;
+			$facts[$w->labelResource]	= $this->exceptionEntity->resource;
 		if( is_a( $this->exceptionEntity->type, LogicException::class, TRUE ) && '' !== trim( $this->exceptionEntity->subject ?? '' ) )
-			$facts['Subject']	= $this->exceptionEntity->subject;
+			$facts[$w->labelSubject]	= $this->exceptionEntity->subject;
 
 		$list	= [];
 		foreach( $facts as $key => $value )
@@ -248,7 +257,7 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 		}
 		$tbody		= HtmlTag::create( 'tbody', $lines );
 		$lines		= HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed'] );
-		$heading	= HtmlTag::create( 'h4', 'File' );
+		$heading	= HtmlTag::create( 'h4', $this->getViewWords()->headingFile );
 		$container	= HtmlTag::create( 'div', $lines, ['class' => 'section-content-container lines'] );
 		return $heading.$container;
 	}
@@ -271,12 +280,13 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 				HtmlTag::create( 'td', htmlentities( stripslashes( trim( json_encode( $value ), '"' ) ), ENT_QUOTES, 'utf-8' ) ),
 			] );
 		}
+		$w				= $this->getViewWords();
 		$colgroup		= HtmlElements::ColumnGroup( '40px', '35%', '7%', '' );
 		$thead			= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 			HtmlTag::create( 'th', '#', ['style' => 'text-align: right'] ),
-			HtmlTag::create( 'th', 'Key' ),
-			HtmlTag::create( 'th', 'Type', ['style' => 'text-align: right'] ),
-			HtmlTag::create( 'th', 'Value' )
+			HtmlTag::create( 'th', $w->headKey ),
+			HtmlTag::create( 'th', $w->headType, ['style' => 'text-align: right'] ),
+			HtmlTag::create( 'th', $w->headValue )
 		] ) );
 		$tbody	= HtmlTag::create( 'tbody', $rows );
 		return HtmlTag::create( 'table', [$colgroup, $thead, $tbody], [
@@ -294,8 +304,8 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 		if( [] === $headers )
 			return '';
 
-		$methodLine			= 'Method: '.$this->getExceptionRequestMethod().PHP_EOL;
-		$heading			= HtmlTag::create( 'h4', 'Request Headers' );
+		$methodLine			= $this->getViewWords()->labelMethod.': '.$this->getExceptionRequestMethod().PHP_EOL;
+		$heading			= HtmlTag::create( 'h4', $this->getViewWords()->headingHeaders );
 		$code				= HtmlTag::create( 'xmp', $methodLine.$headersLines );
 		$requestHeaders		= HtmlTag::create( 'div', $code, ['class' => 'section-content-container'] );
 		return $heading.$requestHeaders;
@@ -303,7 +313,7 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 
 	protected function renderRequestSection(): ?string
 	{
-		$heading	= HtmlTag::create( 'h4', 'Request Data' );
+		$heading	= HtmlTag::create( 'h4', $this->getViewWords()->headingRequest );
 		$table		= $this->renderMapTable( $this->getExceptionRequestParameters() );
 		return $heading.$table;
 	}
@@ -317,7 +327,7 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 		if( 0 === $exceptionSession->count() )
 			return NULL;
 
-		$heading		= HtmlTag::create( 'h4', 'Session Data' );
+		$heading		= HtmlTag::create( 'h4', $this->getViewWords()->headingSession );
 		$sessionData	= $this->renderMapTable( $exceptionSession->getAll() );
 		return $heading.$sessionData;
 	}
@@ -330,7 +340,7 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 		$realPath	= rtrim( $realPath, '/' ).'/';
 
 		$trace		= $this->exceptionEntity->trace;
-		$heading	= HtmlTag::create( 'h4', 'Stack Trace' );
+		$heading	= HtmlTag::create( 'h4', $this->getViewWords()->headingTrace );
 		$container	= $this->renderStackTrace( $trace, $realPath, 'section-content-container' );
 		return $heading.$container;
 	}
@@ -395,6 +405,6 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 //		'status'		=> ...,
 //		'role'			=> ...,
 		], FALSE );
-		return HtmlTag::create( 'h4', 'User' ).$data;
+		return HtmlTag::create( 'h4', $this->getViewWords()->headingUser ).$data;
 	}
 }

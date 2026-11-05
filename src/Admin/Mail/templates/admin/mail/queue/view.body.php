@@ -15,6 +15,8 @@ use CeusMedia\Mail\Message\Part\Text as MailV2TextPart;
 /** @var array<array<string,string>> $words */
 
 //$iconDownload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
+$w	= (object) $words['view-body'];
+
 $iconDownload		= new Icon( 'download' );
 $iconView			= new Icon( 'eye' );
 $iconFile			= new Icon( 'file' );
@@ -29,11 +31,11 @@ $list	= [
 
 $message	= '';
 if( !$mail->object )
-	$message	= 'No mail object available.';
+	$message	= $w->msgNoObject;
 else if( !is_object( $mail->objectInstance ) )
-	$message	= 'Mail object could not by parsed.';
+	$message	= $w->msgNotParsable;
 else if( !isset( $mail->parts ) )
-	$message	= 'Mail parts not provided';
+	$message	= $w->msgNoParts;
 else{
 
 	try{
@@ -70,7 +72,7 @@ else{
 		$parts	= [];
 
 		if( $html ){																			//  realize HTML view if available
-			$headingHtml	= HtmlTag::create( 'h4', 'HTML' );
+			$headingHtml	= HtmlTag::create( 'h4', $w->headingHtml );
 			$displayHtml	= HtmlTag::create( 'iframe', '', [
 				'src'			=> './admin/mail/queue/html/'.$mail->mailId,
 				'frameborder'	=> '0',
@@ -81,7 +83,7 @@ else{
 
 		//  realize plain text view if available
 		if( $text ){
-			$headingText	= HtmlTag::create( 'h4', 'Plain Text' );
+			$headingText	= HtmlTag::create( 'h4', $w->headingText );
 			$displayText	= HtmlTag::create( 'pre', $text, [
 				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
 			] );
@@ -91,7 +93,7 @@ else{
 		if( $attachments ){																		//  realize attachments view if available
 			$list	= [];
 			foreach( $attachments as $attachment ){
-				$buttonDownload	= HtmlTag::create( 'a', $iconDownload.' speichern', [
+				$buttonDownload	= HtmlTag::create( 'a', $iconDownload.' '.$w->buttonDownload, [
 					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$attachment->partKey.'/download',
 					'class'	=> 'btn btn-small',
 				] );
@@ -118,17 +120,17 @@ else{
 				] );
 			}
 			$heads	= HtmlTag::create( 'tr', [
-				HtmlTag::create( 'th', 'Dateiname' ),
-				HtmlTag::create( 'th', 'MIME-Type' ),
-				HtmlTag::create( 'th', 'Dateigröße' ),
-				HtmlTag::create( 'th', 'letzte Änderung' ),
+				HtmlTag::create( 'th', $w->headFileName ),
+				HtmlTag::create( 'th', $w->headMimeType ),
+				HtmlTag::create( 'th', $w->headFileSize ),
+				HtmlTag::create( 'th', $w->headModifiedAt ),
 				HtmlTag::create( 'th', '' ),
 			], ['style' => 'background-color: rgba(255, 255, 255, 0.75);'] );
 			$colgroup	= HtmlElements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= HtmlTag::create( 'thead', $heads );
 			$tbody	= HtmlTag::create( 'tbody', $list );
 			$displayAttachments	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table not-table-condensed table-striped'] );
-			$headingAttachments	= '<h4>Anhänge</h4>';
+			$headingAttachments	= '<h4>'.$w->headingAttachments.'</h4>';
 			$parts[]	= $headingAttachments.$displayAttachments;
 		}
 
@@ -151,24 +153,24 @@ else{
 				] );
 			}
 			$heads	= HtmlTag::create( 'tr', [
-				HtmlTag::create( 'th', 'Dateiname' ),
-				HtmlTag::create( 'th', 'MIME-Type' ),
-				HtmlTag::create( 'th', 'Dateigröße' ),
-				HtmlTag::create( 'th', 'letzte Änderung' ),
+				HtmlTag::create( 'th', $w->headFileName ),
+				HtmlTag::create( 'th', $w->headMimeType ),
+				HtmlTag::create( 'th', $w->headFileSize ),
+				HtmlTag::create( 'th', $w->headModifiedAt ),
 				HtmlTag::create( 'th', '' ),
 			], ['style' => 'background-color: rgba(255, 255, 255, 0.75);'] );
 			$colgroup	= HtmlElements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= HtmlTag::create( 'thead', $heads );
 			$tbody	= HtmlTag::create( 'tbody', $list );
 			$displayImages	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table not-table-condensed table-striped'] );
-			$headingImages	= '<h4>Eingebundene Bilder</h4>';
+			$headingImages	= '<h4>'.$w->headingImages.'</h4>';
 			$parts[]	= $headingImages.$displayImages;
 		}
 
 		$helperSource	= new View_Helper_Mail_View_Source( $env );
 		$helperSource->setMailObjectInstance( $mail->objectInstance );
 		$helperSource->setMode( View_Helper_Mail_View_Source::MODE_CONDENSED );
-		$headingSource	= HtmlTag::create( 'h4', 'Source' );
+		$headingSource	= HtmlTag::create( 'h4', $w->headingSource );
 		$valueSource	= htmlentities( $helperSource->render(), ENT_QUOTES, 'UTF-8' );
 		$viewSource		= HtmlTag::create( 'pre', $valueSource, [
 			'style'	=> "max-height: 300px; scroll-y: auto; overflow: auto",
@@ -183,7 +185,7 @@ else{
 }
 return '
 <div class="content-panel">
-	<h4>'.$words['view-body']['heading'].'</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<b>'.$message.'</b>
 		'.join( $parts ).'

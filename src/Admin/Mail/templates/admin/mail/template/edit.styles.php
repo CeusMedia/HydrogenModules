@@ -37,7 +37,7 @@ if( $template->styles ){
 		$buttonOpen	= HtmlTag::create( 'button', $iconView, [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-info disabled',
-			'title'		=> 'Style-Datei existiert nicht im angegebenen Pfad (in Frontend-Applikation).',
+			'title'		=> $words['edit-style-list']['titleMissing'],
 			'disabled'	=> 'disabled',
 		] );
 		if( file_exists( $appPath.$item ) ){
@@ -53,7 +53,7 @@ if( $template->styles ){
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'class'	=> 'btn btn-inverse pull-right',
 			'href'	=> './admin/mail/template/removeStyle/'.$template->mailTemplateId.'/'.base64_encode( $item ),
-			'title'	=> 'Style-Verweis entfernen',
+			'title'	=> $words['edit-style-list']['titleRemove'],
 		] );
 		$buttons	= HtmlTag::create( 'div', [
 			$buttonOpen,

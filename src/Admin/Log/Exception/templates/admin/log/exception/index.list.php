@@ -22,25 +22,28 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $canSetInstance */
 
 $instanceSelector	= renderInstanceSelector( $instances, $currentInstance, $canSetInstance );
-$table				= renderTable( $env, $exceptions, $canView, $canRemove, $canBulk );
+$table				= renderTable( $env, $words, $exceptions, $canView, $canRemove, $canBulk );
 $buttonbar			= renderButtonBar( $words, $page, $limit, $total, count( $exceptions ), $canRemove );
 
 $from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
+$w			= (object) $words['index.list'];
 
 
 
 /**
  *	@param		WebEnvironment	$env
+ *	@param		array<array<string,string>>	$words
  *	@param		Entity_Log_Exception[]	$exceptions
  *	@param		bool			$canView
  *	@param		bool			$canRemove
  *	@param		bool			$canBulk
  *	@return		string
  */
-function renderTable( WebEnvironment $env, array $exceptions, bool $canView, bool $canRemove, bool $canBulk ): string
+function renderTable( WebEnvironment $env, array $words, array $exceptions, bool $canView, bool $canRemove, bool $canBulk ): string
 {
+	$w	= (object) $words['index.list'];
 	if( [] === $exceptions )
-		return HtmlTag::create( 'div', 'No exceptions logged.', ['class' => "alert alert-success"] );
+		return HtmlTag::create( 'div', $w->noEntries, ['class' => "alert alert-success"] );
 
 	$helper		= new View_Helper_Admin_Log_Exception();
 	$helper->setEnv( $env );
@@ -116,8 +119,8 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 	$heads	= [];
 	if( $canBulk )
 		$heads[]	= $checkboxAll;
-	$heads[]	= 'Message';
-	$heads[]	= 'Facts';
+	$heads[]	= $w->headMessage;
+	$heads[]	= $w->headFacts;
 	$heads[]	= '';
 
 	$cols		= [];
@@ -193,7 +196,7 @@ return '
 <form action="admin/log/exception/bulk" method="post" id="form-admin-log-exception">
 	<div class="content-panel" style="position: relative">
 		'.$instanceSelector.'
-		<h3>Exceptions</h3>
+		<h3>'.$w->heading.'</h3>
 		<div class="content-panel-inner">
 			<input type="hidden" name="type" id="input_type"/>
 			<input type="hidden" name="ids" id="input_ids"/>

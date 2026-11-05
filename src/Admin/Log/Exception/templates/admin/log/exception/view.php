@@ -12,6 +12,8 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var bool $canIndex */
 /** @var bool $canRemove */
 
+$w				= (object) $words['view'];
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
@@ -22,13 +24,13 @@ $helper->setExceptionEntity( $exception );
 
 $buttonCancel	= '';
 if( $canIndex )
-	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zur Liste', [
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 		'href'		=> './admin/log/exception'.( $page ? '/'.$page : '' ),
 		'class'		=> 'btn btn-small',
 	] );
 $buttonRemove	= '';
 if( $canRemove )
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 		'href'		=> './admin/log/exception/remove/'.$exception->exceptionId,
 		'class'		=> 'btn btn-small btn-danger',
 	] );
@@ -37,7 +39,7 @@ return '
 <div class="row-fluid">
 	<div class="span12">
 		<div class="content-panel">
-			<h3>Exception</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$helper->render().'
 				<br/>

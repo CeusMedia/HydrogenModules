@@ -15,24 +15,20 @@ $iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$w	= (object) [
-	'labelPasswordCurrent_title'	=> 'Passwort',
-	'labelPasswordCurrent'			=> 'Passwort',
-	'buttonDownload'				=> 'herunterladen',
-];
+$w	= (object) $words['view.download'];
 
 return '
 <div class="content-panel">
-	<h3>Download</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./admin/database/backup/download/'.$backup->id.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<p>
-						Die Datei kann als SQL-Script heruntergeladen werden.<br/>
+						'.$w->description.'<br/>
 					</p>
 					<div class="alert alert-notice">
-						Diese Datei dient ausschließlich der manuellen Datensicherung und ist nicht für den Import von Daten vorgesehen.
+						'.$w->noteManualOnly.'
 					</div>
 				</div>
 			</div>

@@ -36,17 +36,17 @@ $rows	= [];
 foreach( $module->config as $item ){
 	$isNumeric		= in_array( $item->type, ['integer', 'float'] ) || preg_match( "/^[0-9\.]+$/", $item->value );
 	if( str_contains( $item->key, 'password' ) )
-		$value	= HtmlTag::create( 'em', 'versteckt', ['class' => 'muted'] );
+		$value	= HtmlTag::create( 'em', $w->valueHidden, ['class' => 'muted'] );
 	else if( $item->type === "boolean" )
-		$value	= $item->value ? 'yes' : 'no';
+		$value	= $item->value ? $w->valueYes : $w->valueNo;
 	else
 		$value		= htmlentities( $item->value, ENT_QUOTES, 'UTF-8' );
 
-	$protection	= HtmlTag::create( 'abbr', $iconUnlock, ['title' => 'public - öffentlich (bekannt im Browser)'] );
+	$protection	= HtmlTag::create( 'abbr', $iconUnlock, ['title' => $w->titlePublic] );
 	if( $item->protected === "user" )
-		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => 'user - durch Benutzer konfigurierbar'] );
+		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => $w->titleUser] );
 	if( $item->protected === "yes" )
-		$protection	= HtmlTag::create( 'abbr', $iconLock, ['title' => 'protected - nicht öffentlich (nur auf Server bekannt)'] );
+		$protection	= HtmlTag::create( 'abbr', $iconLock, ['title' => $w->titleProtected] );
 
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;

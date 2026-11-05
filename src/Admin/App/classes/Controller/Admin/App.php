@@ -46,51 +46,55 @@ class Controller_Admin_App extends Controller
 
 	public function setBrand(): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		if( strlen( trim( $brand = $this->request->get( 'brand' ) ) ) ){
 			if( $this->setMainWord( 'brand', $brand ) )
-				$this->messenger->noteSuccess( 'Der Brand wurde geändert.' );
+				$this->messenger->noteSuccess( $words->successBrandChanged );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function setIcon(): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$icon	= (object) $this->request->get( 'icon' );
 		try{
 			$fileName = $this->uploadImage( $icon );
 			if( !!$fileName ){
 				$this->setConfig( 'app.icon', $fileName );
-				$this->messenger->noteSuccess( 'Das Icon wurde geändert.' );
+				$this->messenger->noteSuccess( $words->successIconChanged );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $words->errorException, $e->getMessage() );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function setLogo(): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$logo	= (object) $this->request->get( 'logo' );
 		try{
 			$fileName = $this->uploadImage( $logo );
 			if( $fileName ){
 				$this->setConfig( 'app.logo', $fileName );
-				$this->messenger->noteSuccess( 'Das Logo wurde geändert.' );
+				$this->messenger->noteSuccess( $words->successLogoChanged );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $words->errorException, $e->getMessage() );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function setTitle(): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$title	= $this->request->get( 'title' );
 		if( '' !== trim( $title ) ){
 			if( $this->setMainWord( 'title', $title ) )
-				$this->messenger->noteSuccess( 'Der Titel wurde geändert.' );
+				$this->messenger->noteSuccess( $words->successTitleChanged );
 		}
 		$this->restart( NULL, TRUE );
 	}

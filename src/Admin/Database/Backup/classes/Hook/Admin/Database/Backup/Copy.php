@@ -24,7 +24,8 @@ class Hook_Admin_Database_Backup_Copy extends Hook
 			}
 			catch( Exception $e ){
 				$dbName	= $copyDbName ?: $database->getName();
-				$this->env->getMessenger()->noteFailure( 'Switching to database prefix "'.$dbName.' > '.$copyPrefix.'" failed: '.$e->getMessage() );
+				$words	= $this->env->getLanguage()->getSection( 'admin/database/backup', 'hook' );
+				$this->env->getMessenger()->noteFailure( vsprintf( $words['failureSwitchPrefix'], [$dbName, $copyPrefix, $e->getMessage()] ) );
 			}
 		}
 	}
@@ -44,8 +45,8 @@ class Hook_Admin_Database_Backup_Copy extends Hook
 		$dbName			= $copyDbName ?: $defaultDbName;
 		if( $defaultPrefix !== $copyPrefix ){
 			$prefix		= $copyPrefix ?: $defaultPrefix;
-			$message	= '<strong><big>Dieser Datenbestand ist nur eine Kopie.</big></strong><br/>Datenbank: %s | Präfix: %s';
-			$this->env->getMessenger()->noteNotice( vsprintf( $message, [$dbName, $prefix] ) );
+			$words		= $this->env->getLanguage()->getSection( 'admin/database/backup', 'hook' );
+			$this->env->getMessenger()->noteNotice( vsprintf( $words['noticeCopyActive'], [$dbName, $prefix] ) );
 		}
 	}
 }

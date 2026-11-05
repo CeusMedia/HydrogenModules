@@ -13,6 +13,7 @@ class Controller_Admin_Database_Backup extends Controller
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
 	protected Logic_Database_Backup $logicBackup;
+	protected object $words;
 
 	public function backup(): void
 	{
@@ -20,7 +21,7 @@ class Controller_Admin_Database_Backup extends Controller
 			try{
 				$comment	= $this->request->get( 'comment' );
 				$backupId	= $this->logicBackup->dump( $comment );
-				$this->messenger->noteSuccess( 'Die Sicherung wurde erstellt.' );
+				$this->messenger->noteSuccess( $this->words->successCreated );
 				$this->restart( 'view/'.$backupId, TRUE );
 			}
 			catch( Exception $e ){
@@ -48,7 +49,7 @@ class Controller_Admin_Database_Backup extends Controller
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
 		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
-			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
+			$this->messenger->noteError( $this->words->errorPasswordMismatch );
 			$this->restart( 'view/'.$id, TRUE );
 		}
 		$backup	= $this->check( $id );
@@ -59,7 +60,7 @@ class Controller_Admin_Database_Backup extends Controller
 	{
 		$backup	= $this->check( $id );
 		$this->logicBackup->remove( $id );
-		$this->messenger->noteSuccess( 'Die Sicherung "%s" wurde entfernt.', $backup->filename );
+		$this->messenger->noteSuccess( $this->words->successRemoved, $backup->filename );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -74,13 +75,13 @@ class Controller_Admin_Database_Backup extends Controller
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
 		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
-			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
+			$this->messenger->noteError( $this->words->errorPasswordMismatch );
 			$this->restart( 'view/'.$id, TRUE );
 		}
 		$backup	= $this->check( $id );
 		try{
 			$this->logicBackup->load( $id );
-			$this->messenger->noteSuccess( 'Die Sicherung "%s" wurde wiederhergestellt.', $backup->filename );
+			$this->messenger->noteSuccess( $this->words->successRestored, $backup->filename );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
@@ -107,12 +108,13 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+		$this->words		= (object) $this->getWords( 'msg' );
 
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
 
 		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
-			$this->messenger->noteError( 'Kein Datenbank-Modul vorhanden.' );
+			$this->messenger->noteError( $this->words->errorNoDatabaseModule );
 			$this->restart();
 		}
 	}
@@ -121,7 +123,7 @@ class Controller_Admin_Database_Backup extends Controller
 	{
 		if( ( $backup = $this->logicBackup->check( $id, FALSE ) ) )
 			return $backup;
-		$this->messenger->noteError( 'Ungültige Sicherungs-ID.' );
+		$this->messenger->noteError( $this->words->errorInvalidId );
 		$this->restart( NULL, TRUE );
 		return NULL;
 	}

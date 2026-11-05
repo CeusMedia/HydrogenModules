@@ -8,7 +8,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object[] $backups */
 
-$list	= '<div class="alert alert-info">Keine Backups vorhanden.</div>';
+$w		= (object) $words['index'];
+$wf		= (object) $words['index.filter'];
+
+$list	= '<div class="alert alert-info">'.$w->noEntries.'</div>';
 if( $backups ){
 	$rows	= [];
 	foreach( $backups as $backup ){
@@ -24,20 +27,20 @@ if( $backups ){
 
 $panelList	= '
 <div class="content-panel">
-	<h3>Backups</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
-			<a href="./admin/backup/add" class="btn btn-primary">neues Backup</a>
+			<a href="./admin/backup/add" class="btn btn-primary">'.$w->buttonAdd.'</a>
 		</div>
 	</div>
 </div>';
 
 $panelFilter	= '
 <div class="content-panel">
-	<h3>Backups</h3>
+	<h3>'.$wf->heading.'</h3>
 	<div class="content-panel-inner">
-		<p>Not implemented, yet.</p>
+		<p>'.$wf->notImplemented.'</p>
 	</div>
 </div>';
 

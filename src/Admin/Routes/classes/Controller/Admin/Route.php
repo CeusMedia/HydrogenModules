@@ -213,7 +213,7 @@ class Controller_Admin_Route extends Controller
 			return FileWriter::save( $this->fileName, $xml );
 		}
 		catch( DOMException $e ){
-			$this->env->getMessenger()->noteError( 'Generating routes XML failed: '.$e->getMessage() );
+			$this->env->getMessenger()->noteError( sprintf( $this->getWords( 'msg' )['errorXmlFailed'], $e->getMessage() ) );
 			return 0;
 		}
 	}

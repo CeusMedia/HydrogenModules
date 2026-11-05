@@ -49,8 +49,8 @@ class Controller_Admin_Mail_Queue extends Controller
 		}
 
 		if( !array_key_exists( $attachmentNr, $attachments ) ){
-			$message	= 'Die ID des Anhangs ist ungültig.';
-			$this->env->getMessenger()->noteError( $message );
+			$words		= (object) $this->getWords( 'msg' );
+			$this->env->getMessenger()->noteError( $words->errorAttachmentIdInvalid );
 			$this->restart( 'view/'.$mailId, TRUE );
 		}
 		$item	= $attachments[$attachmentNr];
@@ -107,14 +107,15 @@ class Controller_Admin_Mail_Queue extends Controller
 	 */
 	public function cancel( int|string $mailId ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
-			$this->env->getMessenger()->noteError( 'Invalid mail ID' );
+			$this->env->getMessenger()->noteError( $words->errorMailIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		if( $mail->status > 1 ){
-			$this->env->getMessenger()->noteError( 'Mail already sent' );
+			$this->env->getMessenger()->noteError( $words->errorMailAlreadySent );
 			$this->restart( NULL, TRUE );
 		}
 		$model->edit( $mailId, [
@@ -136,16 +137,17 @@ class Controller_Admin_Mail_Queue extends Controller
 		$subject	= trim( $this->request->get( 'subject' ) );
 		$body		= trim( $this->request->get( 'body' ) );
 		if( $this->request->has( 'add' ) ){
+			$words		= (object) $this->getWords( 'msg' );
 			if( !strlen( $class ) )
-				$this->messenger->noteError( 'Mail class is missing.' );
+				$this->messenger->noteError( $words->errorClassMissing );
 			if( !strlen( $sender ) )
-				$this->messenger->noteError( 'Sender address is missing.' );
+				$this->messenger->noteError( $words->errorSenderMissing );
 			if( !strlen( $receiver ) )
-				$this->messenger->noteError( 'Receiver address is missing.' );
+				$this->messenger->noteError( $words->errorReceiverMissing );
 			if( !strlen( $subject ) )
-				$this->messenger->noteError( 'Mail subject is missing.' );
+				$this->messenger->noteError( $words->errorSubjectMissing );
 			if( !strlen( $body ) )
-				$this->messenger->noteError( 'Mail body is missing.' );
+				$this->messenger->noteError( $words->errorBodyMissing );
 			if( !$this->messenger->gotError() ){
 				try{
 					$receiver	= (object) ['email' => $receiver];
@@ -157,7 +159,7 @@ class Controller_Admin_Mail_Queue extends Controller
 						$mail->sendTo( $receiver );
 					else
 						$this->logic->handleMail( $mail, $receiver, $language );
-					$this->messenger->noteSuccess( "Mail sent ;-)" );
+					$this->messenger->noteSuccess( $words->successSent );
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $e->getMessage() );
@@ -296,10 +298,11 @@ class Controller_Admin_Mail_Queue extends Controller
 	 */
 	public function resend( int|string $mailId ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
-			$this->env->getMessenger()->noteError( 'Invalid mail ID' );
+			$this->env->getMessenger()->noteError( $words->errorMailIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 /*		if( $mail->status > 1 ){
@@ -319,12 +322,13 @@ class Controller_Admin_Mail_Queue extends Controller
 	{
 		$count	= $this->logic->countQueue( ['status' => '< '.Model_Mail::STATUS_SENT] );
 		if( $count ){
-			$this->messenger->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
+			$words		= (object) $this->getWords( 'msg' );
+			$this->messenger->noteNotice( $words->noticeMailsInQueue, $this->logic->countQueue() );
 			if( $this->logic->countQueue( ['status' => '< '.Model_Mail::STATUS_SENT] ) ){
 				foreach( $this->logic->getQueuedMails( ['status' => '< '.Model_Mail::STATUS_SENT] ) as $mail ){
 					try{
 						$this->logic->sendQueuedMail( $mail->mailId );
-						$this->messenger->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );
+						$this->messenger->noteSuccess( $words->successSentMail, $mail->mailId );
 					}
 					catch( Exception $e ){
 						$this->messenger->noteFailure( $e->getMessage() );

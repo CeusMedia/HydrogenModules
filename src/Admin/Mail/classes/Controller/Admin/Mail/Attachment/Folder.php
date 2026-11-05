@@ -46,9 +46,10 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 	 */
 	public function download( string $filePathEncoded ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$filePath	= base64_decode( $filePathEncoded );
 		if( !file_exists( $this->basePath.$filePath ) ){
-			$this->messenger->noteError( 'Invalid file path.' );
+			$this->messenger->noteError( $words->errorPathInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$fileName	= basename( $filePath );
@@ -91,7 +92,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		$filePath	= base64_decode( $filePathEncoded );
 		if( !file_exists( $this->basePath.$filePath ) ){
 //			$this->messenger->noteError( $words->errorFileNotExisting, $filePath );
-			$this->messenger->noteError( 'Invalid file or folder path' );
+			$this->messenger->noteError( $words->errorPathInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		if( is_dir( $this->basePath.$filePath ) ){

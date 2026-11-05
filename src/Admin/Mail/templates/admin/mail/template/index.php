@@ -107,22 +107,22 @@ $wordsImport		= (object) $words['import'];
 $modalImportBody	= $textTop.'
 	<div class="row-fluid">
 		<div class="span12">
-			<label for="input_template">Mail-Template-Datei</label>
+			<label for="input_template">'.$wordsImport->labelFile.'</label>
 			'.$helperUpload->render().'
 		</div>
 	</div>'.$textBottom;
 $modalImport	= new BootstrapModalDialog( 'modal-mail-template-upload' );
 $modalImport->setBody( $modalImportBody );
-$modalImport->setHeading( 'Import eines Mail-Templates <small class="muted">(aus einer Datei)</small>' );
+$modalImport->setHeading( $wordsImport->headingModal );
 $modalImport->setFormAction( './admin/mail/template/import' );
 $modalImport->setFormIsUpload();
-$modalImport->setSubmitButtonLabel( $iconImport.'&nbsp;hochladen' );
+$modalImport->setSubmitButtonLabel( $iconImport.'&nbsp;'.$wordsImport->buttonSave );
 $modalImport->setSubmitButtonClass( 'btn btn-primary' );
-$modalImport->setCloseButtonLabel( $iconCancel.'&nbsp;abbrechen' );
+$modalImport->setCloseButtonLabel( $iconCancel.'&nbsp;'.$wordsImport->buttonCancel );
 
 $modalImportTrigger	= new BootstrapModalTrigger( 'modal-mail-template-upload-trigger' );
 $modalImportTrigger->setModalId( 'modal-mail-template-upload' );
-$modalImportTrigger->setLabel( $iconImport.'&nbsp;Vorlage importieren' );
+$modalImportTrigger->setLabel( $iconImport.'&nbsp;'.$words['index']['buttonImport'] );
 
 return '
 <div class="row-fluid">

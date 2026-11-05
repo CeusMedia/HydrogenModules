@@ -5,7 +5,7 @@
 	<title>Admin: OAuth2</title>
 	<description><![CDATA[Manage connected OAuth2 providers.]]></description>
 	<category>Administration</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add activate and deactivate.</log>
@@ -18,6 +18,7 @@
 	<log version="0.2.8">Extract style to file.</log>
 	<log version="0.3">Migrate to support CeusMedia::Common 0.8.5.</log>
 	<log version="0.3.1">Improve code style.</log>
+	<log version="0.3.2">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -30,6 +31,7 @@
 		<template>admin/oauth2/edit.php</template>
 		<template>admin/oauth2/index.php</template>
 		<locale>de/admin/oauth2.ini</locale>
+		<locale>en/admin/oauth2.ini</locale>
 		<file>config/oauth2_providers.json</file>
 		<script level="end">module.admin.oauth2.js</script>
 		<style source="common" level="end">module.admin.oauth2.css</style>

@@ -117,7 +117,7 @@ class Controller_Admin_Config extends Controller
 
 		if( $moduleId ){
 			if( !array_key_exists( $moduleId, $modules ) ){
-				$this->env->getMessenger()->noteError( 'Invalid module ID.' );
+				$this->env->getMessenger()->noteError( $words->errorInvalidModuleId );
 				$this->restart( NULL, TRUE );
 			}
 			$module		= $modules[$moduleId];
@@ -169,7 +169,8 @@ class Controller_Admin_Config extends Controller
 			$file	= new FileBackup( $fileName );
 			$fileVersion	= $file->getVersion();
 			if( $fileVersion === NULL ){
-				$this->env->getMessenger()->noteError( 'No backup available for module "'.$moduleId.'"' );
+				$words		= (object) $this->getWords( 'msg' );
+				$this->env->getMessenger()->noteError( $words->errorNoBackup, $moduleId );
 				$this->restart( 'module/'.$moduleId, TRUE );
 			}
 			$file->restore( -1, TRUE );
@@ -190,7 +191,7 @@ class Controller_Admin_Config extends Controller
 		$words		= (object) $this->getWords( 'msg' );
 		$modules	= $this->env->getModules()->getAll();
 		if( !array_key_exists( $moduleId, $modules ) ){
-			$this->env->getMessenger()->noteError( 'Invalid module ID.' );
+			$this->env->getMessenger()->noteError( $words->errorInvalidModuleId );
 			$this->restart( NULL, TRUE );
 		}
 		$module		= $modules[$moduleId];

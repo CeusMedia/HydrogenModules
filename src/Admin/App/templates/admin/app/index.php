@@ -11,41 +11,47 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string $appLogo */
 /** @var string $appTitle */
 
+$w		= (object) $words['index'];
+$wTitle	= (object) $words['index.title'];
+$wBrand	= (object) $words['index.brand'];
+$wLogo	= (object) $words['index.logo'];
+$wIcon	= (object) $words['index.icon'];
+
 $iconFile	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $panelTitle	= '<div class="content-panel">
-	<h3>Titel</h3>
+	<h3>'.$wTitle->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./admin/app/setTitle" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Titel als einzeiliger Reintext</label>
+					<label for="input_title">'.$wTitle->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $appTitle, ENT_QUOTES, 'UTF-8' ).'"/>
-					<p><small class="not-muted">Dieser Titel erscheint an allen Stellen, wo die Anwendung benannt werden soll, ohne HTML zu verwenden. Z.B. die Bezeichnung im Browser-Reiter oder in Text-E-Mails.</small></p>
+					<p><small class="not-muted">'.$wTitle->hintTitle.'</small></p>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;speichern</button>
+				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
 </div>';
 
 $panelBrand	= '<div class="content-panel">
-	<h3>Markenname</h3>
+	<h3>'.$wBrand->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./admin/app/setBrand" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Markenname</label>
+					<label for="input_title">'.$wBrand->labelBrand.'</label>
 					<input type="text" name="brand" id="input_title" class="span12" value="'.htmlentities( $appBrand, ENT_QUOTES, 'UTF-8' ).'"/>
-					<p><small class="not-muted">Der Markenname erscheint an allen Stellen, wo die Anwendung benannt werden soll und dabei HTML verwenden darf. Z.B. die Bezeichnung in der Kopfleiste oder in HTML-E-Mails.</small></p>
+					<p><small class="not-muted">'.$wBrand->hintBrand.'</small></p>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;speichern</button>
+				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
@@ -55,18 +61,18 @@ $helperUploadLogo	= new View_Helper_Input_File( $env );
 $helperUploadLogo->setName( 'logo' );
 $helperUploadLogo->setLabel( $iconFile );
 
-$currentLogo	= '<em class="muted">Derzeit:<br/>Standard-Logo</em>';
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+$currentLogo	= '<em class="muted">'.$w->labelCurrent.'<br/>'.$wLogo->labelDefault.'</em>';
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'class'		=> 'btn btn-primary',
 	'type'		=> 'submit',
 ] );
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', [
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'class'		=> 'btn btn-mini btn-inverse',
 	'disabled'	=> 'disabled',
 	'type'		=> 'button',
 ] );
 if( $appLogo ){
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 		'href'	=> './admin/app/removeLogo',
 		'class'	=> 'btn btn-small btn-inverse',
 	] );
@@ -78,14 +84,14 @@ if( $appLogo ){
 
 $panelLogo	= '
 <div class="content-panel">
-	<h3>Markenlogo</h3>
+	<h3>'.$wLogo->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./admin/app/setLogo" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span8">
-					<label for="input_logo">Brand-Logo (png oder svg)</label>
+					<label for="input_logo">'.$wLogo->labelLogo.'</label>
 					'.$helperUploadLogo->render().'
-					<p><small class="not-muted">Das Logo erscheint z.B. in der Kopfleister der Anwendung und in HTML-E-Mails. Empfohlenes Format: SVG. Ansonsten empfohlene Auflösung: 64 oder 128 Pixel. </small></p>
+					<p><small class="not-muted">'.$wLogo->hintLogo.'</small></p>
 				</div>
 				<div class="span3 offset1">
 					'.$currentLogo.'
@@ -103,18 +109,18 @@ $helperUploadIcon	= new View_Helper_Input_File( $env );
 $helperUploadIcon->setName( 'icon' );
 $helperUploadIcon->setLabel( $iconFile );
 
-$currentIcon	= '<em class="muted">Derzeit:<br/>Standard-Icon</em>';
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+$currentIcon	= '<em class="muted">'.$w->labelCurrent.'<br/>'.$wIcon->labelDefault.'</em>';
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'class'		=> 'btn btn-primary',
 	'type'		=> 'submit',
 ] );
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', [
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'class'		=> 'btn btn-mini btn-inverse',
 	'disabled'	=> 'disabled',
 	'type'		=> 'button',
 ] );
 if( $appIcon ){
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 		'href'	=> './admin/app/removeIcon',
 		'class'	=> 'btn btn-small btn-inverse',
 	] );
@@ -126,14 +132,14 @@ if( $appIcon ){
 
 $panelIcon	= '
 <div class="content-panel">
-	<h3>Icon</h3>
+	<h3>'.$wIcon->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./admin/app/setIcon" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span8">
-					<label for="input_icon">Launcher-Icon (png oder ico)</label>
+					<label for="input_icon">'.$wIcon->labelIcon.'</label>
 					'.$helperUploadIcon->render().'
-					<p><small class="not-muted">Das Icon erscheint z.B. im Browser-Reiter oder im Launcher.</small></p>
+					<p><small class="not-muted">'.$wIcon->hintIcon.'</small></p>
 				</div>
 				<div class="span3 offset1">
 					'.$currentIcon.'
@@ -148,7 +154,7 @@ $panelIcon	= '
 </div>';
 
 return '
-<h2>App-Anpassungen</h2>
+<h2>'.$w->heading.'</h2>
 <div class="row-fluid">
 	<div class="span5">
 		'.$panelBrand.'

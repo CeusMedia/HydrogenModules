@@ -5,7 +5,7 @@
 	<title>Admin: Log: Exception</title>
 	<description><![CDATA[Viewer for logged exceptions.]]></description>
 	<category>Administration</category>
-	<version>0.7.0</version>
+	<version>0.7.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
 	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -24,6 +24,7 @@
 	<log version="0.6.7">Add public statistics (as JSON).</log>
 	<log version="0.6.8">Add ID filter.</log>
 	<log version="0.7.0">Refactor exception view with view helper and style.</log>
+	<log version="0.7.1">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

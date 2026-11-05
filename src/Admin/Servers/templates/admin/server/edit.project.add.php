@@ -38,28 +38,28 @@ $panelAddProject	= '
 			<legend>'.$wf->legend.'</legend>
 			<ul class="input">
 				<li class="column-left-50">
-					'.HtmlTag::create( 'label', 'Project' ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelProject ).'<br/>
 					'.HtmlElements::Select( 'projectId', $optProject, 'max' ).'
 				</li>
 				<li class="column-left-50">
-					'.HtmlTag::create( 'label', 'Version' ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelVersion ).'<br/>
 					'.HtmlElements::Select( 'projectVersionId', $optVersion, 'max' ).'
 				</li>
 				<li class="column-left-50">
-					'.HtmlTag::create( 'label', 'Status' ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelStatus ).'<br/>
 					'.HtmlElements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
-					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelTitle ).'<br/>
 					'.HtmlElements::Input( 'title' ).'
 				</li>
 				<li class="column-clear">
-					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelDescription ).'<br/>
 					'.HtmlElements::Textarea( 'description' ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.HtmlElements::Button( 'add', 'hinzufügen', 'button add' ).'
+				'.HtmlElements::Button( 'add', $wf->buttonAdd, 'button add' ).'
 			</div>
 		</fieldset>
 	</form>

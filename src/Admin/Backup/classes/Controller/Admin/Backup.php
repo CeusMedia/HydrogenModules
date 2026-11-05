@@ -60,7 +60,8 @@ class Controller_Admin_Backup extends Controller
 
 	public function add(): void
 	{
-		$this->messenger->noteFailure( 'Not implemented, yet' );
+		$words	= (object) $this->getWords( 'msg' );
+		$this->messenger->noteFailure( $words->failureNotImplemented );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -73,7 +74,8 @@ class Controller_Admin_Backup extends Controller
 	 */
 	public function restore( string $backupId ): void
 	{
-		$this->messenger->noteFailure( 'Not implemented, yet' );
+		$words	= (object) $this->getWords( 'msg' );
+		$this->messenger->noteFailure( $words->failureNotImplemented );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -86,7 +88,8 @@ class Controller_Admin_Backup extends Controller
 	 */
 	public function remove( string $backupId ): void
 	{
-		$this->messenger->noteFailure( 'Not implemented, yet' );
+		$words	= (object) $this->getWords( 'msg' );
+		$this->messenger->noteFailure( $words->failureNotImplemented );
 		$this->restart( NULL, TRUE );
 	}
 

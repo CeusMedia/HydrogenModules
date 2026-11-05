@@ -39,7 +39,7 @@ if( count( $instances ) > 1 ){
 
 $rowType	= '';
 if( $exceptionTypes ){
-	$optType	= ['' => '- alle-'];
+	$optType	= ['' => $w->optTypeAll];
 	foreach( $exceptionTypes as $type )
 		$optType[$type]	= $type;
 	$optType	= HtmlElements::Options( $optType, $filterType );
@@ -62,7 +62,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$w->buttonReset, ['class' =>
 
 return '
 <div class="content-panel">
-	<h3>Filter</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./admin/log/exception/filter" method="post">
 			<div class="row-fluid">
@@ -95,7 +95,7 @@ return '
 
 <!--			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_instance">Instanz</label>
+					<label for="input_instance">'.$w->labelInstance.'</label>
 					'.$selectInstance.'
 				</div>
 			</div>-->

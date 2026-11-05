@@ -11,15 +11,17 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object[] $routes */
 
+$w			= (object) $words['index'];
+
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$table		= HtmlTag::create( 'div', '<em>Keine Routen definiert.</em>', ['alert alert-info'] );
+$table		= HtmlTag::create( 'div', '<em>'.$w->noEntries.'</em>', ['alert alert-info'] );
 if( $routes ){
 	$rows	= [];
 	foreach( $routes as $id => $route ){
-		$regex	= $route->regex ? 'ja' : 'nein';
+		$regex	= $words['regex'][$route->regex ? 1 : 0];
 		$code	= $route->code ? HtmlTag::create( 'abbr', $route->code, ['title' => HttpStatus::getText( $route->code )] ) : '-';
-		$status	= $route->status ? 'aktiv' : 'inaktiv';
+		$status	= $words['status'][$route->status ? 1 : 0];
 		$status	= HtmlTag::create( 'span', $status, ['class' => 'label '.( $route->status ? 'label-success' : 'label-important' )] );
 
 		$buttons = [];
@@ -41,12 +43,12 @@ if( $routes ){
 		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "8%", "7%", "", "", "8%" );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Aktiv', 'Code', 'Quelle', 'Ziel', ''] ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headStatus, $w->headCode, $w->headSource, $w->headTarget, ''] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Route', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './admin/route/add',
 	'class'	=> 'btn btn-success',
 ] );
@@ -61,7 +63,7 @@ return '
 <div class="row-fluid">
 	<div class="span3">
 		<div class="content-panel content-panel-filter">
-			<h3>Filters</h3>
+			<h3>'.$w->headingFilter.'</h3>
 			<div class="content-panel-inner">
 				[Filters]
 			</div>
@@ -69,7 +71,7 @@ return '
 	</div>
 	<div class="span9">
 		<div class="content-panel content-panel-table">
-			<h3>Routen</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$table.'
 				<div class="buttonbar">

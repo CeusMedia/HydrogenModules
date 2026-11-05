@@ -13,6 +13,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 	protected MessengerResource $messenger;
 	protected Logic_Database_Backup $logicBackup;
 	protected Logic_Database_Backup_Copy $logicCopy;
+	protected object $words;
 
 	public function activate( string $backupId ): void
 	{
@@ -20,7 +21,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$copyPrefix	= $backup->comment['copyPrefix'] ?? '';
 		if( strlen( trim( $copyPrefix ) ) ){
 			$this->session->set( 'admin-database-backup-copy-prefix', $copyPrefix );
-			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde aktiviert.' );
+			$this->messenger->noteSuccess( $this->words->successActivated );
 		}
 		if( ( $from = $this->request->get( 'from' ) ) )
 			$this->restart( $from );
@@ -36,7 +37,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 	{
 		$backup		= $this->checkBackupId( $backupId );
 		if( !empty( $backup->comment['copyPrefix'] ) ){
-			$this->messenger->noteError( 'Eine Kopie dieser Sicherung wurde bereits installiert.' );
+			$this->messenger->noteError( $this->words->errorAlreadyInstalled );
 			$this->restart( 'view/'.$backupId, TRUE );
 		}
 		$copyPrefix		= 'copy_'.substr( md5( $backupId ), 16 ).'_';
@@ -51,7 +52,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 				'copyPrefix'	=> $copyPrefix,
 				'copyTimestamp'	=> time(),
 			] );
-			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde installiert.' );
+			$this->messenger->noteSuccess( $this->words->successInstalled );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
@@ -73,10 +74,10 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 					$database->setName( $dbName );
 					$this->session->remove( 'admin-database-backup-copy-prefix' );
 					$this->messenger->clear();
-					$this->messenger->noteSuccess( 'Switching back to default database.' );
+					$this->messenger->noteSuccess( $this->words->successDeactivated );
 				}
 				catch( Exception $e ){
-					$this->messenger->noteFailure( 'Switching to database "'.$dbName.'" failed.' );
+					$this->messenger->noteFailure( $this->words->failureSwitchDatabase, $dbName );
 				}
 			}
 		}
@@ -93,11 +94,11 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$dbName		= $this->config->get( 'module.admin_database_backup.copy.database' );
 
 		if( empty( $backup->comment['copyPrefix'] ) ){
-			$this->messenger->noteError( 'Es wurde bisher keine Kopie dieser Sicherung installiert.' );
+			$this->messenger->noteError( $this->words->errorNotInstalled );
 			$this->restart( 'view/'.$backupId, TRUE );
 		}
 		if( $backup->comment['copyPrefix'] == $copyPrefix ){
-			$this->messenger->noteError( 'Die Kopie ist noch aktiviert und kann daher nicht gelöscht werden.' );
+			$this->messenger->noteError( $this->words->errorStillActivated );
 			$this->restart( 'view/'.$backupId, TRUE );
 		}
 		$currentDbName	= $database->getName();
@@ -114,7 +115,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 			'copyPrefix'	=> NULL,
 			'copyTimestamp'	=> NULL,
 		] );
-		$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde entfernt <small>('.count( $tables ).' Tabellen entfernt)</small>.' );
+		$this->messenger->noteSuccess( $this->words->successRemoved, count( $tables ) );
 		if( $currentDbName != $dbName )
 			$database->setName( $currentDbName );
 		if( $from = $this->request->get( 'from' ) )
@@ -129,7 +130,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$backup	= $this->logicBackup->check( $backupId, FALSE );
 		if( FALSE !== $backup )
 			return $backup;
-		$this->messenger->noteError( 'Invalid backup ID' );
+		$this->messenger->noteError( $this->words->errorInvalidId );
 		$this->restart( 'admin/database/backup' );
 	}
 
@@ -150,9 +151,10 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$this->logicCopy	= Logic_Database_Backup_Copy::getInstance( $this->env );
 
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+		$this->words		= (object) $this->getWords( 'msg.copy', 'admin/database/backup' );
 
 		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
-			$this->messenger->noteError( 'Kein Datenbank-Modul vorhanden.' );
+			$this->messenger->noteError( $this->words->errorNoDatabaseModule );
 			$this->restart();
 		}
 	}

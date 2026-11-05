@@ -68,7 +68,7 @@ if( $mails ){
 		$timestamp	= $mail->status == Model_Mail::STATUS_SENT ? $mail->sentAt : ( $mail->status == 1 ? $mail->attemptedAt : $mail->enqueuedAt );
 		$datetime	= date( $wl->formatDate, $timestamp );
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
-			$datetime	= $helper->convert( $timestamp, TRUE, $wl->timePhrasePrefix );
+			$datetime	= $helper->convert( $timestamp, TRUE, $wl->timePhrasePrefix, $wl->timePhraseSuffix );
 		}
 		$datetime   = HtmlTag::create( 'small', $datetime, ['class' => 'muted'] );
 		$receiverName	= '';
@@ -83,13 +83,13 @@ if( $mails ){
 		$buttons[]		= HtmlTag::create( 'a', $iconView, [
 			'href'		=> './admin/mail/queue/view/'.$mail->mailId.$paramPage,
 			'class'		=> 'btn btn-info btn-mini',
-			'title'		=> 'anzeigen',
+			'title'		=> $wl->buttonView,
 		] );
 		if( $canRemove )
 			$buttons[]		= HtmlTag::create( 'a', $iconRemove, [
 				'href'		=> './admin/mail/queue/remove/'.$mail->mailId.$paramPage,
 				'class'		=> 'btn btn-danger btn-mini',
-				'title'		=> 'entfernen',
+				'title'		=> $wl->buttonRemove,
 			] );
 		$buttons		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 
@@ -170,21 +170,21 @@ if( $mails ){
 	$itemList		= [];
 	if( $canRemove )		//  @todo replace by real right, canRemove is used as hack here
 		$itemList[]		= HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-fw fa-remove"></i> abbrechen', ['class' => '#', 'id' => 'action-button-abort'] )
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-remove"></i> '.$wl->actionAbort, ['class' => '#', 'id' => 'action-button-abort'] )
 		);
 	if( $canRemove )		//  @todo replace by real right, canRemove is used as hack here
 		$itemList[]		= HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-fw fa-refresh"></i> erneut versuchen', ['class' => '#', 'id' => 'action-button-retry'] )
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-refresh"></i> '.$wl->actionRetry, ['class' => '#', 'id' => 'action-button-retry'] )
 		);
 	if( $canRemove )
 		$itemList[]	= HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-fw fa-trash"></i> entfernen', ['class' => '#', 'id' => 'action-button-remove'] )
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-trash"></i> '.$wl->actionRemove, ['class' => '#', 'id' => 'action-button-remove'] )
 		);
 
 	$dropdown	= '';
 	if( [] !== $itemList ){
 		$dropdownMenu	= HtmlTag::create( 'ul', $itemList, ['class' => 'dropdown-menu not-pull-right'] );
-		$dropdownToggle	= HtmlTag::create( 'button', 'Aktion <span class="caret"></span>', [
+		$dropdownToggle	= HtmlTag::create( 'button', $wl->buttonActions.' <span class="caret"></span>', [
 			'type'		=> 'button',
 			'class'		=> 'btn dropdown-toggle',
 		], ['toggle' => 'dropdown'] );

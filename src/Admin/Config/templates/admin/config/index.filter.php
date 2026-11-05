@@ -20,7 +20,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconReset		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-search-minus'] );
 }
 
-$optCategory	= ['' => '- alle -'];
+$optCategory	= ['' => $w->optionAll];
 foreach( $categories as $category => $nrModules )
 	$optCategory[$category]	= $category.' ('.$nrModules.')';
 $optCategory	= HtmlElements::Options( $optCategory, $filterCategory );

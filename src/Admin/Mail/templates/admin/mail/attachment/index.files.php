@@ -30,7 +30,7 @@ if( $files ){
 	foreach( $files as $file ){
 		$link	= HtmlTag::create( 'a', $file->fileName, [
 			'href'		=> './admin/mail/attachment/download/'.urlencode( $file->fileName ),
-			'title'		=> 'Datei herunterladen',
+			'title'		=> $w->buttonDownload,
 		] );
 		$label	= HtmlTag::create( 'big', $file->fileName );
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
@@ -60,7 +60,7 @@ if( $files ){
 
 	$list	= '
 <div class="content-panel">
-	<h3>Dateien</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 	</div>

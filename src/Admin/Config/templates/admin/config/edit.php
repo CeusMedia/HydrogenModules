@@ -29,15 +29,17 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 }
 
+$w	= (object) $words['edit'];
+
 $rows	= [];
 foreach( $module->config as $item ){
 	$input	= $view->renderConfigInput( $moduleId, $item );
 
-	$protection	= HtmlTag::create( 'abbr', $iconUnlock, ['title' => 'public - öffentlich (bekannt im Browser)'] );
+	$protection	= HtmlTag::create( 'abbr', $iconUnlock, ['title' => $w->titlePublic] );
 	if( $item->protected === "user" )
-		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => 'user - durch Benutzer konfigurierbar'] );
+		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => $w->titleUser] );
 	if( $item->protected === "yes" )
-		$protection	= HtmlTag::create( 'abbr', $iconLock, ['title' => 'protected - nicht öffentlich (nur auf Server bekannt)'] );
+		$protection	= HtmlTag::create( 'abbr', $iconLock, ['title' => $w->titleProtected] );
 
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
@@ -56,8 +58,6 @@ $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', [$cols, $tbody], ['class' => 'table table-striped table-fixed'] );
 
 [$textTop, $textBottom] = array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' ) );
-
-$w	= (object) $words['edit'];
 
 $buttonRestore	= '';
 if( $versions ){

@@ -34,7 +34,7 @@ foreach( $serverProjects as $relation ){
 $listServers	= '<table>'.join( $list ).'</table>';
 $panelList		= '
 	<fieldset>
-		<legend>Projekte</legend>
+		<legend>'.$words['listProjects']['legend'].'</legend>
 		'.$listServers.'
 	</fieldset>
 	<br/>
