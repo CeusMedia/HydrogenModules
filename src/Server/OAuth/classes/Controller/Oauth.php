@@ -54,10 +54,11 @@ class Controller_Oauth extends Controller
 	{
 #		if( $this->request->getMethod() !== "GET" )
 #			$this->errorRedirect( 'GET request required.', 'This request must use the GET method.' );
+		$words	= (object) $this->getWords( 'msg' );
 		if( !strlen( trim( $redirectUri = $this->request->get( 'redirect_uri' ) ) ) )
-			$this->errorReport( 'Missing redirect URI.' );
+			$this->errorReport( $words->errorRedirectUriMissing );
 		if( !strlen( trim( $clientId = $this->request->get( 'client_id' ) ) ) )
-			$this->errorReport( 'Missing client ID.' );
+			$this->errorReport( $words->errorClientIdMissing );
 		if( !strlen( trim( $responseType = $this->request->get( 'response_type' ) ) ) )
 			$this->errorRedirect( 'invalid_request', 'Missing response type.' );
 		if( !strlen( trim( $state = $this->request->get( 'state' ) ) ) )

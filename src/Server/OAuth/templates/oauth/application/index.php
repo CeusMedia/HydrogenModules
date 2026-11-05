@@ -5,6 +5,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var array<object> $applications */
 /** @var array<string,array<string|int,string>> $words */
 
+$w	= (object) $words['index'];
+
 
 /*
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
@@ -54,7 +56,7 @@ $iconsType	= array(
 	1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lock'] )
 );
 
-$list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
+$list	= '<div class="muted"><em><small>'.$w->noEntries.'</small></em></div><br/>';
 if( $applications ){
 	$list		= [];
 	foreach( $applications as $application ){
@@ -78,10 +80,10 @@ if( $applications ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '50%', '15%', '15%', '20%' );
 	$heads		= HtmlElements::TableHeads( [
-		'Applikation',
-		'Vertraulichkeit',
-		'Zustand',
-		'erstellt / verändert',
+		$w->headTitle,
+		$w->headType,
+		$w->headStatus,
+		$w->headDates,
 	] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
@@ -90,16 +92,16 @@ if( $applications ){
 	] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 	'class'	=> 'btn btn-primary btn-small',
 	'href'	=> './oauth/application/add',
 ] );
 
 return join( [
-	HtmlTag::create( 'h2', 'OAuth-Server', ['class' => 'muted'] ),
+	HtmlTag::create( 'h2', $w->headingServer, ['class' => 'muted'] ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'h3', 'Applikationen' ),
+			HtmlTag::create( 'h3', $w->heading ),
 			$list,
 			HtmlTag::create( 'div', $buttonAdd, ['class' => 'buttonbar'] ),
 		], ['class' => 'content-panel-inner'] ),

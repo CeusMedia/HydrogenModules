@@ -143,7 +143,7 @@ class Controller_Server_Log_Exception extends Controller
 	{
 		$exception	= $this->logic->check( $id, $strict );
 		if( !$exception ){
-			$this->env->getMessenger()->noteError( 'Invalid exception ID.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg', 'server/log/exception' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		return $exception;

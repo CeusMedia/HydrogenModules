@@ -87,6 +87,7 @@ class Controller_Ajax_System_Load extends AjaxController
 		foreach( $barStyles as $edge => $style )
 			if( $barValue > $edge )
 				$barStyle	= $style;
+		$w			= (object) $this->env->getLanguage()->getSection( 'server/system/load', 'dashboard' );
 		$trend5m	= $this->renderTrend( $percentages[0] - $percentages[1], '%', 2, TRUE );
 		$trend15m	= $this->renderTrend( $percentages[0] - $percentages[2], '%', 2, TRUE );
 		$contentNumbers	= '
@@ -94,12 +95,12 @@ class Controller_Ajax_System_Load extends AjaxController
 			<div class="row-fluid">
 				<div class="span6" style="text-align: center; padding-top: 0.4em; ">
 					<big style="font-size: 2em;">'.$percentages[0].'%</big><br/>
-					<small>last minute</small><br/>
+					<small>'.$w->labelLastMinute.'</small><br/>
 					<br/>
 				</div>
 				<div class="span6 hidden-phone">
-					'.$percentages[1].'% <small class="muted hidden-tablet">last 5 minutes</small><br/>
-					'.$percentages[2].'% <small class="muted hidden-tablet">last 15 minutes</small><br/>
+					'.$percentages[1].'% <small class="muted hidden-tablet">'.$w->labelLast5Minutes.'</small><br/>
+					'.$percentages[2].'% <small class="muted hidden-tablet">'.$w->labelLast15Minutes.'</small><br/>
 				</div>
 			</div>';
 
@@ -117,19 +118,19 @@ class Controller_Ajax_System_Load extends AjaxController
 				</colgroup>
 				<thead>
 					<tr>
-						<th>Periode</th>
-						<th style="text-align: right">Wert</th>
-						<th style="text-align: right">Trend</th>
+						<th>'.$w->headPeriod.'</th>
+						<th style="text-align: right">'.$w->headValue.'</th>
+						<th style="text-align: right">'.$w->headTrend.'</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td><span class="autocut">5 minutes</td>
+						<td><span class="autocut">'.$w->period5Minutes.'</span></td>
 						<td style="text-align: right">'.$percentages[1].'%</td>
 						<td style="text-align: right">'.$trend5m.'</td>
 					</tr>
 					<tr>
-						<td><span class="autocut">15 minutes</span></td>
+						<td><span class="autocut">'.$w->period15Minutes.'</span></td>
 						<td style="text-align: right">'.$percentages[2].'%</td>
 						<td style="text-align: right">'.$trend15m.'</td>
 					</tr>

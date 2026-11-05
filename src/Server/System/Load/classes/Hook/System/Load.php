@@ -37,11 +37,12 @@ class Hook_System_Load extends Hook
 
 	public function onRegisterDashboardPanels(): void
 	{
+		$words	= (object) $this->env->getLanguage()->getSection( 'server/system/load', 'dashboard' );
 		$this->context->registerPanel( 'system-server-load', [
 			'url'		=> './ajax/system/load/renderDashboardPanel',
 			'icon'		=> 'fa fa-fw fa-bar-chart',
-			'title'		=> 'System: Auslastung',
-			'heading'	=> 'System: Auslastung',
+			'title'		=> $words->title,
+			'heading'	=> $words->heading,
 			'refresh'	=> 10,
 		] );
 	}

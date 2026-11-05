@@ -140,7 +140,7 @@ if( !empty( $entity->request ) ){
 	}
 	$topicRequest	= '
 	<div class="request-data"><h4>'.$w->topicRequest.'</h4>'.$dumpRequest.'</div>
-	<div class="request-headers"><h4>Request Headers</h4>'.nl2br( $headers ).'</div>';
+	<div class="request-headers"><h4>'.$w->topicRequestHeaders.'</h4>'.nl2br( $headers ).'</div>';
 }
 
 //  --  SESSION  --  //
@@ -168,7 +168,7 @@ if( !empty( $entity->env ) ){
 return HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'h3', 'Exception' ),
+			HtmlTag::create( 'h3', $w->heading ),
 			HtmlTag::create( 'div', [
 				$listFacts,
 				'<hr/>',
