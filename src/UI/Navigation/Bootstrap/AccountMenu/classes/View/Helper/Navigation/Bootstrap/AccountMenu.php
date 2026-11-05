@@ -30,6 +30,12 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		$this->showEmail		= $this->moduleConfig->get( 'show.email' );
 		$this->showFullname		= $this->moduleConfig->get( 'show.fullname' );
 		$this->showUsername		= $this->moduleConfig->get( 'show.username' );
+		try{																						//  localize guest defaults, values set later from outside take precedence
+			$words	= $this->env->getLanguage()->getSection( 'ui/navigation/bootstrap/accountmenu', 'guest' );
+			$this->guestLabel	= $words['label'] ?? $this->guestLabel;
+			$this->guestEmail	= $words['email'] ?? $this->guestEmail;
+		}
+		catch( Throwable ){}																		//  keep English defaults if topic is not available
 	}
 
 	/**

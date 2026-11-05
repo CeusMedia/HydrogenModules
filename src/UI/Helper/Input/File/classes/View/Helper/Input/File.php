@@ -7,7 +7,7 @@ class View_Helper_Input_File
 {
 	protected $env;
 	protected $buttonClass		= 'btn-primary';
-	protected $label			= 'durchsuchen';
+	protected $label			= '';
 	protected string $name				= 'upload';
 	protected $multiple			= FALSE;
 	protected $folder			= FALSE;
@@ -16,6 +16,7 @@ class View_Helper_Input_File
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
+		$this->label	= $env->getLanguage()->getWords( 'helper/input/file' )['input']['buttonBrowse'];
 	}
 
 	public function __toString()

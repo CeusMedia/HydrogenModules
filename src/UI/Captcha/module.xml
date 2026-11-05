@@ -6,7 +6,7 @@
 	<title>UI: Captcha</title>
 	<description><![CDATA[CAPTCHA.]]></description>
 	<category>User Interface</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add public link to image generator.</log>
@@ -15,6 +15,7 @@
 	<log version="0.2.4">Adjust to new shortcode handling.</log>
 	<log version="0.3">Add Google reCaptcha.</log>
 	<log version="0.3.1">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.3.2">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -24,6 +25,8 @@
 		<class>Hook/Captcha.php</class>
 		<class>View/Helper/Captcha.php</class>
 		<template>captcha/test.php</template>
+		<locale>de/captcha.ini</locale>
+		<locale>en/captcha.ini</locale>
 <!--		<script load="auto">module.ui.captcha.js</script>-->
 		<style load="auto">module.ui.captcha.css</style>
 		<file>themes/common/font/tahoma.ttf</file>

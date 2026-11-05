@@ -31,8 +31,9 @@ class View_Helper_Input_Resource
 	{
 //		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
 		$modal			= new BootstrapModalDialog( $this->modalId );
-		$modal->setHeading( 'Auswahl' );
-		$modal->setBody( '<div id="'.$this->modalId.'-content"></div><div id="'.$this->modalId.'-loader"><div class="alert alert-info">... Loading ...</div></div>' );
+		$words			= $this->env->getLanguage()->getWords( 'helper/input/resource' );
+		$modal->setHeading( $words['modal']['heading'] );
+		$modal->setBody( '<div id="'.$this->modalId.'-content"></div><div id="'.$this->modalId.'-loader"><div class="alert alert-info">'.$words['modal']['loading'].'</div></div>' );
 		$modal->setFade( FALSE );
 		return $modal->render();
 	}

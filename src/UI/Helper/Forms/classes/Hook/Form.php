@@ -33,7 +33,7 @@ class Hook_Form extends Hook
 					);
 				}
 				catch( Exception $e ){
-					$this->env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$this->env->getMessenger()->noteFailure( $this->env->getLanguage()->getWords( 'helper/form' )['hook']['errorShortCode'], $e->getMessage() );
 					break;
 				}
 			}

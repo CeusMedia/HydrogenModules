@@ -13,8 +13,8 @@ class View_Helper_Bootstrap_Modal implements Renderable, Stringable
 	protected bool $fade				= TRUE;
 	protected string $heading			= '';
 	protected ?string $formAction		= NULL;
-	protected string $labelButtonCancel	= "Schließen";
-	protected string $labelButtonSubmit	= "Weiter";
+	protected string $labelButtonCancel	= "";
+	protected string $labelButtonSubmit	= "";
 	protected string $bsVersion;
 	protected bool $isBs4;
 
@@ -29,6 +29,9 @@ class View_Helper_Bootstrap_Modal implements Renderable, Stringable
 		$this->id			= 'modal-'.uniqid();
 		$this->bsVersion	= $env->getModules()->get( 'UI_Bootstrap' )->config['version']->value;
 		$this->isBs4		= version_compare( $this->bsVersion, 4, '>=' );
+		$words				= $env->getLanguage()->getWords( 'helper/bootstrap/modal' );
+		$this->labelButtonCancel	= $words['modal']['buttonCancel'];
+		$this->labelButtonSubmit	= $words['modal']['buttonSubmit'];
 	}
 
 	/**

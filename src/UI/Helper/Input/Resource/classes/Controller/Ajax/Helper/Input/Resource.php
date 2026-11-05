@@ -32,6 +32,7 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 
 		$extensions	= $this->extensions[$mode];
 		$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
+		$words		= $this->env->getLanguage()->getWords( 'helper/input/resource' );
 
 		$env		= $this->env;
 		$path		= $this->env->uri;
@@ -79,10 +80,10 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 				continue;
 			ksort( $sublist );
 			$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'unstyled'] );
-			$labelPath	= HtmlTag::create( 'div', 'Pfad: <strong>'.$path.'</strong>' );
+			$labelPath	= HtmlTag::create( 'div', sprintf( $words['list']['labelPath'], $path ) );
 			$list[]		= HtmlTag::create( 'li', $labelPath.$sublist, ['class' => 'source-list-path'] );
 		}
-		$html	= HtmlTag::create( 'div', 'Nichts gefunden.', ['class' => 'alert alert-info'] );
+		$html	= HtmlTag::create( 'div', $words['list']['noEntries'], ['class' => 'alert alert-info'] );
 		if( count( $list ) )
 			$html	= HtmlTag::create( 'ul', $list, ['id' => '', 'class' => 'unstyled modal-source-list'] );
 		$this->respondData( ['html' => $html] );

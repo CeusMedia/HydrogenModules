@@ -20,7 +20,7 @@ class View_Helper_Form extends Abstraction
 	protected Model_Form $modelForm;
 	protected int $returnCode;
 	protected ?string $mode						= NULL;
-	protected string $label						= 'abschicken';
+	protected string $label						= '';
 
 	/**
 	 *	@param		Environment		$env
@@ -49,6 +49,7 @@ class View_Helper_Form extends Abstraction
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
+		$this->label		= $env->getLanguage()->getWords( 'helper/form' )['form']['buttonSubmit'];
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 		foreach( $this->modelBlock->getAll() as $item )

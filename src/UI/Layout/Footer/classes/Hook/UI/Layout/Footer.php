@@ -18,11 +18,12 @@ class Hook_UI_Layout_Footer extends Hook
 						$links[$page->path]	= $page->label;
 			}
 
-			$footer	= [['id' => 'timestamp', 'label' => 'Date & Time: <b>'.date( "d.m.Y H:i:s" ).'</b>']];
+			$w		= (object) $this->env->getLanguage()->getSection( 'ui/layout/footer', 'footer' );
+			$footer	= [['id' => 'timestamp', 'label' => $w->labelDateTime.' <b>'.date( $w->formatDateTime ).'</b>']];
 			if( $this->env->getDatabase() )
-				$footer[]	= ['id' => 'database', 'label' => 'Database Queries: <b>'.$this->env->getDatabase()->numberStatements.'</b>'];
+				$footer[]	= ['id' => 'database', 'label' => $w->labelQueries.' <b>'.$this->env->getDatabase()->numberStatements.'</b>'];
 			if( $this->env->getModules()->has( 'Server_System_Load' ) )
-				$footer[]	= ['id' => 'system-load', 'title' => 'System Load'];
+				$footer[]	= ['id' => 'system-load', 'title' => $w->titleSystemLoad];
 			foreach( $links as $path => $label )
 				$footer[]	= ['label' => HtmlTag::create( 'a', $label, ['href' => $path] )];
 

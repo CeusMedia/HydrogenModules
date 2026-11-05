@@ -19,7 +19,7 @@ list>
 
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Rework to match view helper interface.</log>
@@ -30,6 +30,7 @@ list>
 	<log version="0.4.2">Improve localization.</log>
 	<log version="0.4.3">Add entities for module relation and its items.</log>
 	<log version="0.4.4">Use constants for render mode.</log>
+	<log version="0.4.5">Extract hard-coded texts to locales (de, en).</log>
 	<files>
 		<class>Entity/ModuleEntityRelation.php</class>
 		<class>Entity/ModuleEntityRelationItem.php</class>

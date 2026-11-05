@@ -5,7 +5,7 @@
 	<title>UI: Helper: Input: Resource</title>
 	<description><![CDATA[...]]></description>
 	<category>User Interface</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support several resources by mode.</log>
@@ -15,6 +15,7 @@
 	<log version="0.3.4">Use thumbnail if available (module Manage:Content:Images).</log>
 	<log version="0.3.5">Use AJAX controller of framework.</log>
 	<log version="0.3.6">Extract trigger class.</log>
+	<log version="0.3.7">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -23,6 +24,8 @@
 		<class>Hook/Helper/Input/Resource.php</class>
 		<class>View/Helper/Input/Resource.php</class>
 		<class>View/Helper/Input/ResourceTrigger.php</class>
+		<locale>de/helper/input/resource.ini</locale>
+		<locale>en/helper/input/resource.ini</locale>
 		<script load="auto">module.ui.helper.input.resource.js</script>
 		<style source="common" load="auto">module.ui.helper.input.resource.css</style>
 	</files>
