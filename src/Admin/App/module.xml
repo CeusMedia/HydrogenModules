@@ -5,14 +5,17 @@
 	<title>Admin: App</title>
 	<description>Editor for App settings like title and logo.</description>
 	<category>Administration</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve code style.</log>
+	<log version="0.2.2">Extract hard-coded texts to locales (de, en).</log>
 	<files>
 		<class>Controller/Admin/App.php</class>
 		<class>View/Admin/App.php</class>
 		<template>admin/app/index.php</template>
+		<locale>de/admin/app.ini</locale>
+		<locale>en/admin/app.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Upload</needs>

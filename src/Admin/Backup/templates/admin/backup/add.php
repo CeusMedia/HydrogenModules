@@ -6,10 +6,12 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 
+$w	= (object) $words['add'];
+
 return '
 <div class="content-panel"
-	<h3>Neues Backup</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner"
-		<p>Not implemented, yet.</p>
+		<p>'.$w->notImplemented.'</p>
 	</div>
 </div>';

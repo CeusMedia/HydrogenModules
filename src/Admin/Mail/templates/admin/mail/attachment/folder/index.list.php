@@ -58,7 +58,7 @@ $modalBodyFileAdd	= '
 </div>
 <div class="row-fluid">
 	<div class="span12">
-		<label for="input_path">in Ordner</label>
+		<label for="input_path">'.$w->labelFolder.'</label>
 		<select name="path" id="input_path" class="span12">'.$optPath.'</select>
 	</div>
 </div>';
@@ -68,46 +68,47 @@ $modalFileAdd	= ModalDialog::create( 'modal-file-add' )
 	->setBody( $modalBodyFileAdd )
 	->setFormAction( $baseLinkPath.'/upload' )
 	->setFormIsUpload( TRUE )
-	->setSubmitButtonLabel( 'hochladen' )
+	->setSubmitButtonLabel( $w->buttonSave )
 	->setSubmitButtonIconClass( 'check' )
 	->setSubmitButtonClass( 'btn-primary' )
-	->setCloseButtonLabel( 'abbrechen' )
+	->setCloseButtonLabel( $w->buttonCancel )
 	->setCloseButtonIconClass( 'arrow-left' );
 
 $modalFileAddTrigger	= ModalTrigger::create( 'modal-trigger-file-add' )
 	->setModalId( 'modal-file-add' )
-	->setLabel( 'neue Datei' )
+	->setLabel( $w->buttonAdd )
 	->setClass( 'btn-success' )
 	->setIcon( 'plus' );
 
+$w	= (object) $words['add-folder'];
 
 $modalBodyFolderAdd	= '
 	<div class="row-fluid">
 		<div class="span12">
-			<label for="input_folder">Neuer Ordner</label>
+			<label for="input_folder">'.$w->labelFolder.'</label>
 			<input type="text" name="folder" id="input_folder" class="span12"/>
 		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span12">
-			<label for="input_path">in Ordner</label>
+			<label for="input_path">'.$w->labelPath.'</label>
 			<select name="path" id="input_path" class="span12">'.$optPath.'</select>
 		</div>
 	</div>';
 
 $modalFolderAdd	= ModalDialog::create( 'modal-folder-add' )
-	->setHeading( 'Neuer Ordner' )
+	->setHeading( $w->heading )
 	->setBody( $modalBodyFolderAdd )
 	->setFormAction( $baseLinkPath.'/add' )
-	->setSubmitButtonLabel( 'erzeugen' )
+	->setSubmitButtonLabel( $w->buttonSave )
 	->setSubmitButtonIconClass( 'check' )
 	->setSubmitButtonClass( 'btn-primary' )
-	->setCloseButtonLabel( 'abbrechen' )
+	->setCloseButtonLabel( $w->buttonCancel )
 	->setCloseButtonIconClass( 'arrow-left' );
 
 $modalFolderAddTrigger	= ModalTrigger::create( 'modal-trigger-folder-add' )
 	->setModalId( 'modal-folder-add' )
-	->setLabel( 'neuer Ordner' )
+	->setLabel( $w->buttonAdd )
 	->setClass( 'btn-success' )
 	->setIcon( 'plus' );
 
@@ -127,7 +128,7 @@ if( $selectedPath ){
 		HtmlTag::create( 'td', $link ),
 		HtmlTag::create( 'td', '' ),
 	] );
-	$buttonUp	= HtmlTag::create( 'a', $iconUp.'&nbsp;zurück', [
+	$buttonUp	= HtmlTag::create( 'a', $iconUp.'&nbsp;'.$w->buttonBack, [
 		'href'	=> $url,
 		'class'	=> 'btn',
 	] );
@@ -184,9 +185,9 @@ else{
 
 return '
 <div class="content-panel">
-	<h3>Dateien</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<div><strong>Pfad: /'.rtrim( $selectedPath, '/' ).'</strong></div>
+		<div><strong>'.$w->labelPath.': /'.rtrim( $selectedPath, '/' ).'</strong></div>
 		'.$list.'
 		<div class="buttonbar">
 			'.$buttonUp.'

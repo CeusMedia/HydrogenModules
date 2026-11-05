@@ -87,7 +87,8 @@ class Controller_Admin_Mail_Template_Import extends Controller
 			return $this->modelTemplate->add( $this->getDataFromExportV2( $template ), FALSE );
 		else if( empty( $template->entity ) )
 			return $this->modelTemplate->add( $this->getDataFromExportV1( $template ), FALSE );
-		$this->messenger->noteError( 'File is not compatible' );
+		$words		= (object) $this->env->getLanguage()->getSection( 'admin/mail/template', 'msg' );
+		$this->messenger->noteError( $words->errorFileIncompatible );
 		$this->restart( 'admin/mail/template' );
 		return FALSE;
 	}

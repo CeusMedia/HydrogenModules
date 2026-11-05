@@ -27,20 +27,20 @@ foreach( $words['states'] as $key => $value )
 $optStatus		= HtmlElements::Options( $optStatus, $filters->get( 'status' ) );
 
 $optOrder		= [
-	''				=> '- egal -',
-	'subject'		=> 'Betreff',
-	'enqueuedAt'	=> 'Eingangsdatum',
-	'sentAt'		=> 'Ausgangsdatum',
+	''				=> $wf->optOrderNone,
+	'subject'		=> $wf->optOrderSubject,
+	'enqueuedAt'	=> $wf->optOrderEnqueuedAt,
+	'sentAt'		=> $wf->optOrderSentAt,
 ];
 $optOrder		= HtmlElements::Options( $optOrder, $filters->get( 'order' ) );
 
 $optDirection	= [
-	'ASC'		=> 'aufsteigend',
-	'DESC'		=> 'absteigend',
+	'ASC'		=> $wf->optDirectionAsc,
+	'DESC'		=> $wf->optDirectionDesc,
 ];
 $optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
-$optMailClass	= ['' => '- alle -'];
+$optMailClass	= ['' => $wf->optAll];
 foreach( $mailClasses as $mailClass )
 	$optMailClass[$mailClass]	= preg_replace( '/_/', ':', preg_replace( '/^Mail_/', '', $mailClass ) );
 $optMailClass	= HtmlElements::Options( $optMailClass, $filters->get( 'mailClass' ) );

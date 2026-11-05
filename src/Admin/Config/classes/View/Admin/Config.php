@@ -55,18 +55,19 @@ class View_Admin_Config extends View
 	 */
 	protected function renderBooleanInput( string $moduleId, object $item ): string
 	{
+		$w			= $this->getWords( 'edit', 'admin/config' );
 		$inputYes	= HtmlTag::create( 'input', NULL, [
 				'name'		=> $moduleId.'|'.$item->key,
 				'type'		=> 'radio',
 				'value'		=> 'yes',
 				'checked'	=> !!$item->value ? 'checked' : NULL,
-			] ).'&nbsp;yes';
+			] ).'&nbsp;'.$w->labelYes;
 		$inputNo	= HtmlTag::create( 'input', NULL, [
 				'name'		=> $moduleId.'|'.$item->key,
 				'type'		=> 'radio',
 				'value'		=> 'no',
 				'checked'	=> !$item->value ? 'checked' : NULL,
-			] ).'&nbsp;no';
+			] ).'&nbsp;'.$w->labelNo;
 		$inputYes		= HtmlTag::create( 'label', $inputYes, ['class' => 'checkbox inline'] );
 		$inputNo		= HtmlTag::create( 'label', $inputNo, ['class' => 'checkbox inline'] );
 		return $inputYes.$inputNo;

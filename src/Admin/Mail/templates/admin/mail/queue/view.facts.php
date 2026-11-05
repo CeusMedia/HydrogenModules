@@ -8,37 +8,39 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var Entity_Mail $mail */
 /** @var int $page */
 
+$w	= (object) $words['view-facts'];
+
 $iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconAgain		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 
 $buttons		= [];
-$buttons[]	= HtmlTag::create( 'a', $iconBack.'&nbsp;zurück', [
+$buttons[]	= HtmlTag::create( 'a', $iconBack.'&nbsp;'.$w->buttonBack, [
 	'href'	=> './admin/mail/queue/',
 	'class'	=> 'btn btn-small'
 ] );
 
 if( in_array( $mail->status, [Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY] ) ){
-	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen', [
+	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
 		'class'	=> 'btn btn-inverse btn-small'
 	] );
 }
 else{
-	$buttons[]	= HtmlTag::create( 'button', $iconCancel.'&nbsp;abbrechen', [
+	$buttons[]	= HtmlTag::create( 'button', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 		'type'		=> 'button',
 		'disabled'	=> 'disabled',
 		'class'		=> 'btn btn-inverse btn-small'
 	] );
 }
 if( in_array( $mail->status, [Model_Mail::STATUS_SENT, Model_Mail::STATUS_FAILED, Model_Mail::STATUS_ABORTED], TRUE ) ){
-	$buttons[]	= HtmlTag::create( 'a', $iconAgain.'&nbsp;noch einmal versenden', [
+	$buttons[]	= HtmlTag::create( 'a', $iconAgain.'&nbsp;'.$w->buttonResend, [
 		'href'	=> './admin/mail/queue/resend/'.$mail->mailId,
 		'class'	=> 'btn btn-primary btn-small'
 	] );
 }
-$buttons[]	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+$buttons[]	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'	=> './admin/mail/queue/remove/'.$mail->mailId.( $page ? '?page='.$page : '' ),
 	'class'	=> 'btn btn-danger btn-small'
 ] );

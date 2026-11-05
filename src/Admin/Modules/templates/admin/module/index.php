@@ -24,7 +24,7 @@ foreach( $modules as $moduleId => $module ){
 	$version	= $module->version;
 	if( $module->versionInstalled && $module->versionAvailable && $module->versionInstalled != $module->versionAvailable ){
 		if( $module->versionInstalled < $module->versionAvailable )
-			$version	= $module->versionInstalled.' <small>(verfügbar: '.$module->versionAvailable.')</small>';
+			$version	= $module->versionInstalled.' <small>('.sprintf( $words['index']['versionAvailable'], $module->versionAvailable ).')</small>';
 		else
 			$version	= $module->versionInstalled.' / '.$module->versionAvailable;
 	}

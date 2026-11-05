@@ -18,14 +18,15 @@ class Controller_Admin_Mail_Template extends Controller
 	 */
 	public function add(): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
 			$title		= strip_tags( trim( $this->request->get( 'template_title' ) ) );
 			$found		= $this->modelTemplate->getByIndices( ['title' => $title] );
 
 			if( !trim( $title ) )
-				$this->messenger->noteError( 'No title given.' );
+				$this->messenger->noteError( $words->errorTitleMissing );
 			else if( $found )
-				$this->messenger->noteError( 'Template with this title already existing.' );
+				$this->messenger->noteError( $words->errorTitleExisting );
 			else{
 				$templateId	= $this->modelTemplate->add( [
 					'status'		=> Model_Mail_Template::STATUS_NEW,
@@ -37,7 +38,7 @@ class Controller_Admin_Mail_Template extends Controller
 					'createdAt'		=> time(),
 					'modifiedAt'	=> time(),
 				], FALSE );
-				$this->messenger->noteSuccess( 'Template added.' );
+				$this->messenger->noteSuccess( $words->successAdded );
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 		}
@@ -61,11 +62,12 @@ class Controller_Admin_Mail_Template extends Controller
 	 */
 	public function copy( int|string $templateId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->getMethod()->isPost() ){
 			$title	= trim( $this->request->get( 'title' ) );
 			$exists	= $this->modelTemplate->getByIndex( 'title', $title );
 			if( $exists ){
-				$this->messenger->noteError( 'Dieser Titel ist bereits vergeben.' );
+				$this->messenger->noteError( $words->errorTitleExisting );
 				$this->restart( 'edit/'.$templateId, TRUE );
 			}
 			/** @var Entity_Mail_Template $template */
@@ -82,7 +84,7 @@ class Controller_Admin_Mail_Template extends Controller
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			], FALSE );
-			$this->messenger->noteSuccess( 'Vorlage "'.$template->title.'" nach "'.$title.'" kopiert.' );
+			$this->messenger->noteSuccess( $words->successCopied, $template->title, $title );
 		}
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
@@ -94,6 +96,7 @@ class Controller_Admin_Mail_Template extends Controller
 	 */
 	public function edit( int|string $templateId ): void
 	{
+		$words			= (object) $this->getWords( 'msg' );
 		$modelMail		= new Model_Mail( $this->env );
 		$template		= $this->checkTemplate( $templateId );
 		$template->used	= $modelMail->countByIndex( 'mailTemplateId', $templateId );
@@ -108,9 +111,9 @@ class Controller_Admin_Mail_Template extends Controller
 					'mailTemplateId'	=> '!= '.$templateId
 				] );
 				if( !trim( $title ) )
-					$this->messenger->noteError( 'No title given.' );
+					$this->messenger->noteError( $words->errorTitleMissing );
 				else if( $found )
-					$this->messenger->noteError( 'Template with this title already existing.' );
+					$this->messenger->noteError( $words->errorTitleExisting );
 				else{
 					$this->modelTemplate->edit( $templateId, [
 						'title'			=> $title,
@@ -121,7 +124,7 @@ class Controller_Admin_Mail_Template extends Controller
 						'modifiedAt'	=> time(),
 					], FALSE );
 				}
-				$this->messenger->noteSuccess( 'Template information saved.' );
+				$this->messenger->noteSuccess( $words->successSaved );
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			else if( $this->request->get( 'template_style' ) ){
@@ -229,13 +232,14 @@ class Controller_Admin_Mail_Template extends Controller
 	 */
 	public function remove( int|string $templateId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$template	= $this->checkTemplate( $templateId );
 		if( $template->status == Model_Mail_Template::STATUS_ACTIVE ){
-			$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" entfernt.' );
+			$this->env->getMessenger()->noteError( $words->errorRemoveActive, $template->title );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
 		$this->modelTemplate->remove( $templateId );
-		$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" entfernt.' );
+		$this->env->getMessenger()->noteSuccess( $words->successRemoved, $template->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -293,8 +297,9 @@ class Controller_Admin_Mail_Template extends Controller
 						'status'	=> Model_Mail_Template::STATUS_USABLE
 					] );
 				$this->modelTemplate->edit( $templateId, ['status' => $status] );
+				$words		= (object) $this->getWords( 'msg' );
 				$this->env->getMessenger()->noteSuccess( sprintf(
-					'Template "%s" aktiviert.',
+					$words->successActivated,
 					$template->title
 				) );
 			}
@@ -314,15 +319,16 @@ class Controller_Admin_Mail_Template extends Controller
 	 */
 	public function test( int|string $templateId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$email		= trim( $this->request->get( 'email' ) );
 		if( !strlen( trim( $email ) ) ){
-			$this->messenger->noteError( 'Keine E-Mail-Adresse angegeben.' );
+			$this->messenger->noteError( $words->errorEmailMissing );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$mail		= $logicMail->createMail( 'Test', ['mailTemplateId' => $templateId] );
 		$logicMail->sendMail( $mail, (object) ['email' => $email] );
-		$this->messenger->noteSuccess( 'E-Mail für Test an "%s" versendet.', htmlentities( $email, ENT_QUOTES, 'UTF-8' ) );
+		$this->messenger->noteSuccess( $words->successTestSent, htmlentities( $email, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 

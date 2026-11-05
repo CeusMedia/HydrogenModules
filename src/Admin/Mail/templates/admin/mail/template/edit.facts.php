@@ -30,7 +30,7 @@ if( $template->status >= Model_Mail_Template::STATUS_USABLE )
 $panelMain	= '
 	<form action="./admin/mail/template/edit/'.$template->mailTemplateId.'" method="post" class="not-form-changes-auto">
 		<div class="content-panel">
-			<h3>Grunddaten</h3>
+			<h3>'.$words['edit']['headingFacts'].'</h3>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span9">
@@ -142,7 +142,7 @@ $panelRemove	= '
 					$words['edit']['buttonRemove'],
 					'btn btn-small btn-danger',
 					'fa fa-fw fa-remove'
-				)->setConfirm( 'Wirklich?' ).'
+				)->setConfirm( $words['edit-remove']['confirm'] ).'
 			</div>
 		</div>
 	</div>';

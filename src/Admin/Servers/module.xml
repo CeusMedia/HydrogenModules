@@ -5,7 +5,8 @@
 	<title>Servers</title>
 	<description><![CDATA[Manage multiple servers.]]></description>
 	<category>Administration</category>
-	<version>0.1</version>
+	<version>0.1.1</version>
+	<log version="0.1.1">Complete German and English locales.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -21,6 +22,7 @@
 		<template>admin/server/index.php</template>
 		<template>admin/server/view.php</template>
 		<locale>de/admin/server.ini</locale>
+		<locale>en/admin/server.ini</locale>
 		<style load="auto">site.admin.server.css</style>
 <!--		<script></script>-->
 	</files>

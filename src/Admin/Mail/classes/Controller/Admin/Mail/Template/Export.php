@@ -98,7 +98,8 @@ class Controller_Admin_Mail_Template_Export extends Controller
 
 			foreach( $source as $item ){
 				if( !file_exists( $item ) ){
-					$this->messenger->noteError( 'File is missing: '.$item );
+					$words		= (object) $this->env->getLanguage()->getSection( 'admin/mail/template', 'msg' );
+					$this->messenger->noteError( $words->errorFileMissing, $item );
 					continue;
 				}
 				$files[$topic][]	= [

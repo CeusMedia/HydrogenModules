@@ -15,6 +15,7 @@ class Controller_Admin_Oauth2 extends Controller
 	protected array $providersIndex				= [];
 	protected array $providersAvailable			= [];
 	protected string $filterPrefix				= 'filter_admin_oauth2_';
+	protected object $words;
 
 	/**
 	 *	@return		void
@@ -42,7 +43,7 @@ class Controller_Admin_Oauth2 extends Controller
 				}
 			}
 			$providerId	= $this->modelProvider->add( $data, FALSE );
-			$this->messenger->noteSuccess( 'Saved.' );
+			$this->messenger->noteSuccess( $this->words->successSaved );
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}
 
@@ -77,7 +78,7 @@ class Controller_Admin_Oauth2 extends Controller
 	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
-			$this->messenger->noteError( 'Invalid provider ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 //		$this->addData( 'exists', class_exists( $provider->className ) );
@@ -129,11 +130,11 @@ class Controller_Admin_Oauth2 extends Controller
 	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
-			$this->messenger->noteError( 'Invalid provider ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}
 		if( $provider->status == Model_Oauth_Provider::STATUS_ACTIVE ){
-			$this->messenger->noteError( 'Provider is active right now. Deactivate first!' );
+			$this->messenger->noteError( $this->words->errorProviderActive );
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}
 		$this->modelProvider->remove( $providerId );
@@ -149,7 +150,7 @@ class Controller_Admin_Oauth2 extends Controller
 	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
-			$this->messenger->noteError( 'Invalid provider ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		$this->modelProvider->edit( $providerId, ['status' => $status] );
@@ -161,6 +162,7 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
+		$this->words			= (object) $this->getWords( 'msg' );
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
 		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
 		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();

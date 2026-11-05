@@ -17,6 +17,9 @@ class Controller_Admin_Module extends Controller
 	];
 
 	protected Messenger $messenger;
+
+	protected object $words;
+
 	/**
 	 *	@deprecated		replaced by module installer
 	 *	@todo			remove
@@ -24,7 +27,7 @@ class Controller_Admin_Module extends Controller
 	public function copy( string $moduleId ): void
 	{
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_COPY ) )
-			$this->env->getMessenger()->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
+			$this->messenger->noteSuccess( $this->words->successCopied, $moduleId );
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
@@ -97,7 +100,7 @@ class Controller_Admin_Module extends Controller
 				@unlink( $fileName );
 		else if( $verbose ){
 			$list	= '<ul><li>'.join( '</li><li>', $listDone ).'</li></ul>';
-			$this->messenger->noteNotice( 'Installed: '.$list );
+			$this->messenger->noteNotice( $this->words->noticeInstalled, $list );
 		}
 		return $state !== FALSE;
 	}
@@ -110,9 +113,9 @@ class Controller_Admin_Module extends Controller
 	public function link( string $moduleId )
 	{
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_LINK ) )
-			$this->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
+			$this->messenger->noteSuccess( $this->words->successLinked, $moduleId );
 		else
-			$this->messenger->noteError( 'Link to module "'.$moduleId.'" failed.' );
+			$this->messenger->noteError( $this->words->errorLinkFailed, $moduleId );
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
@@ -160,9 +163,9 @@ class Controller_Admin_Module extends Controller
 			}
 
 			if( $state )
-				$this->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+				$this->messenger->noteSuccess( $this->words->successRemoved, $moduleId );
 			else
-				$this->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+				$this->messenger->noteSuccess( $this->words->successRemoved, $moduleId );
 #		}
 #		catch( Exception $e ){
 #			$this->messenger->noteError( 'Failed: '.$e->getMessage() );
@@ -182,6 +185,7 @@ class Controller_Admin_Module extends Controller
 	{
 		parent::__onInit();
 		$this->messenger	= $this->env->getMessenger();
+		$this->words		= (object) $this->getWords( 'msg' );
 	}
 
 	protected function copyModuleFile( string $moduleId, string $fileIn, string $fileOut ): bool
@@ -190,29 +194,29 @@ class Controller_Admin_Module extends Controller
 		$fileIn			= $pathModules.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
 		$pathNameIn		= realpath( $fileIn );
 		if( !$pathNameIn ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			$this->messenger->noteFailure( $this->words->errorResourceMissing, $fileIn );
 			return FALSE;
 		}
 		if( !file_exists( $pathNameIn ) ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			$this->messenger->noteFailure( $this->words->errorResourceNotExisting, $fileIn );
 			return FALSE;
 		}
 		if( !is_readable( $pathNameIn ) ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			$this->messenger->noteFailure( $this->words->errorResourceNotReadable, $fileIn );
 			return FALSE;
 		}
 		$pathOut	= dirname( $fileOut );
 		self::createPath( $pathOut );
 		if( !is_dir( $pathOut ) ){
-			$this->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			$this->messenger->noteFailure( $this->words->errorPathNotCreatable, $pathOut );
 			return FALSE;
 		}
 		if( file_exists( $fileOut ) ){
-			$this->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			$this->messenger->noteFailure( $this->words->errorTargetExisting, $fileOut );
 			return FALSE;
 		}
 		if( !copy( $pathNameIn, $fileOut ) ){
-			$this->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			$this->messenger->noteFailure( $this->words->errorLinkFileFailed, $fileOut );
 			return FALSE;
 		}
 		return TRUE;
@@ -287,32 +291,32 @@ class Controller_Admin_Module extends Controller
 		$fileIn		= $path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
 		$pathNameIn	= realpath( $fileIn );
 		if( !$pathNameIn ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			$this->messenger->noteFailure( $this->words->errorResourceMissing, $fileIn );
 			return FALSE;
 		}
 		if( !file_exists( $pathNameIn ) ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			$this->messenger->noteFailure( $this->words->errorResourceNotExisting, $fileIn );
 			return FALSE;
 		}
 		if( !is_readable( $pathNameIn ) ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			$this->messenger->noteFailure( $this->words->errorResourceNotReadable, $fileIn );
 			return FALSE;
 		}
 		if( !is_executable( $pathNameIn ) ){
-			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not executable.' );
+			$this->messenger->noteFailure( $this->words->errorResourceNotExecutable, $fileIn );
 			return FALSE;
 		}
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
-			$this->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			$this->messenger->noteFailure( $this->words->errorPathNotCreatable, $pathOut );
 			return FALSE;
 		}
 		if( file_exists( $fileOut ) ){
-			$this->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			$this->messenger->noteFailure( $this->words->errorTargetExisting, $fileOut );
 			return FALSE;
 		}
 		if( !symlink( $pathNameIn, $fileOut ) ){
-			$this->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			$this->messenger->noteFailure( $this->words->errorLinkFileFailed, $fileOut );
 			return FALSE;
 		}
 		return TRUE;
@@ -323,9 +327,9 @@ class Controller_Admin_Module extends Controller
 		$fileName	= $path.$fileName;
 		if( file_exists( $fileName ) ){
 			if( @unlink( $fileName ) )
-				$this->messenger->noteSuccess( 'Removed "'.$fileName.'".' );
+				$this->messenger->noteSuccess( $this->words->successFileRemoved, $fileName );
 			else
-				$this->messenger->noteFailure( 'Removal failed for "'.$fileName.'".' );
+				$this->messenger->noteFailure( $this->words->errorFileRemovalFailed, $fileName );
 		}
 	}
 }

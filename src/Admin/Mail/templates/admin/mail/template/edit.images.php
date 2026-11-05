@@ -34,7 +34,7 @@ if( $template->images ){
 		$buttonOpen	= HtmlTag::create( 'button', $iconView, [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-info disabled',
-			'title'		=> 'Bild-Datei existiert nicht im angegebenen Pfad (in Frontend-Applikation).',
+			'title'		=> $words['edit-image-list']['titleMissing'],
 			'disabled'	=> 'disabled',
 		] );
 		if( file_exists( $appPath.$item ) ){
@@ -44,14 +44,14 @@ if( $template->images ){
 			] );
 			$image		= HtmlTag::create(' a', $image, [
 				'href'		=> $appUrl.$item,
-				'title'		=> 'Bildverweis in neuem Browser-Tab anzeigen',
+				'title'		=> $words['edit-image-list']['titleView'],
 				'target'	=> '_blank',
 			] );
 			$rowClass	= 'success';
 			$buttonOpen	= HtmlTag::create( 'a', $iconView, [
 				'href'		=> $appUrl.$item,
 				'class'		=> 'btn btn-info',
-				'title'		=> 'Bildverweis in neuem Browser-Tab anzeigen',
+				'title'		=> $words['edit-image-list']['titleView'],
 				'target'	=> '_blank',
 			] );
 		}
@@ -60,7 +60,7 @@ if( $template->images ){
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'class'	=> 'btn btn-inverse pull-right',
 			'href'	=> './admin/mail/template/removeImage/'.$template->mailTemplateId.'/'.base64_encode( $item ),
-			'title'	=> 'Bildverweis entfernen',
+			'title'	=> $words['edit-image-list']['titleRemove'],
 		] );
 		$buttons	= HtmlTag::create( 'div', [
 			$buttonOpen,

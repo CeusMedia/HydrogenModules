@@ -80,10 +80,10 @@ if( $module->sql ){
 
 $disabled			= $module->type == 4 ? '' : 'disabled';
 $buttonCancel		= HtmlElements::LinkButton( './admin/module/', $words['view']['buttonCancel'], 'button cancel' );
-$buttonInstall		= HtmlElements::LinkButton( './admin/module/link/'.$module->id, $words['view']['buttonLink'], 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
-$buttonCopy			= HtmlElements::LinkButton( './admin/module/copy/'.$module->id, $words['view']['buttonCopy'], 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
+$buttonInstall		= HtmlElements::LinkButton( './admin/module/link/'.$module->id, $words['view']['buttonLink'], 'button add', $words['view']['confirmLink'], $disabled );
+$buttonCopy			= HtmlElements::LinkButton( './admin/module/copy/'.$module->id, $words['view']['buttonCopy'], 'button add', $words['view']['confirmCopy'], $disabled );
 $disabled			= $module->type == 4 ? 'disabled' : '';
-$buttonUninstall	= HtmlElements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
+$buttonUninstall	= HtmlElements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', $words['view']['confirmRemove'], $disabled );
 
 HtmlTabs::$version	= 3;
 $tabs	= new HtmlTabs();
@@ -141,6 +141,6 @@ $tabs->addTab( $words['view']['tabDatabase'], $contentDatabase );
 
 
 return '
-<h2>Module "'.$module->title.'"</em></h2>
+<h2>'.sprintf( $words['view']['heading'], $module->title ).'</h2>
 '.$tabs->buildTabs( 'tabs-module' ).'
 ';

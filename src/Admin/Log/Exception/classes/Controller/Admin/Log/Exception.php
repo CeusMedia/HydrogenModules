@@ -85,7 +85,7 @@ class Controller_Admin_Log_Exception extends Controller
 	{
 		$count		= $this->logic->importFromLogFile();
 		if( $count )
-			$this->messenger->noteNotice( 'Imported %d logged exceptions.', $count );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeImported'], $count );
 
 		$limit	= $limit ?: $this->session->get( $this->filterPrefix.'limit', 10 );
 
@@ -174,7 +174,7 @@ class Controller_Admin_Log_Exception extends Controller
 		/** @var ?Entity_Log_Exception $exception */
 		$exception	= $this->model->get( $id );
 		if( NULL === $exception ){
-			$this->messenger->noteError( 'Invalid exception number.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'exception', $exception );
@@ -224,7 +224,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->logic			= new Logic_Log_Exception( $this->env );
 		$this->model			= new Model_Log_Exception( $this->env );
 
-		$instances	= ['this' => (object) ['title' => 'Diese Instanz']];
+		$instances	= ['this' => (object) ['title' => $this->getWords( 'msg' )['instanceThis']]];
 //		$path		= $this->env->getConfig()->get( 'path.logs' );
 //		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 

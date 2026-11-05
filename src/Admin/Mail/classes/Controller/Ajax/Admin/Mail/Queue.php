@@ -46,6 +46,18 @@ class Controller_Ajax_Admin_Mail_Queue extends AjaxController
 	public function renderDashboardPanel( string $panelId = NULL ): int
 	{
 		$model	= new Model_Mail( $this->env );
+		$w		= (object) $this->env->getLanguage()->getSection( 'admin/mail/queue', 'dashboard' );
+		$this->statuses	= [
+			Model_Mail::STATUS_SENT		=> $w->statusSent,
+			Model_Mail::STATUS_FAILED	=> $w->statusFailed,
+			Model_Mail::STATUS_ABORTED	=> $w->statusAborted,
+		];
+		$this->ranges	= [
+			1		=> $w->rangeDay,
+			7		=> $w->rangeWeek,
+			30		=> $w->rangeMonth,
+			365		=> $w->rangeYear,
+		];
 
 		$data	= [];
 		foreach( $this->statuses as $statusKey => $statusLabel ){
@@ -98,7 +110,7 @@ class Controller_Ajax_Admin_Mail_Queue extends AjaxController
 			HtmlElements::ColumnGroup( '20%', '80%' ),
 			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( ['status' => 0] ).'</span>', ['style' => 'text-align: right; vertical-align: bottom'] ),
-				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', ['style' => 'vertical-align: bottom'] ),
+				HtmlTag::create( 'td', '<span>'.$w->labelQueued.'</span>', ['style' => 'vertical-align: bottom'] ),
 			] ) ),
 		], [
 			'class'		=> 'table table-fixed',

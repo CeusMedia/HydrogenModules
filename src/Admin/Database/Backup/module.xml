@@ -6,7 +6,7 @@
 	<title>Admin: Database: Backup</title>
 	<description><![CDATA[Backup and restore database dumps.]]></description>
 	<category>Administration</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve index timestamp handling.</log>
@@ -18,6 +18,7 @@
 	<log version="0.3.4">Add relation to module UI:Helper:HTML.</log>
 	<log version="0.3.5">Support remote dump management by module Resource:Frontend.</log>
 	<log version="0.3.6">Improve code style.</log>
+	<log version="0.3.7">Extract hard-coded texts to locales (de, en).</log>
 <!--	<log version="0.3.x">Support dump switch.</log>-->
 <!--	<log version="0.3.y">Add locale files.</log>-->
 <!--	<log version="0.3.z">Extract view panels.</log>-->
@@ -42,6 +43,8 @@
 		<template>admin/database/backup/view.copy.php</template>
 		<template>admin/database/backup/view.download.php</template>
 		<template>admin/database/backup/view.recover.php</template>
+		<locale>de/admin/database/backup.ini</locale>
+		<locale>en/admin/database/backup.ini</locale>
 <!--		<file>config/jobs/admin.backup.database.xml</file>-->
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>

@@ -14,13 +14,9 @@ $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 
-$words	= ['statuses' => [
-	-1		=> 'deaktiviert',
-	0		=> 'in Arbeit',
-	1		=> 'aktiviert',
-]];
+$w	= (object) $words['index'];
 
-$table	= HtmlTag::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
+$table	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 if( $providers ){
 	$rows	= [];
 	foreach( $providers as $provider ){
@@ -36,7 +32,7 @@ if( $providers ){
 //			HtmlTag::create( 'td', $provider->oauthProviderId, ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', '<small>'.$provider->composerPackage.'</small>' ),
-			HtmlTag::create( 'td', $helperTime->convert( max( $provider->createdAt, $provider->modifiedAt ), TRUE, 'vor' ) ),
+			HtmlTag::create( 'td', $helperTime->convert( max( $provider->createdAt, $provider->modifiedAt ), TRUE, $w->timePrefix, $w->timeSuffix ) ),
 			HtmlTag::create( 'td', $words['statuses'][$provider->status], ['style' => 'text-align: center; background-color: '.calculateColor( ( $provider->status + 1 ) / 2 )] ),
 			HtmlTag::create( 'td', $provider->rank, ['style' => 'text-align: right'] ),
 		] );
@@ -51,11 +47,11 @@ if( $providers ){
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 //		HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
-		HtmlTag::create( 'th', 'Anbieter' ),
-		HtmlTag::create( 'th', 'Paket' ),
-		HtmlTag::create( 'th', 'geändert' ),
-		HtmlTag::create( 'th', 'Zustand', ['style' => 'text-align: center'] ),
-		HtmlTag::create( 'th', 'Rang', ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headProvider ),
+		HtmlTag::create( 'th', $w->headPackage ),
+		HtmlTag::create( 'th', $w->headModified ),
+		HtmlTag::create( 'th', $w->headStatus, ['style' => 'text-align: center'] ),
+		HtmlTag::create( 'th', $w->headRank, ['style' => 'text-align: right'] ),
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], [
@@ -65,7 +61,7 @@ if( $providers ){
 
 $buttonAdd	= '';
 if( $env->getAcl()->has( 'admin/oauth2', 'add' ) )
-	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neuer Anbieter', [
+	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 		'href'	=> './admin/oauth2/add',
 		'class' => 'btn btn-success',
 	] );
@@ -73,7 +69,7 @@ if( $env->getAcl()->has( 'admin/oauth2', 'add' ) )
 [$textTop, $textBottom] = array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/oauth2/' ) );
 
 return $textTop.HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Providers' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', [

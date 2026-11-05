@@ -10,38 +10,40 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $backup */
 /** @var string $currentCopyPrefix */
 
+$w				= (object) $words['view.copy'];
+
 $iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$buttonCreateCopy	= HtmlTag::create( 'a', $iconRestore.' Kopie installieren', [
+$buttonCreateCopy	= HtmlTag::create( 'a', $iconRestore.' '.$w->buttonCreate, [
 	'href'	=> './admin/database/backup/copy/create/'.$backup->id,
 	'class'	=> 'btn btn-primary'
 ] );
-$facts					= 'Eine Sicherung kann als Kopie in der Datenbank installiert werden.<br/>Diese Kopie kann zur temporären Ansicht für den aktuellen Benutzer aktiviert werden.<br/>Der Kopiervorgang kann, abhängig von der Datenbankgröße, einige Zeit beanspruchen.';
+$facts					= $w->description;
 $buttonActivateCopy		= '';
 $buttonDeactivateCopy	= '';
 $buttonRemoveCopy		= '';
 if( !empty( $backup->comment['copyPrefix'] ) ){
 	$buttonCreateCopy		= '';
-	$buttonActivateCopy		= HtmlTag::create( 'a', $iconRemove.'&nbsp; Kopie aktivieren', [
+	$buttonActivateCopy		= HtmlTag::create( 'a', $iconRemove.'&nbsp; '.$w->buttonActivate, [
 		'href'	=> './admin/database/backup/copy/activate/'.$backup->id,
 		'class'	=> 'btn btn-success'
 	] );
-	$buttonRemoveCopy	= HtmlTag::create( 'a', $iconRemove.' Kopie entfernen', [
+	$buttonRemoveCopy	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
 		'href'	=> './admin/database/backup/copy/drop/'.$backup->id,
 		'class'	=> 'btn btn-danger'
 	] );
 	$facts	= '
 		<dl class="dl-horizontal">
-			<dt>Präfix</dt>
+			<dt>'.$w->labelPrefix.'</dt>
 			<dd>'.$backup->comment['copyPrefix'].'</dd>
-			<dt>Erstellungsdatum</dt>
+			<dt>'.$w->labelCreatedAt.'</dt>
 			<dd>'.date( 'Y-m-d H:i:s', (float) $backup->comment['copyTimestamp'] ).'</dd>
 		</dl>';
 	if( $backup->comment['copyPrefix'] === $currentCopyPrefix ){
 		$buttonActivateCopy		= '';
 		$buttonRemoveCopy		= '';
-		$buttonDeactivateCopy	= HtmlTag::create( 'a', $iconRemove.'&nbsp; Kopie deaktivieren', [
+		$buttonDeactivateCopy	= HtmlTag::create( 'a', $iconRemove.'&nbsp; '.$w->buttonDeactivate, [
 			'href'	=> './admin/database/backup/copy/deactivate/'.$backup->id,
 			'class'	=> 'btn btn-inverse'
 		] );
@@ -50,7 +52,7 @@ if( !empty( $backup->comment['copyPrefix'] ) ){
 
 return '
 <div class="content-panel">
-	<h3>Kopie erstellen und aktivieren</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span12">

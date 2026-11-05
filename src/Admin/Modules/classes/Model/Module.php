@@ -99,7 +99,7 @@ class Model_Module
 				$list[$id]		= $module;
 			}
 			catch( Exception $e ){
-				$this->env->getMessenger()->noteFailure( 'XML of Module "'.$id.'" is broken.' );
+				$this->env->getMessenger()->noteFailure( $this->env->getLanguage()->getWords( 'admin/module' )['msg']['errorXmlBroken'], $id );
 			}
 		}
 		ksort( $list );
@@ -125,7 +125,7 @@ class Model_Module
 				$list[$id]	= $obj;
 			}
 			catch( Exception $e ){
-				$this->env->getMessenger()->noteFailure( 'a: XML of Module "'.$id.'" is broken.' );
+				$this->env->getMessenger()->noteFailure( $this->env->getLanguage()->getWords( 'admin/module' )['msg']['errorXmlBroken'], $id );
 			}
 		}
 		$this->cache	= $list;
