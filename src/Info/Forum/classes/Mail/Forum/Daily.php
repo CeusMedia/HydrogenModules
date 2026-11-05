@@ -19,7 +19,8 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 		if( [] === $posts )
 			throw DataMissingException::create( 'No post given' );
 
-		$this->setSubject( 'Moderation im Forum notwendig' );
+		$w		= (object) $this->getWords( 'info/forum', 'mail-daily' );
+		$this->setSubject( $w->subject );
 
 //		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$heading	= $this->env->title;
@@ -42,7 +43,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 
 		$rows	= [];
 		foreach( $postsByThread as $thread ){
-			$posts		= HtmlTag::create( 'b', count( $thread->posts ).' '.( count( $thread->posts ) === 1 ? 'Beitrag' : 'Beiträge' ) );
+			$posts		= HtmlTag::create( 'b', sprintf( count( $thread->posts ) === 1 ? $w->postsSingular : $w->postsPlural, count( $thread->posts ) ) );
 			$linkTopic	= HtmlTag::create( 'a', $thread->topic->title, [
 				'href'		=> $this->env->url.'info/forum/topic/'.$thread->topic->topicId,
 				'class'		=> 'link-topic'
@@ -52,7 +53,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 				'class'		=> 'link-thread'
 			] );
 //			$line		= '%1$s > %2$s: %3$s';
-			$line		= '%3$s in Kategorie %1$s in Thema %2$s';
+			$line		= $w->line;
 			$line		= sprintf( $line, $linkTopic, $linkThread, $posts );
 			$rows[]		= HtmlTag::create( 'li', $line );
 		}
@@ -60,10 +61,10 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 
 		$body	= '
 <div class="moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer">
-	<h2>Forum</h2>
+	<h2>'.$w->heading.'</h2>
 	<div class="intro">
-		<div class="salutation">Hallo '.$data['user']->username.'!</div>
-		Es gibt etwas zu moderieren:
+		<div class="salutation">'.sprintf( $w->salutation, $data['user']->username ).'</div>
+		'.$w->intro.'
 	</div>
 	'.$list.'
 </div>';

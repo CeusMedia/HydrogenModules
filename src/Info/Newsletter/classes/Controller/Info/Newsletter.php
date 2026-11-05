@@ -226,7 +226,7 @@ class Controller_Info_Newsletter extends Controller
 				}
 
 				if( !$this->request->has( 'disable' ) && !$unregisterGroups ){
-					$this->messenger->noteNotice( 'Keine Änderungen vorgenommen.' );
+					$this->messenger->noteNotice( $words->msgNoChanges );
 					$this->restart( 'unregister', TRUE );
 				}
 				foreach( $unregisterGroups as $unregisterGroupId ){
@@ -320,7 +320,7 @@ class Controller_Info_Newsletter extends Controller
 			exit;
 		}
 		catch( InvalidArgumentException $e ){
-			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
+			$this->messenger->noteError( $this->getWords( 'view' )['msgInvalidLetter'] );
 			$this->restart( NULL, TRUE );
 		}
 		catch( Throwable $e ){

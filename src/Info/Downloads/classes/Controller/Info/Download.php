@@ -31,7 +31,7 @@ class Controller_Info_Download extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidFileId'], $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
@@ -55,7 +55,7 @@ class Controller_Info_Download extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidFileId'], $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
@@ -76,7 +76,7 @@ class Controller_Info_Download extends Controller
 		if( $folderId ){
 			$folder		= $this->logic->getFolder( $folderId );
 			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidFolderId'], $folderId );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -101,7 +101,7 @@ class Controller_Info_Download extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidFileId'], $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
@@ -134,14 +134,14 @@ class Controller_Info_Download extends Controller
 			if( $folder && file_exists( $this->path.$folder->title ) )
 				return TRUE;
 			if( !$folder )
-				$this->messenger->noteError( 'Invalid folder with ID '.$folderId );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidFolderId'], $folderId );
 			else if( file_exists( $this->path.$folder->title ) )
-				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorFolderNotExisting'], $folder->title );
 		}
 		else{
 			if( file_exists( $this->path ) )
 				return TRUE;
-			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorBaseFolderNotExisting'], $this->path );
 		}
 		return FALSE;
 	}

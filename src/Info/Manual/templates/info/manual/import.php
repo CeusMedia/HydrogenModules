@@ -8,10 +8,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var array<Entity_Manual_Category> $categories */
 /** @var array<string> $files */
 /** @var int|string $categoryId */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['import'];
 
 $rows		= [];
 foreach( $files as $fileName ){
-	$buttonImport	= HtmlTag::create( 'a', 'import', [
+	$buttonImport	= HtmlTag::create( 'a', $w->buttonImport, [
 		'href'	=> './info/manual/import/'.base64_encode( $fileName ),
 		'class'	=> 'btn',
 	] );
@@ -44,8 +47,8 @@ $optCategory	= HtmlElements::Options( $optCategory, $categoryId );
 $optFormat		= array_flip( ObjectConstants::staticGetAll( 'Model_Manual_Page', 'FORMAT_' ) );
 $optFormat		= HtmlElements::Options( array_reverse( $optFormat, TRUE ) );
 
-$buttonCancel	= HtmlTag::create( 'a', 'zurück', ['href' => './info/manual', 'class' => 'btn'] );
-$buttonSave		= HtmlTag::create( 'button', 'importieren', [
+$buttonCancel	= HtmlTag::create( 'a', $w->buttonCancel, ['href' => './info/manual', 'class' => 'btn'] );
+$buttonSave		= HtmlTag::create( 'button', $w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class' 	=> 'btn btn-primary',
@@ -53,7 +56,7 @@ $buttonSave		= HtmlTag::create( 'button', 'importieren', [
 
 $preset		= HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
-		HtmlTag::create( 'label', 'Kategorie', ['for' => 'input_categoryId'] ),
+		HtmlTag::create( 'label', $w->labelCategory, ['for' => 'input_categoryId'] ),
 		HtmlTag::create( 'select', $optCategory, [
 			'name'		=> 'categoryId',
 			'id'		=> 'input_categoryId',
@@ -61,7 +64,7 @@ $preset		= HtmlTag::create( 'div', [
 		] ),
 	], ['class' => 'span4'] ),
 	HtmlTag::create( 'div', [
-		HtmlTag::create( 'label', 'Format', ['for' => 'input_format'] ),
+		HtmlTag::create( 'label', $w->labelFormat, ['for' => 'input_format'] ),
 		HtmlTag::create( 'select', $optFormat, [
 			'name'		=> 'format',
 			'id'		=> 'input_format',
@@ -71,7 +74,7 @@ $preset		= HtmlTag::create( 'div', [
 ], ['class' => 'row-fluid'] );
 
 $panelList	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Import' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', join( '&nbsp;', [

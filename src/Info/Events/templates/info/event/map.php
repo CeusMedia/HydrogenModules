@@ -6,6 +6,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var array<object> $events */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['map'];
+$wm	= (object) $words['modal'];
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -38,7 +42,7 @@ if( $center ){
 	}
 	$list		= HtmlTag::create( 'ul', $list, ['class' => 'list-branches nav nav-pills nav-stacked'] );
 */
-	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
+	$list	= '<div><em class="muted">'.$w->empty.'</em></div>';
 	if( [] !== $events ){
 		$list	= [];
 		foreach( $events as $nr => $event ){
@@ -64,18 +68,18 @@ if( $center ){
 			$heading	= HtmlTag::create( 'div', $link, [
 				'class'		=> 'accordion-heading'
 			] );
-			$buttonView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
+			$buttonView	= HtmlTag::create( 'a', $iconView.'&nbsp;'.$w->buttonView, [
 				'class'	=> 'btn btn-info',
 				'href'	=> './index/view/'.$event->eventId
 			] );
-			$buttonView		= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
+			$buttonView		= HtmlTag::create( 'a', $iconView.'&nbsp;'.$w->buttonView, [
 				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 				'class'			=> 'btn btn-info',
 			] );
 
-			$buttonNote	= HtmlTag::create( 'a', $iconNote.'&nbsp;merken', [
+			$buttonNote	= HtmlTag::create( 'a', $iconNote.'&nbsp;'.$w->buttonNote, [
 				'class'	=> 'btn btn-small',
 				'href'	=> './index/note/'.$event->eventId
 			] );
@@ -89,7 +93,7 @@ if( $center ){
 		'.$buttonNote.'
 	</div>
 	<div class="" style="float: left">
-		<big><strong>Adresse</strong></big>
+		<big><strong>'.$w->headingAddress.'</strong></big>
 		<div class="vcard">
 			'.$event->street.' '.$event->number.'<br/>
 			'.$event->postcode.' '.$event->city.'<br/>
@@ -150,11 +154,11 @@ return '
 	<div id="modal-event-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Wichtigste Informationen</h3>
+			<h3 id="myModalLabel">'.$wm->heading.'</h3>
 		</div>
 		<div class="modal-body"></div>
 		<div class="modal-footer">
-			<button type="button" class="btn btn-primary" id="modal-button-details">'.$iconDetails.'&nbsp;weitere Informationen</button>
+			<button type="button" class="btn btn-primary" id="modal-button-details">'.$iconDetails.'&nbsp;'.$wm->buttonDetails.'</button>
 			<button data-dismiss="modal" class="btn btn-inverse" aria-hidden="true">'.$iconClose.'</button>
 		</div>
 	</div>

@@ -5,7 +5,7 @@
 	<title>Info: Novelties</title>
 	<description><![CDATA[Collects news from modules as dashboard panel.]]></description>
 	<category>Info</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added relation to time phraser.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.1">Add dashboard panel and hook.</log>
 	<log version="0.3.2">Improve code style.</log>
 	<log version="0.3.3">Extract hook to own class and remove obsolete controller and view classes.</log>
+	<log version="0.3.4">Extract hard-coded texts to locales (de, en).</log>
 <!--	<log version="0.3.4">Extract locales.</log>-->
 <!--	<log version="0.3.5">Extract JavaScript.</log>-->
 	<files>
@@ -20,6 +21,8 @@
 		<class>Hook/Info/Novelty.php</class>
 		<class>Model/Novelty.php</class>
 		<class>View/Helper/Info/Novelty/DashboardPanel.php</class>
+		<locale>de/info/novelty.ini</locale>
+		<locale>en/info/novelty.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Work_Timer</needs>

@@ -30,7 +30,8 @@ class Controller_Info_Testimonial extends Controller
 			$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];	//	get mail receiver from module config
 			$logic->handleMail( $mail, $receiver, $language->getLanguage() );						//  send or enqueue mail
 
-			$this->messenger->noteSuccess( 'Der Kommentar wurde gespeichert.<br/>Er wird angezeigt, nachdem er geprüft und frei geschaltet wurde.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successSaved );
 		}
 		$this->restart( './info/testimonial' );
 	}

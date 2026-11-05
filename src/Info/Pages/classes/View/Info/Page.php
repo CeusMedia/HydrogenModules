@@ -49,7 +49,7 @@ class View_Info_Page extends View
 		$page	= $logic->getPageFromPath( $path, TRUE );
 		if( NULL !== $page )
 			return $page->content;
-		$this->env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
+		$this->env->getMessenger()->noteFailure( $this->env->getLanguage()->getSection( 'info/pages', 'hook-dispatch' )['errorInvalidPath'], htmlentities( $path, ENT_QUOTES, 'UTF-8' ) );
 		return '';
 	}
 }

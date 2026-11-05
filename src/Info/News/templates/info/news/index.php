@@ -5,7 +5,7 @@ if( !empty( $article ) ){
 	$helper		= new View_Helper_Catalog( $env );
 	$article	= $helper->renderArticleListItem( $article );
 	$article	= '
-		<h3>Aktuelle Neuerscheinung</h3>
+		<h3>'.$words['index']['headingArticle'].'</h3>
 		<div class="articleList">
 			'.$article.'
 		</div>';

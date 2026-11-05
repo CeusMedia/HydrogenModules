@@ -20,7 +20,7 @@ extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/blog/' 
 
 return $textIndexTop.'
 <div class="content-panel content-panel-list">
-	<h3>Blog-Beiträge</h3>
+	<h3>'.$words['index']['heading'].'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 	</div>

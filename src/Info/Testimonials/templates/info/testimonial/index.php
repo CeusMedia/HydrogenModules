@@ -3,8 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var View_Info_Testimonial $view */
 /** @var array<object> $testimonials */
+/** @var array<array<string,string>> $words */
 
-$list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
+$w		= (object) $words['index'];
+
+$list	= '<div class="muted"><em>'.$w->noEntries.'</em></div><br/>';
 if( $testimonials ){
 	$list	= [];
 	foreach( $testimonials as $entry ){
@@ -35,7 +38,7 @@ extract( $view->populateTexts( ['top', 'bottom', 'list.top', 'list.bottom', 'for
 
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 
-$button 	= HtmlTag::create( 'a', 'Kommentar abgeben', [
+$button 	= HtmlTag::create( 'a', $w->buttonAdd, [
 	'href'			=> '#modal-comment-add',
 	'class'			=> 'btn',
 	'onclick'		=> 'selectCourse(0);',
@@ -44,7 +47,7 @@ $button 	= HtmlTag::create( 'a', 'Kommentar abgeben', [
 ] );
 
 return $textTop.'
-<!--<h3>Kundenmeinungen</h3>-->
+<!--<h3>'.$w->heading.'</h3>-->
 	'.$textListTop.'
 	'.$list.'
 	'.$textListBottom.'
@@ -56,13 +59,13 @@ return $textTop.'
 				<form action="./info/testimonial/addComment" method="post">
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_title">Deine Meinung <small class="muted">(Überschrift)</small></label>
+							<label for="input_title">'.$w->labelTitle.'</label>
 							<input type="text" name="title" id="input_title" class="span12" required="required"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_description">Ausfühlicher Kommentar</label>
+							<label for="input_description">'.$w->labelDescription.'</label>
 							<textarea name="description" id="input_description" rows="6" class="span12" required="required"></textarea>
 						</div>
 					</div>
@@ -70,18 +73,18 @@ return $textTop.'
 						<div class="span12">
 							<div class="row-fluid">
 								<div class="span4">
-									<label for="input_username">Dein Name</label>
+									<label for="input_username">'.$w->labelUsername.'</label>
 									<input type="text" name="username" id="input_username" class="span12" required="required"/>
 								</div>
 								<div class="span8">
-									<label for="input_email">E-Mail-Adresse <small class="muted">(optional, wird nicht angezeigt)</small></label>
+									<label for="input_email">'.$w->labelEmail.'</label>
 									<input type="text" name="email" id="input_email" class="span12"/>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="buttonbar">
-						<button class="btn btn-primary" name="save" value="addComment">'.$iconSave.'&nbsp;absenden</button>
+						<button class="btn btn-primary" name="save" value="addComment">'.$iconSave.'&nbsp;'.$w->buttonSave.'</button>
 					</div>
 				</form>
 			</div>
@@ -99,7 +102,7 @@ return $textTop.'
 		<div class="row-fluid">
 			<div class="offset1 span10">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h3 class="myModalLabel">Dein Kommentar zu diesem Kurs</h3>
+				<h3 class="myModalLabel">'.$w->headingModal.'</h3>
 			</div>
 		</div>
 	</div>
@@ -112,7 +115,7 @@ return $textTop.'
 	<div class="modal-footer">
 		<div class="row-fluid">
 			<div class="offset1 span10">
-				<button class="btn btn-small" data-dismiss="modal" aria-hidden="true">Schließen</button>
+				<button class="btn btn-small" data-dismiss="modal" aria-hidden="true">'.$w->buttonClose.'</button>
 			</div>
 		</div>
 	</div>
@@ -125,7 +128,7 @@ function showComment(id){
 //console.log(item.data());
 	content.append($("<h4></h4>").append(item.data("heading")));
 	content.append($("<div></div>").html(item.data("content")));
-	$("#modal-comment-view .myModalLabel").html("Kundenmeinung von "+item.data("author"));
+	$("#modal-comment-view .myModalLabel").html('.json_encode( $w->headingModalAuthor, JSON_HEX_TAG | JSON_HEX_AMP ).'+item.data("author"));
 	$("#modal-comment-view .myModalContent").html(content);
 }
 </script>

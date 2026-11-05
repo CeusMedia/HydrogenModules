@@ -75,10 +75,10 @@ return '
 	</div>
 	<div class="bs2-span9 bs4-col-lg-9" style="position: relative">
 		<div class="content-panel">
-			<h3><span class="muted">Dokument:</span> '.$page->title.'</h3>
+			<h3><span class="muted">'.$words['view']['heading'].'</span> '.$page->title.'</h3>
 			<div class="content-panel-inner">
 				<div id="content-index">
-					<div class="heading">Inhalt</div>
+					<div class="heading">'.$words['view']['headingIndex'].'</div>
 				</div>
 				'.$contentContainer.'
 				<div class="buttonbar">

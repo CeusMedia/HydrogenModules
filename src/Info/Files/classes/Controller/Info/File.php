@@ -39,16 +39,16 @@ class Controller_Info_File extends Controller
 		$path		= $this->logic->getPathFromFolderId( $folderId );
 		$folder		= trim( $this->request->get( 'folder', '' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
-			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
+			$this->messenger->noteError( $this->messages->errorFolderNameInvalid );
 			$url	= ( $folderId ?: NULL ).'?input_folder='.rawurlencode( $folder );
 			$this->restart( $url, TRUE );
 		}
 		if( file_exists( $this->path.$path.$folder ) ){
-			$this->messenger->noteError( sprintf( 'Ein Eintrag <small>(ein Ordner oder eine Datei)</small> mit dem Namen "%s" existiert in diesem Ordner bereits.', $folder ) );
+			$this->messenger->noteError( $this->messages->errorEntryExists, $folder );
 			$this->restart( $folderId.'?input_folder='.rawurlencode( $folder ), TRUE );
 		}
 		$this->logic->addFolder( $folder, $folderId );
-		$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
+		$this->messenger->noteSuccess( $this->messages->successFolderAdded, $folder );
 		$this->restart( 'index/'.$folderId, TRUE );
 	}
 
@@ -61,12 +61,12 @@ class Controller_Info_File extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( NULL === $file ){
-			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
+			$this->messenger->noteError( $this->messages->errorInvalidFileId, $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= getCwd().'/'.$this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
-			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administrator!' );
+			$this->messenger->noteError( $this->messages->errorFileNotFound );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
 		$mimeType	= mime_content_type( $path.$file->title );
@@ -89,12 +89,12 @@ class Controller_Info_File extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
+			$this->messenger->noteError( $this->messages->errorInvalidFileId, $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
-			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administrator!' );
+			$this->messenger->noteError( $this->messages->errorFileNotFound );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
 		$this->logic->makeDownloadCount( $fileId );
@@ -111,7 +111,7 @@ class Controller_Info_File extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( NULL === $file ){
-			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
+			$this->messenger->noteError( $this->messages->errorInvalidFileId, $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
@@ -124,7 +124,7 @@ class Controller_Info_File extends Controller
 
 			if( $folder->downloadFolderId != $file->downloadFolderId ){
 				if( !$this->logic->folderPathExists( $folder ) ){
-					$this->messenger->noteError( 'Target folder is not existing' );
+					$this->messenger->noteError( $this->messages->errorTargetFolderMissing );
 					$this->restart( 'editFile/'.$fileId, TRUE );
 				}
 				$this->logic->moveFile( $file, $folder );
@@ -147,7 +147,7 @@ class Controller_Info_File extends Controller
 	{
 		$folder		= $this->logic->getFolder( $folderId );
 		if( NULL === $folder ){
-			$this->messenger->noteError( 'Invalid folder ID: %s', $folderId );
+			$this->messenger->noteError( $this->messages->errorInvalidFolderId, $folderId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
@@ -160,7 +160,7 @@ class Controller_Info_File extends Controller
 			}
 			if( $parentId != $folder->parentId ){
 				if( !$this->logic->folderPathExists( $this->logic->getFolder( $parentId ) ) ){
-					$this->messenger->noteError( 'Target folder is not existing' );
+					$this->messenger->noteError( $this->messages->errorTargetFolderMissing );
 					$this->restart( 'editFolder/'.$folderId, TRUE );
 				}
 				$this->logic->moveFolder( $folder, $parentId );
@@ -204,7 +204,7 @@ class Controller_Info_File extends Controller
 			if( 0 !== $folderId ){
 				$folder		= $this->logic->getFolder( $folderId );
 				if( NULL === $folder ){
-					$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
+					$this->messenger->noteError( $this->messages->errorInvalidFolderId, $folderId );
 					$this->restart( NULL, TRUE );
 				}
 				$this->addData( 'folder', $folder );
@@ -248,11 +248,11 @@ class Controller_Info_File extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
+			$this->messenger->noteError( $this->messages->errorInvalidFileId, $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$this->logic->removeFile( $fileId );
-		$this->messenger->noteSuccess( 'Datei <b>"%s"</b> entfernt.', $file->title );
+		$this->messenger->noteSuccess( $this->messages->successFileRemoved, $file->title );
 		$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 	}
 
@@ -266,13 +266,13 @@ class Controller_Info_File extends Controller
 		if( $folderId ){
 			$folder		= $this->logic->getFolder( $folderId );
 			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
+				$this->messenger->noteError( $this->messages->errorInvalidFolderId, $folderId );
 			}
 			else{
 				$hasFiles	= $this->logic->countFilesInFolder( $folder );
 				$hasFolders	= $this->logic->countFoldersInFolder( $folder );
 				if( $hasFiles || $hasFolders ){
-					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
+					$this->messenger->noteError( $this->messages->errorFolderNotEmpty, $folder->title );
 				}
 				else{
 					$this->logic->removeFolder( $folder );
@@ -337,7 +337,7 @@ class Controller_Info_File extends Controller
 				$description	= $this->request->get( 'description', '' );
 				$logicUpload->setUpload( $upload );
 				$this->logic->addFileFromUpload( $logicUpload, $folderId, $description );
-				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
+				$this->messenger->noteSuccess( $this->messages->successFileUploaded, $upload->name );
 			}
 			catch( Exception $e ){
 				$helperError	= new View_Helper_UploadError( $this->env );
@@ -358,7 +358,7 @@ class Controller_Info_File extends Controller
 	{
 		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
+			$this->messenger->noteError( $this->messages->errorInvalidFileId, $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
@@ -393,14 +393,14 @@ class Controller_Info_File extends Controller
 			if( $folder && file_exists( $this->path.$folder->title ) )
 				return TRUE;
 			if( !$folder )
-				$this->messenger->noteError( 'Invalid folder with ID %s', $folderId );
+				$this->messenger->noteError( $this->messages->errorInvalidFolderId, $folderId );
 			else if( file_exists( $this->path.$folder->title ) )
-				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
+				$this->messenger->noteError( $this->messages->errorFolderMissing, $folder->title );
 		}
 		else{
 			if( file_exists( $this->path ) )
 				return TRUE;
-			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
+			$this->messenger->noteError( $this->messages->errorBaseFolderMissing, $this->path );
 		}
 		return FALSE;
 	}

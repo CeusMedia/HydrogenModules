@@ -35,6 +35,6 @@ foreach( $facts as $nr => $fact )
 $facts	= HtmlTag::create( 'ul', $facts );
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h4', 'Informationen' ),
+	HtmlTag::create( 'h4', $w->heading ),
 	HtmlTag::create( 'div', $facts, ['class' => 'content-panel-inner'] ),
 ], ['class' => 'content-panel'] );

@@ -10,7 +10,7 @@ Provides management, based on role rights.
 Can be replaced by module Info:Downloads, which has no management.
 ]]></description>
 	<category>Info</category>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -38,6 +38,7 @@ Can be replaced by module Info:Downloads, which has no management.
 	<log version="0.6.0">Extracted logic, models and job to new module Resource:Downloads.</log>
 	<log version="0.6.1">Extract AJAX actions to own controller.</log>
 	<log version="0.6.2">Use entities of Resource:Downloads.</log>
+	<log version="0.6.3">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -48,6 +49,9 @@ Can be replaced by module Info:Downloads, which has no management.
 		<locale>de/info/file.ini</locale>
 		<locale>de/html/info/file/index.bottom.html</locale>
 		<locale>de/html/info/file/index.top.html</locale>
+		<locale>en/info/file.ini</locale>
+		<locale>en/html/info/file/index.bottom.html</locale>
+		<locale>en/html/info/file/index.top.html</locale>
 		<template>info/file/editFile.php</template>
 		<template>info/file/editFolder.php</template>
 		<template>info/file/index.php</template>

@@ -23,12 +23,12 @@ class Controller_Company_Branch extends Controller
 
 		$branch		= $this->modelBranch->get( $branchId );
 		if( !$branch ){
-			$this->messenger->noteError( "Die aufgerufene Niederlassung existiert nicht." );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( './company' );
 		}
 		$company	= $this->modelCompany->get( $branch->companyId );
 		if( !$company ){
-			$this->messenger->noteError( "Das aufgerufene Unternehmen existiert nicht." );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidCompanyId'] );
 			$this->restart();
 		}
 

@@ -9,7 +9,7 @@ Simple frontend view of downloadable files, provided by module Resource:Download
 Can be replaced by module Info:Files, which adds management to frontend, based on role rights.
 ]]></description>
 	<category>Info</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -26,6 +26,7 @@ Can be replaced by module Info:Files, which adds management to frontend, based o
 	<log version="0.4.0">Migration to PHP 8.</log>
 	<log version="0.4.1">Strict types.</log>
 	<log version="0.4.2">Extracted logic and models to new Module Resource:Downloads.</log>
+	<log version="0.4.3">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

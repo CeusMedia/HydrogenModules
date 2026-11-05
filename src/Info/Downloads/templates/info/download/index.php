@@ -39,7 +39,7 @@ foreach( $files as $file ){
 	$urlDownload	= './info/download/download/'.$file->downloadFileId;
 	$urlRemove		= './info/download/remove/'.$file->downloadFileId;
 	$class			= 'type type-'.pathinfo( $file->title, PATHINFO_EXTENSION );
-	$underline		= $size.', '.$timePhrase.', '.$file->nrDownloads.' Downloads';
+	$underline		= $size.', '.$timePhrase.', '.sprintf( $words['index']['fileDownloads'], $file->nrDownloads );
 	$underline		= HtmlTag::create( 'small', $underline, ['class' => "muted"] );
 	$label			= $file->title;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
@@ -79,7 +79,7 @@ ksort( $rows['files'] );
 foreach( $folders as $folder ){
 	$url	= './info/download/index/'.$folder->downloadFolderId;
 	$label	= $folder->title.'<br/>';
-	$info	= HtmlTag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', ['class' => 'muted'] );
+	$info	= HtmlTag::create( 'small', sprintf( $words['index']['folderInfo'], $folder->nrFiles, $folder->nrFolders ), ['class' => 'muted'] );
 	$label	= HtmlTag::create( 'a', $label.$info, ['class' => 'name', 'href' => $url] );
 
 	$buttons	= [];
@@ -104,7 +104,7 @@ foreach( $folders as $folder ){
 		$buttons[]	= HtmlTag::create( 'a', $iconDown, [
 			'href'	=> './info/download/rankFolder/'.$folder->downloadFolderId.'/down',
 			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonUp'],
+			'title'	=> $words['index']['buttonDown'],
 		] );
 	}
 	if( in_array( 'removeFolder', $rights ) && !$folder->nrFiles && !$folder->nrFolders ){

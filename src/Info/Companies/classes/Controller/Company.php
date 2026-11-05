@@ -25,7 +25,7 @@ class Controller_Company extends Controller
 
 		$company    = $this->modelCompany->get( $companyId );
 		if( !$company ){
-			$this->messenger->noteError( "Das aufgerufene Unternehmen existiert nicht." );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart();
 		}
 		$branches	= $this->modelBranch->getAllByIndex( 'companyId', $companyId );

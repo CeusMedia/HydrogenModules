@@ -46,7 +46,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconDown		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-chevron-down"] );
 }
 
-$optParentId	= ['' => '- ohne -'];
+$optParentId	= ['' => $words['edit']['optionParentNone']];
 foreach( $folders as $folder )
 	$optParentId[$folder->manualPageId]	= $folder->title;
 $optParentId	= HtmlElements::Options( $optParentId, $page->parentId );

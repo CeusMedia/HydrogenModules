@@ -10,11 +10,12 @@ class Hook_Info_File extends Hook
 		$logic		= new Logic_Download( $this->env, $options->get( 'path' ) );
 		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $logic->findFiles( $conditions, ['uploadedAt' => 'DESC'] );
+		$words		= $this->env->getLanguage()->getSection( 'info/file', 'hook' );
 		foreach( $files as $file ){
 			$this->context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, [
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
-				'typeLabel'	=> 'Datei',
+				'typeLabel'	=> $words['typeLabel'],
 				'id'		=> $file->downloadFolderId,
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
@@ -30,11 +31,12 @@ class Hook_Info_File extends Hook
 		$logic		= new Logic_Download( $this->env, $options->get( 'path' ) );
 		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $logic->findFiles( $conditions, ['uploadedAt' => 'DESC'] );
+		$words		= $this->env->getLanguage()->getSection( 'info/file', 'hook' );
 		foreach( $files as $file ){
 			$this->context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, [
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
-				'typeLabel'	=> 'Datei',
+				'typeLabel'	=> $words['typeLabel'],
 				'id'		=> $file->downloadFileId,
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,

@@ -22,7 +22,7 @@ $iconApprove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$table	= '<em><small class="muted">Keine.</small></em>';
+$table	= '<em><small class="muted">'.$words['thread']['labelEmpty'].'</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );
 $userCanEdit	= $env->getAcl()->has( 'ajax/info/forum', 'editPost' );
 $userCanRemove	= in_array( 'removePost', $rights );
@@ -55,7 +55,7 @@ if( $posts ){
 		}
 		if( $userCanRemove && $userCanChange ){
 			$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
-				'onclick'	=> 'if(!confirm(\'Wirklich ?\')) return false;',
+				'onclick'	=> 'if(!confirm(\''.htmlspecialchars( addslashes( $words['thread']['confirmRemove'] ), ENT_QUOTES, 'UTF-8' ).'\')) return false;',
 				'href'		=> './info/forum/removePost/'.$post->postId,
 				'class'		=> 'btn not-btn-small btn-danger',
 				'title'		=> $words['thread']['buttonRemove']
@@ -130,7 +130,7 @@ return $textTop.'
 <div>'.$position.'</div><br/>
 <div class="row-fluid">
 	<div class="span12">
-		<h4>Beiträge</h4>
+		<h4>'.$words['thread']['headPosts'].'</h4>
 		'.$panelList.'
 		<br/>
 	</div>

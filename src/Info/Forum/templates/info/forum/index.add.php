@@ -13,16 +13,18 @@ $optStatus	= HtmlElements::Options( $optStatus, (int) $request->get( 'status' ) 
 $optType	= $words['types'];
 $optType	= HtmlElements::Options( $optType, (int) $request->get( 'type' ) );
 
+$w	= (object) $words['index-add'];
+
 if( !in_array( 'addTopic', $rights ) )
 	return '';
 return '
 <div class="content-panel">
-	<h4>Neue Kategorie</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<form action="./info/forum/addTopic" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Title</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="" required="required"/>
 				</div>
 			</div>
@@ -37,7 +39,7 @@ return '
 				</div>
 			</div>-->
 			<div class="buttonbar">
-				<button type="submit" name="save" value="1" class="btn btn-primary btn-small"><i class="fa fa-fw fa-check"></i> speichern</button>
+				<button type="submit" name="save" value="1" class="btn btn-primary btn-small"><i class="fa fa-fw fa-check"></i> '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

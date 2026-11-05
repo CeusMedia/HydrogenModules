@@ -66,7 +66,7 @@ class Controller_Ajax_Info_Blog extends AjaxController
 		$post	= $this->modelPost->get( (int) $postId );
 		if( $post )
 			return $post;
-		$words = (object) $this->env->getLanguage()->getWords( 'msg' );
+		$words = (object) $this->env->getLanguage()->getSection( 'info/blog', 'msg' );
 		$this->respondError( 0, $words->errorInvalidPostId );
 		exit;
 	}

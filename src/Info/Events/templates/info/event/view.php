@@ -3,18 +3,21 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var object $event */
 /** @var ?string $from */
+/** @var array<string,array<string,string>> $words */
+
+$w		= (object) $words['view'];
 
 $iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $facts	= [];
-$facts[]	= HtmlTag::create( 'dt', 'Datum' );
+$facts[]	= HtmlTag::create( 'dt', $w->labelDate );
 $facts[]	= HtmlTag::create( 'dd', date( 'j.n.Y', strtotime( $event->dateStart ) ) );
-$facts[]	= HtmlTag::create( 'dt', 'Zeit' );
-$facts[]	= HtmlTag::create( 'dd', date( 'H:i', strtotime( $event->dateStart.' '.$event->timeStart ) ).' &minus; '.date( 'H:i', strtotime( $event->dateStart.' '.$event->timeEnd ) ).' Uhr' );
+$facts[]	= HtmlTag::create( 'dt', $w->labelTime );
+$facts[]	= HtmlTag::create( 'dd', sprintf( $w->valueTime, date( 'H:i', strtotime( $event->dateStart.' '.$event->timeStart ) ).' &minus; '.date( 'H:i', strtotime( $event->dateStart.' '.$event->timeEnd ) ) ) );
 
-$facts[]	= HtmlTag::create( 'dt', 'Ort' );
+$facts[]	= HtmlTag::create( 'dt', $w->labelPlace );
 $facts[]	= HtmlTag::create( 'dd', $event->address->title );
-$facts[]	= HtmlTag::create( 'dt', 'Adresse' );
+$facts[]	= HtmlTag::create( 'dt', $w->labelAddress );
 $facts[]	= HtmlTag::create( 'dd', $event->address->street.' '.$event->address->number.'<br/>'.$event->address->postcode.' '.$event->address->city );
 
 $facts		= HtmlTag::create( 'dl', $facts, ['class' => 'not-dl-horizontal'] );
@@ -22,7 +25,7 @@ $facts		= HtmlTag::create( 'dl', $facts, ['class' => 'not-dl-horizontal'] );
 $urlBack	= $from ? './'.$from : './event';
 
 return	'
-<a href="'.$urlBack.'" class="btn btn-small">'.$iconBack.'&nbsp;zurück</a>
+<a href="'.$urlBack.'" class="btn btn-small">'.$iconBack.'&nbsp;'.$w->buttonBack.'</a>
 <div>
 	<div class="event-title">'.$event->title.'</div>
 	<div class="event-description">'.nl2br( $event->description ).'</div>

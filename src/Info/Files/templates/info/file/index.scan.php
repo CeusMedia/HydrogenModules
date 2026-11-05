@@ -5,19 +5,20 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 /** @var array $rights */
+/** @var array<array<string,string>> $words */
 
 if( !in_array( 'scan', $rights ) )
 	return '';
 
 $iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'icon-repeat'] );
+$w				= (object) $words['scan'];
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h4', 'Dateien scannen' ),
+	HtmlTag::create( 'h4', $w->heading ),
 	HtmlTag::create( 'div', [
-		HtmlTag::create( 'p', 'Wurden neue Dateien oder Ordner per FTP hochgeladen?
-			Damit diese hier aufgelistet werden, müssen Sie den gesamten Dateienordner scannen.' ),
+		HtmlTag::create( 'p', $w->description ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'a', $iconRefresh.' nach neuen Dateien scannen', [
+			HtmlTag::create( 'a', $iconRefresh.' '.$w->buttonScan, [
 				'href'	=> './info/file/scan',
 				'class'	=> 'btn btn-mini',
 			] ),

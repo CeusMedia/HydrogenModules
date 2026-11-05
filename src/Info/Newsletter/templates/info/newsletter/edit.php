@@ -8,20 +8,21 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var int|string $readerId */
 /** @var int|string $letterId */
 
+$w		= (object) $words['edit'];
 $status	= $words['reader-states'][$reader->status];
 
 $panelReader	= '
-<h4>Ihre Daten</h4>
+<h4>'.$w->headingReader.'</h4>
 <dl class="dl-horizontal">
-	<dt>E-Mail-Adresse</dt>
+	<dt>'.$w->labelEmail.'</dt>
 	<dd><span>'.$reader->email.'</span></dd>
-	<dt>Vor- und Nachname</dt>
+	<dt>'.$w->labelName.'</dt>
 	<dd>'.$reader->firstname.' '.$reader->surname.'</dd>
-	<dt>Institution</dt>
+	<dt>'.$w->labelInstitution.'</dt>
 	<dd>'.( $reader->institution ?: '-' ).'</dd>
-	<dt>Registriert am/um</dt>
+	<dt>'.$w->labelRegisteredAt.'</dt>
 	<dd>'.date( 'd.m.Y H:i', $reader->registeredAt ).'</dd>
-	<dt>active</dt>
+	<dt>'.$w->labelStatus.'</dt>
 	<dd>'.$status.'</dd>
 </dl>
 ';
@@ -46,29 +47,29 @@ foreach( $groups as $group ){
 }
 $list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 
-$panelGroups	= '<h4>Ihre Themen</h4>
+$panelGroups	= '<h4>'.$w->headingGroups.'</h4>
 '.$list;
 
 return '
-<h3>Ihre Eintragung beim Newsletter</h3>
+<h3>'.$w->heading.'</h3>
 <div class="row-fluid">
 	<div class="span6">
-		Sie haben sich am Newsletter registriert. Hier können Sie:
+		'.$w->textIntro.'
 		<ul>
-			<li>ihre Registrierungsdaten einsehen</li>
-			<li>Themen abonnieren, über die sie informiert werden wollen</li>
-			<li>E-Mails zu Themen abbstellen</li>
-			<li>ihre Registrierung auflösen, falls keine Interesse mehr besteht</li>
+			<li>'.$w->textOption1.'</li>
+			<li>'.$w->textOption2.'</li>
+			<li>'.$w->textOption3.'</li>
+			<li>'.$w->textOption4.'</li>
 		</ul>
 		<br/>
 		<small class="muted">
-			<b>Hinweise nach Teledienstdatenschutzgesetz (TDDSG):</b>
+			<b>'.$w->headingPrivacy.'</b>
 			<ul>
-				<li>Nach der Anmeldung erhalten Sie eine Bestätigung des Abonnements per E-Mail.</li>
-				<li>Ihre Daten werden keinen Dritten zugänglich gemacht.</li>
-				<li>Personenbezogene Daten werden ausschließlich für den Versand des Newsletters verwendet.</li>
-				<li>Ihre Daten werden nach Wegfall dieser Zweckbestimmung von uns gelöscht.</li>
-				<li>Sie können jederzeit Ihr Newsletter-Abonnement löschen.</li>
+				<li>'.$w->textPrivacy1.'</li>
+				<li>'.$w->textPrivacy2.'</li>
+				<li>'.$w->textPrivacy3.'</li>
+				<li>'.$w->textPrivacy4.'</li>
+				<li>'.$w->textPrivacy5.'</li>
 			</ul>
 		</small>
 	</div>
@@ -76,8 +77,8 @@ return '
 		<form action="./info/newsletter/edit/'.$readerId.'/'.$letterId.'/'.$key.'" method="post">
 			'.$panelReader.'
 			'.$panelGroups.'
-			<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i>&nbsp;speichern</button>
-			<a href="#" class="btn btn-small btn-danger"><i class="icon-remove icon-white"></i>&nbsp;komplett abmelden</a>
+			<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
+			<a href="#" class="btn btn-small btn-danger"><i class="icon-remove icon-white"></i>&nbsp;'.$w->buttonUnregister.'</a>
 		</form>
 	</div>
 </div>';

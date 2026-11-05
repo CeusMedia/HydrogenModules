@@ -19,7 +19,8 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 		$posts		= $this->data['posts'];
 		$authors	= $this->data['authors'];
 
-		$this->setSubject( 'Antwort im Forum zum Thema: '.$thread->title );
+		$w			= (object) $this->getWords( 'info/forum', 'mail-answer' );
+		$this->setSubject( sprintf( $w->subject, $thread->title ) );
 
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$heading	= $this->env->title;
@@ -52,19 +53,19 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 
 		$body	= '
 <div class="moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer">
-	<h2>Forum</h2>
+	<h2>'.$w->heading.'</h2>
 	<div class="intro">
-		<div class="salutation">Hallo '.$user->username.'!</div>
-		Auf deinen Beitrag im Forum gibt es eine Reaktion.
+		<div class="salutation">'.sprintf( $w->salutation, $user->username ).'</div>
+		'.$w->intro.'
 	</div>
-	<h3>Thema: <a href="'.$this->env->url.'info/forum/thread/'.$thread->threadId.'">'.$thread->title.'</a></h3>
+	<h3>'.$w->labelThread.': <a href="'.$this->env->url.'info/forum/thread/'.$thread->threadId.'">'.$thread->title.'</a></h3>
 <!--	<div class="post-header">
 		Neuer Beitrag von '.$author->username.' vom '.date( 'd.m.Y', $post->createdAt ).' um '.date( 'd.m.Y', $post->createdAt ).':
 	</div>-->
 	<div class="post-content1">
 		<blockquote>
 			<p>'.$content.'</p>
-			<small>von '.$author->username.' am '.date( 'd.m.Y', $post->createdAt ).' um '.date( 'H:i', $post->createdAt ).'</small>
+			<small>'.sprintf( $w->labelAuthor, $author->username, date( 'd.m.Y', $post->createdAt ), date( 'H:i', $post->createdAt ) ).'</small>
 		<blockquote>
 	</div>
 </div>';
