@@ -283,9 +283,9 @@ class Hook_Work_Mission extends Hook
 			}
 		}
 		if( $nrMissionsRemoved )
-			$this->env->getMessenger()->noteSuccess( 'Removed %d missions.', $nrMissionsRemoved );
+			$this->env->getMessenger()->noteSuccess( $this->env->getLanguage()->getSection( 'work/mission', 'msg' )['successMissionsRemoved'], $nrMissionsRemoved );
 		if( $nrMissionsChanged )
-			$this->env->getMessenger()->noteSuccess( 'Reassigned %d missions.', $nrMissionsChanged );
+			$this->env->getMessenger()->noteSuccess( $this->env->getLanguage()->getSection( 'work/mission', 'msg' )['successMissionsReassigned'], $nrMissionsChanged );
 		if( isset( $this->payload['counts'] ) )
 			$this->payload['counts']['Work_Missions']	= (object) [
 				'entities'		=> $nrMissionsRemoved,
@@ -333,18 +333,19 @@ class Hook_Work_Mission extends Hook
 	{
 		if( !$this->env->getAcl()->has( 'ajax/work/mission', 'renderDashboardPanel' ) )
 			return;
+		$words	= $this->env->getLanguage()->getWords( 'work/mission' );
 		$this->context->registerPanel( 'work-mission-my-today', [
 			'url'		=> 'ajax/work/mission/renderDashboardPanel',
-			'title'		=> 'Heute & Termine',
-			'heading'	=> 'Heute & Termine',
+			'title'		=> $words['dashboard-panel-my-today']['title'],
+			'heading'	=> $words['dashboard-panel-my-today']['heading'],
 			'icon'		=> 'fa fa-fw fa-calendar-o',
 			'rank'		=> 10,
 			'refresh'	=> 60,
 		] );
 		$this->context->registerPanel( 'work-mission-my-tasks', [
 			'url'		=> 'ajax/work/mission/renderDashboardPanel',
-			'title'		=> 'Aufgaben: Meine - Heute',
-			'heading'	=> 'Meine heutigen Aufgaben',
+			'title'		=> $words['dashboard-panel-my-tasks']['title'],
+			'heading'	=> $words['dashboard-panel-my-tasks']['heading'],
 			'icon'		=> 'fa fa-fw fa-thumb-tack',
 			'rank'		=> 20,
 			'refresh'	=> 120,

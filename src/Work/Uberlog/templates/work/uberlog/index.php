@@ -9,7 +9,9 @@ use CeusMedia\HydrogenFramework\View;
 
 //return '[uberlog::index]';
 
-$add	= '<a href="./work/uberlog/testRecord">test</a> | <button id="testRecordAjax">test AJAX</button>
+$w		= (object) $words['index'];
+
+$add	= '<a href="./work/uberlog/testRecord">'.$w->linkTest.'</a> | <button id="testRecordAjax">'.$w->buttonTestAjax.'</button>
 
 <script>
 $(document).ready(function(){
@@ -26,7 +28,7 @@ $(document).ready(function(){
 
 $panelFilter	= '
 <div class="content-panel">
-	<h4>Filter</h4>
+	<h4>'.$w->headingFilter.'</h4>
 	<div class="content-panel-inner">
 		<ul class="input">
 			<li>
@@ -82,17 +84,17 @@ $panelFilter	= '
 		}
 		$list	= '
 <div class="content-panel">
-	<h4>Einträge</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<table class="table tabe-striped">
 			<thead>
 				<tr>
-					<th>Nr</th>
-					<th>Message</th>
-					<th>Client / Host</th>
-					<th>Category / Type</th>
-					<th>Date / Time</th>
-					<th>Action</th>
+					<th>'.$w->headId.'</th>
+					<th>'.$w->headMessage.'</th>
+					<th>'.$w->headClientHost.'</th>
+					<th>'.$w->headCategoryType.'</th>
+					<th>'.$w->headDateTime.'</th>
+					<th>'.$w->headAction.'</th>
 				</tr>
 			</thead>
 			<tbody>

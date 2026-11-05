@@ -29,7 +29,7 @@ foreach( $issues as $issue ){
 	}
 	$notes		= count( $issue->notes );
 	$changes	= count( $issue->changes );
-	$changes	= ( $notes || $changes ) ? '<small class="muted">mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)</small>' : '';
+	$changes	= ( $notes || $changes ) ? '<small class="muted">'.sprintf( $words['index']['changesInfo'], $changes, $notes ).'</small>' : '';
 	$link		= HtmlElements::Link( './work/issue/edit/'.$issue->issueId, $issue->title, 'issue-title' );
 	$type		= HtmlTag::create( 'span', $words['types'][$issue->type], ['class' => 'issue-type type-'.$issue->type] );
 	$severity	= HtmlTag::create( 'span', $words['severities'][$issue->severity], ['class' => 'issue-severity severity-'.$issue->severity] );
@@ -37,9 +37,9 @@ foreach( $issues as $issue ){
 	$status		= HtmlTag::create( 'span', $words['states'][$issue->status], ['class' => 'issue-status status-'.$issue->status] );
 	$progress	= $issue->progress ? HtmlTag::create( 'span', $issue->progress.'%', ['class' => 'issue-progress progress-'.( floor( $issue->progress / 25 ) * 25 )] ) : "-";
 //	$createdAt	= date( 'd.m.Y H:i:s', $issue->createdAt );
-	$createdAt	= $helper->convert( $issue->createdAt, TRUE, 'vor' );
+	$createdAt	= $helper->convert( $issue->createdAt, TRUE, $words['index']['timePrefix'], $words['index']['timeSuffix'] );
 //	$modifiedAt	= $issue->modifiedAt ? date( 'd.m.Y H:i:s', $issue->modifiedAt ) : "-";
-	$modifiedAt	= $helper->convert( $issue->modifiedAt ?? 0, TRUE, 'vor' );
+	$modifiedAt	= $helper->convert( $issue->modifiedAt ?? 0, TRUE, $words['index']['timePrefix'], $words['index']['timeSuffix'] );
 	$rows[]	= '
 <tr>
 	<td>'.$link.'<br/>'.$changes.'</td>
@@ -55,7 +55,7 @@ $pagination	= $pagination->render();
 
 return '
 <div class="content-panel content-panel-list"">
-	<h3>Probleme</h3>
+	<h3>'.$words['index']['heading'].'</h3>
 	<div class="content-panel-inner content-panel-table">
 <!--		<legend>Einträge ('.$number.' von '.$total.')</legend>-->
 		<table class="table table-condensed table-striped">
@@ -68,11 +68,11 @@ return '
 			</colgroup>
 			<thead>
 				<tr>
-					<th>Kurzbeschreibung / Veränderungen</th>
-					<th>Typ / Schweregrad</th>
-					<th>Zustand / Fortschritt</th>
-					<th>Reporter / Manager</th>
-					<th>gemeldet / bearbeitet</th>
+					<th>'.$words['index']['headTitle'].'</th>
+					<th>'.$words['index']['headType'].'</th>
+					<th>'.$words['index']['headStatus'].'</th>
+					<th>'.$words['index']['headUsers'].'</th>
+					<th>'.$words['index']['headDates'].'</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -80,7 +80,7 @@ return '
 			</tbody>
 		</table>
 		<div class="buttonbar">
-			<a class="btn btn-small btn-success" href="./work/issue/add"><i class="icon-plus icon-white"></i> neuer Eintrag</a>
+			<a class="btn btn-small btn-success" href="./work/issue/add"><i class="icon-plus icon-white"></i> '.$words['index']['buttonAdd'].'</a>
 			'.$pagination.'
 		</div>
 	</div>

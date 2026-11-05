@@ -56,7 +56,7 @@ class Controller_Work_Uberlog extends Controller
 	{
 		$request	= $this->env->getRequest();
 		$this->modelRecord->remove( $recordId );
-		$this->env->getMessenger()->noteSuccess( 'Record '.$recordId.' has been removed.' );
+		$this->env->getMessenger()->noteSuccess( sprintf( $this->getWords( 'msg' )['successRemoved'], $recordId ) );
 		if( $request->isAjax() )
 			exit;
 		$this->restart( NULL, TRUE );

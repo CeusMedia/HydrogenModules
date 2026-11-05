@@ -25,7 +25,7 @@ foreach( $addTemplates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= HtmlElements::Options( $optTemplate, 0 );
 
-$optNewsletter	= ['0' => '- keine Kopie -'];
+$optNewsletter	= ['0' => $w->optionNoCopy];
 krsort( $addNewsletters );
 foreach( $addNewsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;
@@ -47,7 +47,7 @@ if( $useUserGroupRelations ){
 	$groupRelations	= '
 		<div class="row-fluid">
 			<div class="span12">
-				<label for="input_useGroupRelations">geerbte Gruppenzuweisung</label>
+				<label for="input_useGroupRelations">'.$w->labelGroupRelations.'</label>
 				<input type="hidden" name="useGroupRelations" id="input_useGroupRelations" value="1"/>
 				<div class="checkbox-list" id="newsletter-group-relations" >
 					'.join( $list ).'

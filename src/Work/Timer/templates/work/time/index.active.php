@@ -8,24 +8,25 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 
 $w	= (object) $words['index'];
+$wa	= (object) $words['index-active'];
 $content	= '<div class="alert alert-info"><em class="muted">'.$w->noCurrent.'</em></div>';
 
 
 $buttonPause	= '';
 $buttonStop		= '';
 $buttonEdit		= '';
-$buttonAdd		= '<a href="./work/time/add'.$from.'" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> neue Aktivität</a>';
+$buttonAdd		= '<a href="./work/time/add'.$from.'" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> '.$wa->buttonAdd.'</a>';
 if( $timer ){
 
-	$buttonPause	= '<a href="./work/time/pause/'.$timer->workTimerId.$from.'" class="btn not-btn-large btn-warning"><i class="icon-pause icon-white"></i> pausieren</a>';
-	$buttonStop		= '<a href="./work/time/stop/'.$timer->workTimerId.$from.'" class="btn not-btn-large btn-danger"><i class="icon-stop icon-white"></i> abschließen</a>';
-	$buttonEdit		= '<a href="./work/time/edit/'.$timer->workTimerId.$from.'" class="btn"><i class="fa fa-fw fa-pencil"></i> bearbeiten</a>';
+	$buttonPause	= '<a href="./work/time/pause/'.$timer->workTimerId.$from.'" class="btn not-btn-large btn-warning"><i class="icon-pause icon-white"></i> '.$wa->buttonPause.'</a>';
+	$buttonStop		= '<a href="./work/time/stop/'.$timer->workTimerId.$from.'" class="btn not-btn-large btn-danger"><i class="icon-stop icon-white"></i> '.$wa->buttonStop.'</a>';
+	$buttonEdit		= '<a href="./work/time/edit/'.$timer->workTimerId.$from.'" class="btn"><i class="fa fa-fw fa-pencil"></i> '.$wa->buttonEdit.'</a>';
 
 	$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 		'href'	=> './manage/project/view/'.$timer->project->projectId,
 		'class'	=> 'autocut',
 	] );
-	$linkRelation	= HtmlTag::create( 'em', 'Nicht zugeordnet.', ['class' => 'muted'] );
+	$linkRelation	= HtmlTag::create( 'em', $wa->noRelation, ['class' => 'muted'] );
 	if( $timer->relationTitle ){
 		$linkRelation	= $timer->relationTitle;
 		if( $timer->relationLink )
@@ -34,7 +35,7 @@ if( $timer ){
 				'class'	=> 'autocut',
 			] );
 	}
-	$labelType	= $timer->type ?: 'Zuordnung';
+	$labelType	= $timer->type ?: $wa->labelRelation;
 	$seconds	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );
 	$from		= $from ? '?from='.$from : '';
 
@@ -42,13 +43,13 @@ if( $timer ){
 		<div class="row-fluid">
 			<div class="span12">
 				<dl class="facts-vertical">
-					<dt>Projekt</dt>
+					<dt>'.$wa->labelProject.'</dt>
 					<dd><div class="autocut">'.$linkProject.'</div></dd>
 					<dt>'.$labelType.'</dt>
 					<dd><div class="autocut">'.$linkRelation.'</div></dd>
-					<dt>Aktivität</dt>
+					<dt>'.$wa->labelActivity.'</dt>
 					<dd><div class="autocut">'.$timer->title.'&nbsp;</div></dd>
-					<dt>erfasste Zeit</dt>
+					<dt>'.$wa->labelTimeNeeded.'</dt>
 					<dd><div id="timer-active" data-value="'.$seconds.'">'.View_Helper_Work_Time::formatSeconds( $seconds ).'</div></dd>
 				</dl>
 			</div>
@@ -63,7 +64,7 @@ $(document).ready(function(){
 
 return '
 <div class="content-panel">
-	<h3>Aktuelle Aktivität</h3>
+	<h3>'.$wa->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$content.'
 		<div class="buttonbar">

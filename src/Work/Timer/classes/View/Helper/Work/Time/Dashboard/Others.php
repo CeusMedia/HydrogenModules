@@ -29,8 +29,9 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 			'workerId'	=> array_keys( $coworkers ),
 			'status'	=> [1],
 		] );
+		$w				= (object) $this->getWords( 'dashboard-others', 'work/time' );
 		if( !$hasTimers ){
-			$content	= '<div class="alert alert-info">Keine laufenden Aktivitäten vorhanden.</div>';
+			$content	= '<div class="alert alert-info">'.$w->empty.'</div>';
 		}
 		else{
 			$timers		= $modelTimer->getAllByIndices( [
@@ -68,8 +69,8 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 							<small>'.$linkRelation.'</small>
 						</div>
 						<div class="autocut">
-							<small class="muted">Zeit:</small>
-							<span>'.$timeNeeded.'</span> <small class="not-muted">(geplant: <span>'.$timePlanned.'</span>)</small>
+							<small class="muted">'.$w->labelTime.'</small>
+							<span>'.$timeNeeded.'</span> <small class="not-muted">('.$w->labelPlanned.' <span>'.$timePlanned.'</span>)</small>
 						</div>
 					',
 					['class' => NULL] ),

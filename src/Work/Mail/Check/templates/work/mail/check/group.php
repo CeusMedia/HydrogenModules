@@ -7,35 +7,38 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var Environment $env */
 
 /** @var object[] $groups */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['group'];
 
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times-circle'] );
 
 
 $panelAdd	= '
 <div class="content-panel content-panel-form">
-	<h3>Add</h3>
+	<h3>'.$w->headingAdd.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/mail/check/addGroup" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_mailColumn">Name der Hauptspalte <small class="muted">(E-Mail)</small></label>
-					<input type="text" name="mailColumn" id="input_mailColumn" class="span12" placeholder="E-Mail"/>
+					<label for="input_mailColumn">'.$w->labelMailColumn.' <small class="muted">'.$w->labelMailColumn_suffix.'</small></label>
+					<input type="text" name="mailColumn" id="input_mailColumn" class="span12" placeholder="'.htmlentities( $w->placeholderMailColumn, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_columns">weitere Spalten <small class="muted">(z.B. Name)</small></label>
+					<label for="input_columns">'.$w->labelColumns.' <small class="muted">'.$w->labelColumns_suffix.'</small></label>
 					<textarea name="columns" id="input_columns" class="span12" rows="4"></textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;add</button>
+				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;'.$w->buttonAdd.'</button>
 			</div>
 		</form>
 	</div>
@@ -50,10 +53,10 @@ foreach( $groups as $group ){
 		$percentSuccess	= floor( $group->numbers->positive / $group->numbers->total * 1000 ) / 10;
 	}
 
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 		'href'		=> './work/mail/check/removeGroup/'.$group->mailCheckGroupId,
 		'class'		=> 'btn btn-small btn-inverse',
-		'onclick'	=> 'return confirm(\'Wirklich?\nDabei werden alle Adressen und Prüfungen gelöscht.\')',
+		'onclick'	=> 'return confirm(\''.str_replace( "'", "\\'", $w->confirmRemove ).'\')',
 	] );
 	$buttons	= HtmlTag::create( 'div', $buttonRemove, ['class' => 'btn-group'] );
 	$link		= HtmlTag::create( 'a', $group->title, [
@@ -72,13 +75,13 @@ foreach( $groups as $group ){
 	] );
 }
 $colgroup	= HtmlElements::ColumnGroup( '', '15%', '15%', '15%', '15%' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getestet', 'Qualität', 'Erstellung'] ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headTested, $w->headQuality, $w->headCreated] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 
 $panelList	= '
 <div class="content-panel content-panel-list content-panel-table">
-	<h3>Gruppen</h3>
+	<h3>'.$w->headingList.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 	</div>

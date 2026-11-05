@@ -12,7 +12,9 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var array $readerLetters */
 /** @var array $readerGroups */
 
-$listLetters	= '<div class="alert alert-info">Dieser Abonnent hat noch keinen Newsletter erhalten.</div>';
+$w				= (object) $words->edit_letters;
+
+$listLetters	= '<div class="alert alert-info">'.$w->empty.'</div>';
 if( $readerLetters ){
 	$stats		= (object) [
 		'sent'		=> 0,
@@ -44,11 +46,11 @@ if( $readerLetters ){
 	$listLetters	= HtmlTag::create( 'div', $listLetters, ['id' => 'reader-newsletter-list'] );
 	if( $stats->sent > 0 ){
 		$list	= [];
-		$list[]	= HtmlTag::create( 'dt', 'Zugestellt' );
+		$list[]	= HtmlTag::create( 'dt', $w->labelSent );
 		$list[]	= HtmlTag::create( 'dd', $stats->sent );
-		$list[]	= HtmlTag::create( 'dt', 'Geöffnet' );
+		$list[]	= HtmlTag::create( 'dt', $w->labelOpened );
 		$list[]	= HtmlTag::create( 'dd', $stats->opened );
-		$list[]	= HtmlTag::create( 'dt', 'Rate' );
+		$list[]	= HtmlTag::create( 'dt', $w->labelRatio );
 		$list[]	= HtmlTag::create( 'dd', $stats->ratio.'%' );
 		$listLetters	.= '<hr/>'.HtmlTag::create( 'dl', $list, ['class' => "dl-horizontal"] );
 	}
@@ -56,7 +58,7 @@ if( $readerLetters ){
 
 return '
 			<div class="content-panel">
-				<h3>Erhaltende Newsletter</h3>
+				<h3>'.$w->heading.'</h3>
 				<div class="content-panel-inner">
 					'.$listLetters.'
 				</div>

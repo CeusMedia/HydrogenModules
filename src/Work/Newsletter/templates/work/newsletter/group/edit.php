@@ -44,10 +44,10 @@ if( $canExport ){
 	$modalImportCsv		= $view->loadTemplateFile( 'work/newsletter/group/modal.import.csv.php' );
 	$panelImport	= '
 	<div class="content-panel">
-		<h3>Import</h3>
+		<h3>'.$w->headingImport.'</h3>
 		<div class="content-panel-inner">
 			<p>
-				CSV-Listen oder Excel-Dateien lassen sich in die Liste importieren.<br/>
+				'.$w->textImport.'<br/>
 			</p>
 			<div class="buttonbar">
 				'.$buttonImport.'
@@ -69,15 +69,15 @@ if( $canExport ){
 		$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-small not-btn-info disabled',
-			'onclick'	=> 'alert("Exportieren von Kategorien ist in dieser Demo-Installation nicht möglich.")',
+			'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertExportDisabled ), ENT_QUOTES, 'UTF-8' ).')',
 		] );
 
 	$panelExport	= '
 <div class="content-panel">
-	<h3>Export</h3>
+	<h3>'.$w->headingExport.'</h3>
 	<div class="content-panel-inner">
 		<p>
-			Die aktuelle Liste kann im CSV-Format exportiert werden.<br/>
+			'.$w->textExport.'<br/>
 		</p>
 		<div class="buttonbar">
 			'.$buttonExport.'

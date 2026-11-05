@@ -70,7 +70,7 @@ $(document).ready(function(){
 });
 </script>
 <div class="content-panel">
-	<h3>Beschreibung</h3>
+	<h3>'.$words['add']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/issue/add" method="post">
 			<div class="row-fluid">
@@ -115,7 +115,7 @@ return '
 	</div>
 	<div class="span4">
 		<div class="content-panel">
-			<h4>Ähnliche Einträge</h4>
+			<h4>'.$words['add']['headingSimilar'].'</h4>
 			<div class="content-panel-inner">
 				<table id="list-similar" class="issues table table-condensed table-striped table-fixed">
 					<colgroup>
@@ -131,7 +131,7 @@ return '
 		</div>
 		<br/>
 		<div class="content-panel">
-			<h4>Letzte Einträge</h4>
+			<h4>'.$words['add']['headingLatest'].'</h4>
 			<div class="content-panel-inner">
 				<table id="list-latest" class="issues table table-condensed table-striped table-fixed">
 					<colgroup>

@@ -45,7 +45,7 @@ class View_Work_Meeting extends View
 			$warning	= '
 			<div class="row-fluid">
 				<div class="span12">
-					<div class="alert alert-danger"><strong>Achtung:</strong> Bei Änderungen werden E-Mails an die Teilnehmer versendet. Bitte sparsam mit diesem Formular umgeben.</div>
+					<div class="alert alert-danger">'.$w->warningActive.'</div>
 				</div>
 			</div>';
 
@@ -125,6 +125,7 @@ class View_Work_Meeting extends View
 	public function renderEditParticipantsPanel( Entity_Work_Meeting $meeting, array $roles = [], array $groups = [], array $users = [] ): string
 	{
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-plus"] ).'&nbsp;';
+		$wp			= $this->getWords( 'panel-participants', NULL, TRUE );
 
 		$modal		= '';
 		$buttonAdd	= '';
@@ -138,13 +139,13 @@ class View_Work_Meeting extends View
 				->setAttributes( ['class' => 'modal-wide'] )
 				->render();
 			$buttonAdd	= $modal->trigger
-				->setLabel( $iconAdd.'&nbsp;hinzufügen' )
+				->setLabel( $iconAdd.'&nbsp;'.$wp->buttonAdd )
 				->setClass( 'btn btn-primary' )
 				->render();
 		}
 		return '
 		<div class="content-panel">
-			<h4>Teilnehmer</h4>
+			<h4>'.$wp->heading.'</h4>
 			<div class="content-panel-inner">
 				<div class="boxed not-boxed-large user-avatar-list">
 					'.$this->renderParticipantsList( $meeting, $meeting->participants, Model_Work_Meeting::STATUS_NEW === $meeting->status ).'
@@ -357,9 +358,10 @@ class View_Work_Meeting extends View
 			$modals[]	= View_Modal_Work_Meeting_Display::create( $this->env )->setMeeting( $meeting )->useRoles( $this->useRoles );
 			$trigger	= $this->renderViewModalTrigger( $meeting );
 
-			$labelCount	= '<strong>'.$nrParticipants.'</strong> Teilnehmer';
+			$wc			= $this->getWords( 'cards', NULL, TRUE );
+			$labelCount	= sprintf( $wc->labelParticipants, $nrParticipants );
 			if( $this->useRoles )
-				$labelCount	.= ', du bist <strong>'.$myRole.'</strong>';
+				$labelCount	.= sprintf( $wc->labelMyRole, $myRole );
 
 			$list[]	= HtmlTag::create( 'li', [
 				HtmlTag::create( 'div', [
@@ -368,8 +370,8 @@ class View_Work_Meeting extends View
 						HtmlTag::create( 'h4', $meeting->title ),
 						HtmlTag::create( 'p', [
 							HtmlTag::create( 'div', $labelCount ),
-							HtmlTag::create( 'div', 'Wann: '.$dateTimeRange.' Uhr' ),
-							HtmlTag::create( 'div', 'Wo: '.$location ),
+							HtmlTag::create( 'div', sprintf( $wc->labelWhen, $dateTimeRange ) ),
+							HtmlTag::create( 'div', sprintf( $wc->labelWhere, $location ) ),
 						], ['class' => ''] ),
 						HtmlTag::create( 'div', $trigger, ['class' => 'meeting-card-modal-trigger'] ),
 					], ['class' => 'caption'] ),
@@ -390,7 +392,7 @@ class View_Work_Meeting extends View
 		return $trigger->setModalId( 'meeting-'.$meeting->meetingId )
 			->setId( 'trigger-meeting-'.$meeting->meetingId )
 			->setClass( 'btn btn-block btn-primary' )
-			->setLabel( $iconEye.'&nbsp;mehr anzeigen' )
+			->setLabel( $iconEye.'&nbsp;'.$this->getWords( 'cards', NULL, TRUE )->buttonView )
 			->render();
 	}
 
@@ -411,7 +413,7 @@ class View_Work_Meeting extends View
 			$remove		= HtmlTag::create( 'a', $iconRemove, [
 				'href'	=> './work/meeting/removeParticipant/'.$meeting->meetingId.'/'.$participant->userId,
 				'class'	=> 'pull-right',
-				'title'	=> 'entfernen',
+				'title'	=> $this->getWords( 'panel-participants', NULL, TRUE )->buttonRemove,
 			] );
 
 		if( $this->useRoles )

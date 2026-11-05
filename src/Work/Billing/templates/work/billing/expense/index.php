@@ -6,19 +6,21 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var object[] $persons */
 /** @var object[] $corporations */
 
+$w		= (object) $env->getLanguage()->getSection( 'work/billing', 'expense-index' );
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconPerson		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-o'] );
 $iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] );
 
-$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
+$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', $w->noEntries, ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 
 $frequencies	= [
-	0		=> '- keine Wiederholung -',
-	1		=> 'jährlich',
-	2		=> 'quartalsweise',
-	3		=> 'monatlich',
-	4		=> 'wöchentlich',
-	5		=> 'täglich',
+	0		=> $w->frequency0,
+	1		=> $w->frequency1,
+	2		=> $w->frequency2,
+	3		=> $w->frequency3,
+	4		=> $w->frequency4,
+	5		=> $w->frequency5,
 ];
 
 if( $expenses ){
@@ -26,11 +28,11 @@ if( $expenses ){
 	foreach( $expenses as $expense ){
 		$title	= $expense->title;
 		if( preg_match( '/\[date.Y\]/', $title ) )
-			$title	= preg_replace( '/\[date.Y\]/', '<em class="muted">Jahr</em>', $title );
+			$title	= preg_replace( '/\[date.Y\]/', '<em class="muted">'.$w->placeholderYear.'</em>', $title );
 		if( preg_match( '/\[date.m\]/', $title ) )
-			$title	= preg_replace( '/\[date.m\]/', '<em class="muted">Monat</em>', $title );
+			$title	= preg_replace( '/\[date.m\]/', '<em class="muted">'.$w->placeholderMonth.'</em>', $title );
 		if( preg_match( '/\[date.d\]/', $title ) )
-			$title	= preg_replace( '/\[date.d\]/', '<em class="muted">Tag</em>', $title );
+			$title	= preg_replace( '/\[date.d\]/', '<em class="muted">'.$w->placeholderDay.'</em>', $title );
 		$link	= HtmlTag::create( 'a', $title, ['href' => './work/billing/expense/edit/'.$expense->expenseId] );
 		if( $expense->fromCorporationId ){
 			$corporation	= $corporations[$expense->fromCorporationId];
@@ -74,17 +76,17 @@ if( $expenses ){
 		'100',
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-		'Bezeichnung',
-		'Wiederholung',
-		'Belasteter',
-		'Begünstigter',
-		'Betrag'
+		$w->headTitle,
+		$w->headFrequency,
+		$w->headFrom,
+		$w->headTo,
+		$w->headAmount
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 	'href'	=> './work/billing/expense/add',
 	'class'	=> 'btn btn-success',
 ] );
@@ -93,7 +95,7 @@ return '
 <div class="row-fluid">
 	<div class="span12">
 		<div class="content-panel">
-			<h3>Regelausgaben</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$list.'
 				<div class="buttonbar">

@@ -98,7 +98,7 @@ class Controller_Work_Note extends Controller
 		$model		= new Model_Tag( $this->env );
 		$tag		= $model->get( $tagId );
 		if( !$tag )
-			$this->messenger->noteError( 'invalid tag ID: '.$tagId );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidTagId'], $tagId );
 		else{
 			foreach( $tags as $item )
 				if( $item->tagId == $tag->tagId )
@@ -146,7 +146,7 @@ class Controller_Work_Note extends Controller
 		$modelNote		= new Model_Note( $this->env );
 		$note			= $modelNote->get( $noteId );
 		if( !$note ){
-			$this->messenger->noteError( 'Invalid Note ID');
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidNoteId'] );
 			$this->restart( './work/note/' );
 		}
 
@@ -346,7 +346,7 @@ class Controller_Work_Note extends Controller
 		$model	= new Model_Link( $this->env );
 		$link	= $model->get( $linkId );
 		if( !$link ){
-			$this->messenger->noteError( 'Invalid link ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidLinkId'] );
 			$this->restart( NULL, TRUE );
 		}
 		header( 'Location: '.$link->url );
@@ -403,7 +403,7 @@ class Controller_Work_Note extends Controller
 		$note		= $this->logic->getNoteData( $noteId );
 		$note->user	= $modelUser->get( $note->userId );
 		if( !$note ){
-			$this->messenger->noteError( 'Invalid Note ID');
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidNoteId'] );
 			$this->restart( './work/note/' );
 		}
 		$this->addData( 'note', $note );

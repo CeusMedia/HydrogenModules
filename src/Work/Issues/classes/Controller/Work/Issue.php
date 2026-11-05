@@ -60,7 +60,7 @@ class Controller_Work_Issue extends Controller
 				'createdAt'		=> time(),
 			];
 			if( empty( $data['title'] ) )
-				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
+				$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorTitleMissing'] );
 			if( !$this->env->getMessenger()->gotError() ){
 				$issueId	= $model->add( $data, FALSE );
 				$this->logic->informAboutNew( $issueId, $this->userId );
@@ -163,10 +163,10 @@ class Controller_Work_Issue extends Controller
 				$modelIssue->edit( $issueId, $changes, FALSE );
 				$this->logic->informAboutChange( $issueId, $this->userId );
 
-				$this->env->getMessenger()->noteSuccess( 'Die Veränderungen wurden gespeichert.' );
+				$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successSaved'] );
 			}
 			else
-				$this->env->getMessenger()->noteError( 'Keine Veränderungen vorgenommen.' );
+				$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorNoChanges'] );
 		}
 		$this->restart( './work/issue/edit/'.$issueId );
 	}

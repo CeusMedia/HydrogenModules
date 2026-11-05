@@ -86,7 +86,7 @@ class Controller_Work_Time_Archive extends Controller
 		$this->session			= $this->env->getSession();
 		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		if( !$this->userId ){
-			$this->env->getMessenger()->noteError( 'You need to be logged in to use this feature.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorNotLoggedIn'] );
 			$this->restart();
 		}
 		$this->modelProject		= new Model_Project( $this->env );

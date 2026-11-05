@@ -23,7 +23,7 @@ class Controller_Work_Newsletter_Link extends Controller
 	{
 		$link	= $this->modelLink->get( $linkId );
 		if( NULL === $link ){
-			$this->env->getMessenger()->noteError( 'Invalid link ID' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'link', $link );

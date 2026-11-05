@@ -73,6 +73,7 @@ class View_Work_Billing_Helper_Transactions
 
 	public function render(): string
 	{
+		$w					= (object) $this->env->getLanguage()->getSection( 'work/billing', 'helper-transactions' );
 		$modelPerson		= new Model_Billing_Person( $this->env );
 		$modelCorporation	= new Model_Billing_Corporation( $this->env );
 
@@ -80,13 +81,13 @@ class View_Work_Billing_Helper_Transactions
 		$iconPerson		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-o'] );
 		$iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] );
 
-		$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
+		$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', $w->noEntries, ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 		if( $this->transactions ){
 			$sum	= 0;
 			$list	= [];
 			foreach( $this->transactions as $transaction ){
 				$sum	+= (float) $transaction->amount;
-				$from	= HtmlTag::create( 'em', 'extern', ['class' => 'muted'] );
+				$from	= HtmlTag::create( 'em', $w->external, ['class' => 'muted'] );
 				switch( $transaction->fromType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
 						$sender	= $this->logic->getPerson( $transaction->fromId );
@@ -108,7 +109,7 @@ class View_Work_Billing_Helper_Transactions
 						break;
 				}
 
-				$to		= HtmlTag::create( 'em', 'extern', ['class' => 'muted'] );
+				$to		= HtmlTag::create( 'em', $w->external, ['class' => 'muted'] );
 				switch( $transaction->toType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
 						$sender	= $this->logic->getPerson( $transaction->toId );
@@ -143,7 +144,7 @@ class View_Work_Billing_Helper_Transactions
 
 			$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', [
 			/*	HtmlTag::create( 'td', $id, ['class' => 'cell-number'] ),*/
-				HtmlTag::create( 'td', '<strong>Gesamt</strong>' ),
+				HtmlTag::create( 'td', '<strong>'.$w->total.'</strong>' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', '' ),
@@ -155,11 +156,11 @@ class View_Work_Billing_Helper_Transactions
 			$colgroup	= HtmlElements::ColumnGroup( [/*'45', */'', '200', '200', '100', '100'] );
 			$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 /*				HtmlTag::create( 'th', 'ID', ['class' => 'cell-number'] ),*/
-				HtmlTag::create( 'th', 'Vorgang' ),
-				HtmlTag::create( 'th', 'Zu Lasten' ),
-				HtmlTag::create( 'th', 'Zu Gunsten' ),
-				HtmlTag::create( 'th', 'Datum', ['class' => 'cell-number'] ),
-				HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
+				HtmlTag::create( 'th', $w->headTitle ),
+				HtmlTag::create( 'th', $w->headFrom ),
+				HtmlTag::create( 'th', $w->headTo ),
+				HtmlTag::create( 'th', $w->headDate, ['class' => 'cell-number'] ),
+				HtmlTag::create( 'th', $w->headAmount, ['class' => 'cell-number'] ),
 			] ) );
 			$tbody	= HtmlTag::create( 'tbody', $list );
 			$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed table-condensed'] );
@@ -208,6 +209,7 @@ class View_Work_Billing_Helper_Transactions
 
 	protected function transformRelationToTitle( object $transaction ): string
 	{
+		$w			= (object) $this->env->getLanguage()->getSection( 'work/billing', 'helper-transactions' );
 		$parts		= [];
 		$title		= '';
 		$relation	= $transaction->relation;
@@ -216,7 +218,7 @@ class View_Work_Billing_Helper_Transactions
 			$billShare		= $this->logic->getBillShare( $billShareId );
 			$bill			= $this->logic->getBill( $billShare->billId );
 			$linkBill		= HtmlTag::create( 'a', $bill->title, ['href' => './work/billing/bill/edit/'.$bill->billId] );
-			$title			= 'Anteil aus Rechnung '.$linkBill;
+			$title			= sprintf( $w->titleBillShare, $linkBill );
 		}
 		else if( preg_match( '/\|billReserve:([0-9]+)\|/', $relation ) ){
 			$billReserveId	= preg_replace( '/\|billReserve:([0-9]+)\|/', '\\1', $relation );
@@ -224,7 +226,7 @@ class View_Work_Billing_Helper_Transactions
 			$bill			= $this->logic->getBill( $billReserve->billId );
 			$linkReserve	= HtmlTag::create( 'a', $billReserve->title, ['href' => './work/billing/reserve/edit/'.$billReserve->reserveId] );
 			$linkBill		= HtmlTag::create( 'a', $bill->title, ['href' => './work/billing/bill/edit/'.$bill->billId] );
-			$prefix			= HtmlTag::create( 'small', 'Rücklage '.$linkReserve.' aus Rechnung: ', ['class' => 'muted'] );
+			$prefix			= HtmlTag::create( 'small', sprintf( $w->titleBillReserve, $linkReserve ), ['class' => 'muted'] );
 			$title			= $prefix.$linkBill;
 		}
 /*		else if( preg_match( '/^bill:([0-9]+)$/', $relation ) ){
@@ -236,16 +238,16 @@ class View_Work_Billing_Helper_Transactions
 		else if( preg_match( '/\|expense:([0-9]+)\|/', $relation ) ){
 			$id			= preg_replace( '/\|expense:([0-9]+)\|/', '\\1', $relation );
 			$expense	= $this->modelExpense->get( $id );
-			$prefix		= HtmlTag::create( 'small', 'Ausgabe: ', ['class' => 'muted'] );
+			$prefix		= HtmlTag::create( 'small', $w->prefixExpense, ['class' => 'muted'] );
 			$link		= HtmlTag::create( 'a', $prefix.$transaction->title, ['href' => './work/billing/expense/edit/'.$id] );
 			$title		= $link;
 		}
 		else if( preg_match( '/\|payin\|/', $relation ) ){
-			$prefix		= HtmlTag::create( 'small', 'Einzahlung: ', ['class' => 'muted'] );
+			$prefix		= HtmlTag::create( 'small', $w->prefixPayin, ['class' => 'muted'] );
 			$title		= $prefix.$transaction->title;
 		}
 		else if( preg_match( '/\|payout\|/', $relation ) ){
-			$prefix		= HtmlTag::create( 'small', 'Auszahlung: ', ['class' => 'muted'] );
+			$prefix		= HtmlTag::create( 'small', $w->prefixPayout, ['class' => 'muted'] );
 			$title		= $prefix.$transaction->title;
 		}
 		return $title;

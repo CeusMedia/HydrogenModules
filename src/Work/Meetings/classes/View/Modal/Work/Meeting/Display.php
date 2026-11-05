@@ -13,10 +13,10 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 	public function __construct( Environment $env )
 	{
 		parent::__construct( $env );
-		$this->setHeading( 'Meeting' )
-			->setFade( FALSE )
-			->setButtonLabelCancel( 'Okay' );
 		$this->moduleWords	= $this->env->getLanguage()->getWords( 'work/meeting' );
+		$this->setHeading( $this->moduleWords['modal-display']['heading'] )
+			->setFade( FALSE )
+			->setButtonLabelCancel( $this->moduleWords['modal-display']['buttonClose'] );
 	}
 
 	public function render(): string
@@ -47,8 +47,9 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 		$location	= $this->meeting->location;
 		if( '' !== ( $this->meeting->link ?? '' ) )
 			$location	= HtmlTag::create( 'a', $location, ['href' => $this->meeting->link] );
+		$wd			= (object) $this->moduleWords['modal-display'];
 		$blockLocation = join( [
-			HtmlTag::create( 'div', 'Ort', ['class' => 'form-view-label'] ),
+			HtmlTag::create( 'div', $wd->labelLocation, ['class' => 'form-view-label'] ),
 			HtmlTag::create( 'div', $location, ['class' => 'form-view-value'] ),
 		] );
 
@@ -56,14 +57,14 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 		foreach( $this->meeting->participants as $participant )
 			$participants[]	= HtmlTag::create( 'div', $this->renderParticipant( $participant ), [ 'class' => 'user-avatar-item' ] );
 		$blockParticipants = join( [
-			HtmlTag::create( 'div', 'Teilnehmer', ['class' => 'form-view-label'] ),
+			HtmlTag::create( 'div', $wd->labelParticipants, ['class' => 'form-view-label'] ),
 			HtmlTag::create( 'div', $participants, ['class' => 'user-avatar-list'] ),
 		] );
 
 		$blockContent	= '';
 		if( '' !== ( $this->meeting->content ?? '' ) )
 			$blockContent = join( [
-				HtmlTag::create( 'div', 'Beschreibung', ['class' => 'form-view-label'] ),
+				HtmlTag::create( 'div', $wd->labelContent, ['class' => 'form-view-label'] ),
 				HtmlTag::create( 'div', $this->meeting->content, ['class' => ''] ),
 			] );
 
@@ -82,7 +83,7 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 						</div>
 						<div class="span4">
 							'.join( [
-				HtmlTag::create( 'div', 'Ort', ['class' => 'form-view-label'] ),
+				HtmlTag::create( 'div', $wd->labelLocation, ['class' => 'form-view-label'] ),
 				HtmlTag::create( 'div', $location, ['class' => 'form-view-value'] ),
 			] ).'
 						</div>
@@ -98,7 +99,7 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 						</div>
 						<div class="span4">
 							'.join( [
-				HtmlTag::create( 'div', 'aktueller Zustand', ['class' => 'form-view-label'] ),
+				HtmlTag::create( 'div', $wd->labelStatus, ['class' => 'form-view-label'] ),
 				HtmlTag::create( 'div', $status, ['class' => 'form-view-value'] ),
 			] ).'
 						</div>
@@ -128,7 +129,7 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 			$remove		= HtmlTag::create( 'a', $iconRemove, [
 				'href'	=> './work/meeting/removeParticipant/'.$this->meeting->meetingId.'/'.$participant->userId,
 				'class'	=> 'pull-right',
-				'title'	=> 'entfernen',
+				'title'	=> $this->moduleWords['modal-display']['buttonRemove'],
 			] );
 
 		if( $this->useRoles )

@@ -19,14 +19,15 @@ class View_Work_Mission_Archive extends View
 
 		$page->js->addScript( '$(document).ready(function(){WorkMissions.init("archive");});' );
 		$filter	= $this->loadTemplateFile( 'work/mission/index.filter.php' );
+		$w		= (object) $this->env->getLanguage()->getSection( 'work/mission', 'index' );
 		return '
 <div id="work-mission-index">
 	'.$filter.'
 	<div id="work-mission-index-content">
 		<div class="content-panel content-panel-list">
-			<h3><span class="muted">Aufgaben: </span>Archiv</h3>
+			<h3><span class="muted">'.$w->headingPrefix.' </span>'.$w->headingArchive.'</h3>
 			<div class="content-panel-inner">
-				<div id="message-loading-list" class="alert alert-info">Loading...</div>
+				<div id="message-loading-list" class="alert alert-info">'.$w->messageLoadingList.'</div>
 				<div id="day-controls">
 					<div id="day-controls-large"></div>
 					<div id="day-controls-small"></div>

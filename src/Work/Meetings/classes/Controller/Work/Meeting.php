@@ -301,7 +301,7 @@ class Controller_Work_Meeting extends Controller
 		/** @var ?Entity_Work_Meeting $meeting */
 		$meeting	= $this->modelMeeting->get( $meetingId );
 		if( NULL === $meeting ){
-			$this->env->getMessenger()->noteError( 'Invalid meeting ID' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$allowedStatuses	= [
@@ -333,7 +333,7 @@ class Controller_Work_Meeting extends Controller
 			/** @var ?Entity_Work_Meeting $meeting */
 			$meeting	= $this->logic->getMeeting( $meetingId );
 			if( NULL === $meeting ){
-				$this->env->getMessenger()->noteError( 'Das verlinkte Meeting ist vorbei und der Eintrag existiert nicht mehr.' );
+				$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorMeetingGone'] );
 				$this->addData( 'gone', TRUE );
 			}
 			else{
@@ -351,7 +351,7 @@ class Controller_Work_Meeting extends Controller
 						$this->env->getPage()->js->addScriptOnReady( $script );
 					}
 					else{
-						$this->env->getMessenger()->noteError( 'Das verlinkte Meeting ist vorbei.' );
+						$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorMeetingPast'] );
 						$this->addData( 'gone', TRUE );
 					}
 				}
@@ -386,7 +386,7 @@ class Controller_Work_Meeting extends Controller
 		/** @var ?Entity_Work_Meeting $meeting */
 		$meeting	= $this->modelMeeting->get( $meetingId );
 		if( NULL === $meeting ){
-			$this->env->getMessenger()->noteError( 'Invalid meeting ID.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			if( $strict )
 				$this->restart( NULL, TRUE );
 			return NULL;

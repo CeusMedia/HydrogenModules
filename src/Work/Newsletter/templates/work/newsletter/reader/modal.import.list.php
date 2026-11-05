@@ -17,6 +17,7 @@ unset( $optStatus[-1] );
 $optStatus	= HtmlElements::Options( $optStatus );
 
 $w	= (object) $words->add;
+$wl	= (object) $words->import_list;
 
 $optGroupId	= [];
 foreach( $groups as $group )
@@ -28,12 +29,12 @@ return '
 	<div id="modalImportList" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Adressliste importieren</h3>
+			<h3 id="myModalLabel">'.$wl->heading.'</h3>
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid">
 				<div class="span9">
-					<label for="input_groupId">Empfängerliste</label>
+					<label for="input_groupId">'.$wl->labelGroupId.'</label>
 					<select name="groupId" id="input_groupId" class="span12">'.$optGroupId.'</select>
 				</div>
 				<div class="span3">
@@ -43,14 +44,14 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_addresses">Addressliste</label>
+					<label for="input_addresses">'.$wl->labelAddresses.'</label>
 					<textarea name="addresses" id="input_addresses" class="span12" rows="10" required="required"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">'.$iconCancel.'abbrechen</button>
-			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'importieren</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">'.$iconCancel.$wl->buttonCancel.'</button>
+			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.$wl->buttonSave.'</button>
 		</div>
 	</div>
 </form>';

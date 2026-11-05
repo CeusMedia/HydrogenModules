@@ -30,7 +30,7 @@ $content	= $textTop.'
 			<h3>
 				'.$words->edit->labelPlain.'
 				<div class="pull-right">
-					<a href="#modal-newsletter-template-placeholders" role="button" class="btn btn-mini not-btn-info" data-toggle="modal"><i class="fa fa-fw fa-info-circle"></i>&nbsp;Hilfe</a>
+					<a href="#modal-newsletter-template-placeholders" role="button" class="btn btn-mini not-btn-info" data-toggle="modal"><i class="fa fa-fw fa-info-circle"></i>&nbsp;'.$words->edit->buttonHelp.'</a>
 				</div>
 			</h3>
 			<div class="content-panel-inner">

@@ -155,12 +155,13 @@ class View_Helper_Modal
 
 	protected function renderFooter(): string
 	{
-		$buttonClose	= HtmlTag::create( 'button', 'Schließen', [
+		$words			= $this->env->getLanguage()->getSection( 'work/mission', 'modal' );
+		$buttonClose	= HtmlTag::create( 'button', $words['buttonClose'], [
 			'class'			=> 'btn',
 			'data-dismiss'	=> 'modal',
 			'aria-hidden'	=> 'true',
 		] );
-		$buttonSubmit	= HtmlTag::create( 'button', 'Weiter', [
+		$buttonSubmit	= HtmlTag::create( 'button', $words['buttonSubmit'], [
 			'class'		=> 'btn btn-primary',
 			'type'		=> 'submit',
 		] );

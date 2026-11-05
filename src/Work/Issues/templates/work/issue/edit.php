@@ -55,7 +55,7 @@ if( $env->getModules()->has( 'UI_Markdown' ) )
 
 $main	= '
 <div class="content-panel" id="issue-details">
-	<h3>Beschreibung</h3>
+	<h3>'.$words['edit']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/issue/edit/'.$issue->issueId.'" method="post">
 			<div class="issue-id"><small class="muted">Eintrag #'.$issue->issueId.'</small></div>
@@ -65,9 +65,9 @@ $main	= '
 				<div class="issue-content">'.$content.'</div>
 				<div class="buttonbar">
 					<a href="./work/issue" class="btn btn-small"><i class="not-icon-arrow-left icon-list"></i>&nbsp;'.$words['edit']['buttonCancel'].'</a>
-					<button type="button" id="issue-edit-trigger-mode-1" class="btn not-btn-small btn-success"><i class="icon-pencil icon-white"></i>&nbsp;verändern</button>
+					<button type="button" id="issue-edit-trigger-mode-1" class="btn not-btn-small btn-success"><i class="icon-pencil icon-white"></i>&nbsp;'.$words['edit']['buttonEdit'].'</button>
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					<a href="./work/issue/edit/'.$issue->issueId.'" class="btn btn-info btn-small not-btn-mini"><i class="icon-refresh icon-white"></i> aktualisieren</a>
+					<a href="./work/issue/edit/'.$issue->issueId.'" class="btn btn-info btn-small not-btn-mini"><i class="icon-refresh icon-white"></i> '.$words['edit']['buttonRefresh'].'</a>
 				</div>
 			</div>
 			<div id="panel-mode-1" style="display: none">
@@ -87,7 +87,7 @@ $main	= '
 				</div>
 				<div class="buttonbar">
 					<a href="./work/issue" class="btn btn-small"><i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'].'</a>
-					<button type="button" id="issue-edit-trigger-mode-0" class="btn btn-small"><i class="icon-eye-open"></i> anzeigen</button>
+					<button type="button" id="issue-edit-trigger-mode-0" class="btn btn-small"><i class="icon-eye-open"></i> '.$words['edit']['buttonView'].'</button>
 					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'].'</button>
 				</div>
 			</div>

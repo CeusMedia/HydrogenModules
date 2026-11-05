@@ -5,10 +5,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var object[] $persons */
 
+$w		= (object) $env->getLanguage()->getSection( 'work/billing', 'person-index' );
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconUser		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-o'] );
 
-$list	= HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] );
+$list	= HtmlTag::create( 'em', $w->noEntries, ['class' => 'muted'] );
 
 if( $persons ){
 	$list	= [];
@@ -33,12 +35,12 @@ if( $persons ){
 		'100',
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'th', 'Person' ),
-		HtmlTag::create( 'th', 'Auszahlungen' ),
-		HtmlTag::create( 'th', 'Balance', ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', $w->headPerson ),
+		HtmlTag::create( 'th', $w->headPayouts ),
+		HtmlTag::create( 'th', $w->headBalance, ['class' => 'cell-number'] ),
 	] ) );
 	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'th', 'Gesamt' ),
+		HtmlTag::create( 'th', $w->total ),
 		HtmlTag::create( 'th', number_format( $totalPayout, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', number_format( $totalBalance, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 	] ) );
@@ -46,14 +48,14 @@ if( $persons ){
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Person', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 	'href'	=> './work/billing/person/add',
 	'class'	=> 'btn btn-success',
 ] );
 
 return '
 <div class="content-panel">
-	<h3>Personen</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">

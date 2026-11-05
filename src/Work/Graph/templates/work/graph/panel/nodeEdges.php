@@ -1,11 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+$wp	= (object) $words['panel.nodeEdges'];
+
 $nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ?: $node->ID;
 
-$listEdgesIn	= '<small class="muted"><em>None.</em></small>';
+$listEdgesIn	= '<small class="muted"><em>'.$wp->empty.'</em></small>';
 if( $edgesIn ){
 	$listEdgesIn	= [];
 	foreach( $edgesIn as $edge ){
@@ -22,7 +25,7 @@ if( $edgesIn ){
 	$listEdgesIn	= HtmlTag::create( 'ul', $listEdgesIn, ['class' => 'not-unstyled nav nav-pills nav-stacked'] );
 }
 
-$listEdgesOut	= '<small class="muted"><em>None.</em></small>';
+$listEdgesOut	= '<small class="muted"><em>'.$wp->empty.'</em></small>';
 if( $edgesOut ){
 	$listEdgesOut	= [];
 	foreach( $edgesOut as $edge ){
@@ -41,11 +44,11 @@ if( $edgesOut ){
 
 return '
 <div class="content-panel">
-	<h3>Edges on this node</h3>
+	<h3>'.$wp->heading.'</h3>
 	<div class="content-panel-inner">
-		<h4>Outgoing edges</h4>
+		<h4>'.$wp->headingOutgoing.'</h4>
 		'.$listEdgesOut.'
-		<h4>Incoming edges</h4>
+		<h4>'.$wp->headingIncoming.'</h4>
 		'.$listEdgesIn.'
 	</div>
 </div>

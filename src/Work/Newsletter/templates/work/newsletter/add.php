@@ -22,7 +22,7 @@ foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= HtmlElements::Options( $optTemplate, $newsletter->newsletterTemplateId );
 
-$optNewsletter	= ['0' => '- keine Kopie -'];
+$optNewsletter	= ['0' => $words->add->optionNoCopy];
 krsort( $newsletters );
 foreach( $newsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;

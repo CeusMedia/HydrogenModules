@@ -33,10 +33,10 @@ $optDirection	= join( $optDirection );
 $mode	= (int) $session->get( 'issue-filter-panel-mode' );
 
 if( $mode == 1 ){
-	$words['types']			= ['' => '- alle -'] + $words['types'];
-	$words['severities']	= ['' => '- alle -'] + $words['severities'];
-	$words['priorities']	= ['' => '- alle -'] + $words['priorities'];
-	$words['states']		= ['' => '- alle -'] + $words['states'];
+	$words['types']			= ['' => $words['indexFilter']['optionAll']] + $words['types'];
+	$words['severities']	= ['' => $words['indexFilter']['optionAll']] + $words['severities'];
+	$words['priorities']	= ['' => $words['indexFilter']['optionAll']] + $words['priorities'];
+	$words['states']		= ['' => $words['indexFilter']['optionAll']] + $words['states'];
 
 	$optType		= $this->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
 	$optSeverity	= $this->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
@@ -65,7 +65,7 @@ if( $mode == 1 ){
 					</td>
 					<td>
 <!--						<label for="project">'.$words['indexFilter']['labelProject'].'</label><br/>
-						'.HtmlElements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-issues' ).'
+						'.HtmlElements::Select( 'project', '<option>'.$words['indexFilter']['optionAll'].'</option>', 'm', NULL, 'filter-issues' ).'
 -->					</td>
 					<td>
 
@@ -145,7 +145,7 @@ else
 					</td>
 					<td>
 						<label for="projectId">'.$words['indexFilter']['labelProject'].'</label><br/>
-						'.HtmlElements::Select( 'projectId', '<option>- alle -</option>', 'm', NULL, 'filter-issues' ).'
+						'.HtmlElements::Select( 'projectId', '<option>'.$words['indexFilter']['optionAll'].'</option>', 'm', NULL, 'filter-issues' ).'
 					</td>
 					<td></td>
 				</tr>

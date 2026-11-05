@@ -26,7 +26,7 @@ if( $note->tags ){
 		$url	= './work/note/removeTag/'.$note->noteId.'/'.$tag->tagId;
 		$label	= '<div class="item-tag-label">'.$tag->content.'</div>';
 //		$count	= '<div class="number-indicator">'.$tag->relevance.'</div>';
-		$button	= '<a href="'.$url.'" class="btn btn-small btn-mini btn-danger" title="entfernen">'.$iconRemove.'</a>';
+		$button	= '<a href="'.$url.'" class="btn btn-small btn-mini btn-danger" title="'.htmlentities( $w->buttonLinkRemove, ENT_QUOTES, 'UTF-8' ).'">'.$iconRemove.'</a>';
 		$tray	= '<div class="item-tag-tray">'.$button.'</div>';
 		$list[]	= '<li class="item-tag-extended border-bottom">'.$label.$tray.'</li>';
 	}
@@ -42,12 +42,12 @@ if( $relatedTags ){
 		$urlIgnore		= './work/note/ignoreTag/'.$note->noteId.'/'.$tag->tagId;
 		$label			= '<div class="item-tag-label">'.$tag->content.'</div>';
 		$count			= '<div class="number-indicator">'.$tag->relevance.'</div>';
-		$buttonAdd		= '<a href="'.$urlAdd.'" class="btn not-btn-small btn-mini btn-success" title="zuweisen">'.$iconAdd.'</a>';
-		$buttonIgnore	= '<a href="'.$urlIgnore.'" class="btn not-btn-small btn-mini btn-inverse" title="Tag für diese Notiz ignorieren">'.$iconRemove.'</a>';
+		$buttonAdd		= '<a href="'.$urlAdd.'" class="btn not-btn-small btn-mini btn-success" title="'.htmlentities( $w->buttonTagAssign, ENT_QUOTES, 'UTF-8' ).'">'.$iconAdd.'</a>';
+		$buttonIgnore	= '<a href="'.$urlIgnore.'" class="btn not-btn-small btn-mini btn-inverse" title="'.htmlentities( $w->buttonTagIgnore, ENT_QUOTES, 'UTF-8' ).'">'.$iconRemove.'</a>';
 		$tray			= '<div class="item-tag-tray">'.$count.'<div class="btn-group">'.$buttonAdd.$buttonIgnore.'</div></div>';
 		$list[]	= '<li class="item-tag-extended border-top">'.$label.$tray.'</li>';
 	}
-	$listRelatedTags	= '<br/><label>Vorschläge</label><ul class="tags-list">'.join( $list ).'</ul>';
+	$listRelatedTags	= '<br/><label>'.$w->labelSuggestions.'</label><ul class="tags-list">'.join( $list ).'</ul>';
 }
 $panelTags	= '
 <div class="content-panel content-panel-form">
@@ -79,7 +79,7 @@ if( $note->links ){
 		$link	= '<a href="'.$link->url.'">'.htmlentities( $link->title, ENT_QUOTES ).'</a>';
 		$label	= '<div class="item-link-label">'.$link.'</div>';
 //		$count	= '<div class="number-indicator">'.$tag->relevance.'</div>';
-		$button	= '<a href="'.$url.'" class="btn btn-small btn-mini btn-danger" title="entfernen">'.$iconRemove.'</a>';
+		$button	= '<a href="'.$url.'" class="btn btn-small btn-mini btn-danger" title="'.htmlentities( $w->buttonLinkRemove, ENT_QUOTES, 'UTF-8' ).'">'.$iconRemove.'</a>';
 		$tray	= '<div class="item-link-tray">'.$button.'</div>';
 		$list[]	= '<li class="item-link-extended border-bottom">'.$label.$tray.'</li>';
 	}
@@ -103,13 +103,13 @@ $panelLinks	= '
 		<form action="./work/note/addLink/'.$note->noteId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_link_url" class="mandatory">Link-Adresse</label>
+					<label for="input_link_url" class="mandatory">'.$w->labelLinkUrl.'</label>
 					<input type="text" name="link_url" id="input_link_url" class="span12 mandatory"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_link_title">Link-Titel</label>
+					<label for="input_link_title">'.$w->labelLinkTitle.'</label>
 					<input type="text" name="link_title" id="input_link_title" class="span12"/>
 				</div>
 			</div>
@@ -120,7 +120,7 @@ $panelLinks	= '
 	</form>
 </div>';
 
-$optProject	= ['0' => '- ohne Projektbezug -'];
+$optProject	= ['0' => $w->optionNoProject];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject, $note->projectId );

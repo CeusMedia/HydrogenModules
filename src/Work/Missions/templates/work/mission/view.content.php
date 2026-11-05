@@ -31,7 +31,7 @@ if( 1 || $mission->versions ){
 	foreach( $mission->versions as $version ){
 		$date	= date( 'Y-m-d H:i:s', $version->timestamp );
 		$date	= $phraser->convert( $version->timestamp, TRUE );
-		$label	= '#'.$version->version.' <small class="muted">('.$date.') von '.$version->user->username.'</small>';
+		$label	= '#'.$version->version.' <small class="muted">'.sprintf( $w->versionBy, $date, $version->user->username ).'</small>';
 		$link	= HtmlTag::create( 'a', $label, [
 			'href'	=> './work/mission/view/'.$mission->missionId.'#version-'.$version->version,
 		] );
@@ -40,7 +40,7 @@ if( 1 || $mission->versions ){
 			'data-version'		=> $version->version,
 		] );
 	}
-	$label	= '<strong>aktuell</strong>';
+	$label	= '<strong>'.$w->labelCurrent.'</strong>';
 	$link	= HtmlTag::create( 'a', $label, [
 		'href'		=> './work/mission/view/'.$mission->missionId,
 		'onclick'	=> 'return false'
@@ -75,7 +75,7 @@ return '
 				<div class="row-fluid">
 					<div class="span12">
 						<div id="mission-content-html" class="mission-content">
-							<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+							<div id="work-missions-loader" style=""><em class="muted">'.$w->messageLoading.'</em></div>
 						</div>
 					</div>
 				</div>

@@ -62,17 +62,17 @@ foreach( $words['indexFilterDirections'] as $key => $label ){
 }
 $optDirection	= join( $optDirection );
 
-$words['types']			= quantifyWords( ['' => '- alle -'] + $words['types'], $numberTypes );
-$words['severities']	= quantifyWords( ['' => '- alle -'] + $words['severities'] );
-$words['priorities']	= quantifyWords( ['' => '- alle -'] + $words['priorities'], $numberPriorities );
-$words['states']		= quantifyWords( ['' => '- alle -'] + $words['states'], $numberStates );
+$words['types']			= quantifyWords( ['' => $words['indexFilter']['optionAll']] + $words['types'], $numberTypes );
+$words['severities']	= quantifyWords( ['' => $words['indexFilter']['optionAll']] + $words['severities'] );
+$words['priorities']	= quantifyWords( ['' => $words['indexFilter']['optionAll']] + $words['priorities'], $numberPriorities );
+$words['states']		= quantifyWords( ['' => $words['indexFilter']['optionAll']] + $words['states'], $numberStates );
 
 $optType		= $view->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
 $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $session->get( 'filter-issue-priority' ), 'issue-priority priority-%1$d');
 $optStatus		= $view->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
 
-$optRelation	= ['' => 'in einem meiner Projekte', '1' => 'von mir berichtet', '2' => 'mir zugewiesen'];
+$optRelation	= ['' => $words['indexFilter']['relationProjects'], '1' => $words['indexFilter']['relationReported'], '2' => $words['indexFilter']['relationAssigned']];
 $optRelation	= HtmlElements::Options( $optRelation, $session->get( 'filter-issue-relation' ) );
 
 $filters		= [];
@@ -106,7 +106,7 @@ if( !empty( $projects ) ){
 //		if( $numberProjects[$project->projectId] > 0 )
 			$optProject[$project->projectId]	= $project->title;
 
-	$optProject		= quantifyWords( ['' => '- alle -'] + $optProject, $numberProjects );
+	$optProject		= quantifyWords( ['' => $words['indexFilter']['optionAll']] + $optProject, $numberProjects );
 	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
 	$filters[]	= HTML::DivClass( 'row-fluid', [

@@ -36,7 +36,7 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 			] );
 
 			$buttons	= HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', 'nur dieser', [
+				HtmlTag::create( 'button', $this->words['filter-modals']['buttonOnlyThisWorker'], [
 					'class'		=> 'btn btn-mini trigger-select-this',
 //						'disabled'	=> 'disabled',
 					'data-id'	=> $worker->userId,
@@ -63,18 +63,18 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 			'href'	=> '#',
 		] );
 
-		$buttonUser	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-user"></i>&nbsp;<b>nur ich</b>', [
+		$buttonUser	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-user"></i>&nbsp;<b>'.$this->words['filter-modals']['buttonOnlyMe'].'</b>', [
 			'class'		=> 'btn btn-small trigger-select-this',
 			'data-id'	=> $this->userId,
 		] );
-		$buttonAll	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-users"></i>&nbsp;<b>alle</b>', [
+		$buttonAll	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-users"></i>&nbsp;<b>'.$this->words['filter-modals']['buttonAll'].'</b>', [
 			'class'		=> 'btn btn-small trigger-select-all',
 			'href'		=> '#',
 		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonUser, $buttonAll], ['class' => 'btn-group'] );
 		$colgroup	= HtmlElements::ColumnGroup( "", "160px" );
 		$tableHeads	= HtmlTag::create( 'tr', [
-			HtmlTag::create( 'th', "Bearbeiter" ),
+			HtmlTag::create( 'th', $this->words['filter-modals']['headWorker'] ),
 			HtmlTag::create( 'th', $buttons, ['style' => 'text-align: right'] )
 		] );
 		$thead		= HtmlTag::create( 'thead', $tableHeads );
@@ -86,7 +86,7 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 
 		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
 		$modal->setId( 'modal-work-mission-filter-workers' );
-		$modal->setHeading( 'Filter: Bearbeiter' );
+		$modal->setHeading( $this->words['filter-modals']['headingWorkers'] );
 		$modal->setBody( $table );
 		$modal->setFade( FALSE );
 		$this->modalRegistry?->register( 'workMissionFilterWorkers', $modal );

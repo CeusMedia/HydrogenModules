@@ -24,7 +24,7 @@ class View_Helper_Work_Mission_Filter_Project extends View_Helper_Work_Mission_F
 			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$project->title, ['class' => 'checkbox'] );
 			$label		= HtmlTag::create( 'div', $label, ['class' => 'autocut'] );
 			$buttons	= HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', 'nur dieses', [
+				HtmlTag::create( 'button', $this->words['filter-modals']['buttonOnlyThisProject'], [
 					'class'		=> 'btn btn-mini trigger-select-this',
 //						'disabled'	=> 'disabled',
 					'data-id'	=> $project->projectId,
@@ -54,7 +54,7 @@ class View_Helper_Work_Mission_Filter_Project extends View_Helper_Work_Mission_F
 			'href'	=> '#',
 		] );
 		$colgroup	= HtmlElements::ColumnGroup( "30px", "", "140px" );
-		$tableHeads	= HtmlElements::tableHeads( [$iconWarning, $buttonAll."&nbsp;&nbsp;Projekt", ""] );
+		$tableHeads	= HtmlElements::tableHeads( [$iconWarning, $buttonAll."&nbsp;&nbsp;".$this->words['filter-modals']['headProject'], ""] );
 		$thead		= HtmlTag::create( 'thead', $tableHeads );
 		$tbody		= HtmlTag::create( 'tbody', $list );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
@@ -64,7 +64,7 @@ class View_Helper_Work_Mission_Filter_Project extends View_Helper_Work_Mission_F
 
 		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
 		$modal->setId( 'modal-work-mission-filter-projects' );
-		$modal->setHeading( 'Filter: Projekte' );
+		$modal->setHeading( $this->words['filter-modals']['headingProjects'] );
 		$modal->setBody( $table );
 		$modal->setFade( FALSE );
 		$this->modalRegistry?->register( 'workMissionFilterProjects', $modal );

@@ -15,12 +15,12 @@ use CeusMedia\HydrogenFramework\View;
 /** @var ?string $filterSurname */
 /** @var ?string $filterLimit */
 
-$optStatus		= ['' => '- alle -'];
+$optStatus		= ['' => $words->index_filter['optionAll']];
 foreach( $words->states as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optGroup		= ['' => '- alle -'];
+$optGroup		= ['' => $words->index_filter['optionAll']];
 foreach( $groups as $group )
 	$optGroup[$group->newsletterGroupId]	= $group->title;
 $optGroup		= HtmlElements::Options( $optGroup, $filterGroupId );

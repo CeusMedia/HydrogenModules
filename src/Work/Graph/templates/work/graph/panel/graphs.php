@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+$wp	= (object) $words['panel.graphs'];
+
 $listGraphs	= [];
 foreach( $graphs as $graph ){
 	$class		= $graphId == $graph->graphId ? 'active' : '';
@@ -17,7 +20,7 @@ $listGraphs	= HtmlTag::create( 'ul', $listGraphs, ['class' => 'not-unstyled nav 
 
 return '
 <div class="content-panel">
-	<h3>Graphs</h3>
+	<h3>'.$wp->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$listGraphs.'
 	</div>

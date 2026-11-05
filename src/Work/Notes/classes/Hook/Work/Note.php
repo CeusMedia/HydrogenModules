@@ -52,7 +52,7 @@ class Hook_Work_Note extends Hook
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o'] ),
 		);*/
-		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz'] );
+		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sticky-note-o', 'title' => $language->getWords( 'work/note' )['hook-relations']['item']] );
 		$words		= $language->getWords( 'work/note' );
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
@@ -102,7 +102,7 @@ class Hook_Work_Note extends Hook
 		$notes		= $model->getAllByIndex( 'userId', $userId );
 		$language	= $this->env->getLanguage();
 		$words		= $language->getWords( 'work/note' );
-		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz'] );
+		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sticky-note-o', 'title' => $words['hook-relations']['item']] );
 		$list		= [];
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );

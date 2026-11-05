@@ -115,20 +115,20 @@ $shortUrl	= $env->getBaseUrl().'?'.$shortHash;
 
 $panelInfo	= '
 		<div class="content-panel">
-			<h3>Informationen</h3>
+			<h3>'.$words['view']['headingInfo'].'</h3>
 			<div class="content-panel-inner">
 		<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
 				'.HtmlElements::Input( 'shortUrl', $shortUrl, 'max', TRUE ).'-->
 				<dl class="dl-horizontal">
-					<dt>erstellt</dt>
+					<dt>'.$words['view']['labelCreatedAt'].'</dt>
 					<dd>vor '.$helper->convert( $note->createdAt, TRUE ).'</dd>
-					<dt>von</dt>
+					<dt>'.$words['view']['labelAuthor'].'</dt>
 					<dd> '.$note->user->username.'</dd>
-					<dt>zuletzt verändert</dt>
+					<dt>'.$words['view']['labelModifiedAt'].'</dt>
 					<dd>vor '.$helper->convert( $note->modifiedAt, TRUE ).'</dd>
 					<dt><a href="./work/note/view/'.$note->noteId.'">Link</a></dt>
-					<dd><a href="./work/note/view/'.$note->noteId.'" class="btn btn-mini" target="_blank">in neuem Tab</a></dd>
-					<dt>Notiz-Textverweis</dt>
+					<dd><a href="./work/note/view/'.$note->noteId.'" class="btn btn-mini" target="_blank">'.$words['view']['linkNewTab'].'</a></dd>
+					<dt>'.$words['view']['labelTextReference'].'</dt>
 					<dd><code>[note:'.$note->noteId.']</code></dd>
 					<dt>Views</dt>
 					<dd>'.$note->numberViews.'</dd>
@@ -138,7 +138,7 @@ $panelInfo	= '
 ';
 
 return '
-<small><a href="./work/note">&laquo;&nbsp;zurück</a></small>
+<small><a href="./work/note">&laquo;&nbsp;'.$words['view']['linkBack'].'</a></small>
 <div class="row-fluid">
 	<div class="span8">
 		<div class="content-panel">
@@ -148,8 +148,8 @@ return '
 '.$content.'
 				</div><br/>
 				<div class="buttonbar">
-					<a href="./work/note" class="btn not-btn-small"><i class="icon-arrow-left"></i> zur Liste</a>
-					<a href="./work/note/edit/'.$note->noteId.'" class="btn not-btn-small btn-primary"><i class="icon-pencil icon-white"></i> bearbeiten</a>
+					<a href="./work/note" class="btn not-btn-small"><i class="icon-arrow-left"></i> '.$words['view']['buttonList'].'</a>
+					<a href="./work/note/edit/'.$note->noteId.'" class="btn not-btn-small btn-primary"><i class="icon-pencil icon-white"></i> '.$words['view']['buttonEdit'].'</a>
 				</div>
 			</div>
 		</div>

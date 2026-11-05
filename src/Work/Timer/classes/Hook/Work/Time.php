@@ -30,17 +30,18 @@ class Hook_Work_Time extends Hook
 	{
 		if( !$this->env->getAcl()->has( 'ajax/work/time', 'renderDashboardPanel' ) )
 			return;
+		$words	= (object) $this->env->getLanguage()->getSection( 'work/time', 'dashboard' );
 		$this->context->registerPanel( 'work-timer-my', [
 			'url'			=> 'ajax/work/time/renderDashboardPanel',
-			'title'			=> 'Aktivität: Meine',
-			'heading'		=> 'Meine letzte Aktivität',
+			'title'			=> $words->titleMy,
+			'heading'		=> $words->headingMy,
 			'icon'			=> 'fa fa-fw fa-play',
 			'rank'			=> 10,
 		] );
 		$this->context->registerPanel( 'work-timer-others', [
 			'url'			=> 'work/time/ajaxRenderDashboardPanel',
-			'title'			=> 'Aktivität: Andere',
-			'heading'		=> 'Aktivitäten der Anderen',
+			'title'			=> $words->titleOthers,
+			'heading'		=> $words->headingOthers,
 			'rank'			=> 20,
 			'refresh'		=> 10,
 		] );

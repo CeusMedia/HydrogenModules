@@ -37,7 +37,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, [
 	'class'			=> "btn btn-primary".( $isUsed ? ' disabled' : '' ),
 	'name'			=> "save",
 	'readonly'		=> $isUsed ? 'readonly' : NULL,
-	'onmousedown'	=> $isUsed ? "alert('".$words->edit->buttonSaveDisabled."');" : NULL,
+	'onmousedown'	=> $isUsed ? "alert('".htmlspecialchars( addslashes( $words->edit->buttonSaveDisabled ), ENT_QUOTES, 'UTF-8' )."');" : NULL,
 ] );
 $buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, [
 	'type'			=> "button",
@@ -56,7 +56,7 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
-	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
+	'onclick'	=> $isUsed ? "alert('".htmlspecialchars( addslashes( $words->edit->buttonRemoveDisabled ), ENT_QUOTES, 'UTF-8' )."'); return false;" : NULL,
 ] );
 $buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, [
 	'class'		=> "btn btn-success btn-small",

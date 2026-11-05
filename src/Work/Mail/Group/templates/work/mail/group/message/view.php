@@ -8,6 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $message */
 /** @var array $words */
 
+$w		= (object) $words['view'];
 $tabs	= $view->renderTabs( $env, 'message' );
 
 $message->text	= '';
@@ -21,14 +22,14 @@ foreach( $message->object->getParts( FALSE ) as $part ){
 
 $fieldText	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
-		HtmlTag::create( 'h4', 'Plain Text' ),
+		HtmlTag::create( 'h4', $w->headingText ),
 		xmp( $message->text, TRUE ),
 	], ['class' => 'span12'] ),
 ], ['class' => 'row-fluid'] );
 
 $fieldHtml	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
-		HtmlTag::create( 'h4', 'HTML' ),
+		HtmlTag::create( 'h4', $w->headingHtml ),
 		HtmlTag::create( 'iframe', '', [
 			'src'			=> './work/mail/group/message/html/'.$message->mailGroupMessageId,
 			'style'			=> 'width: 100%; height: 600px; border: 1px solid gray;',
@@ -43,7 +44,7 @@ if( !$message->html )
 	$fieldHtml	= '';
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
+$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 	'href'	=> './work/mail/group/message',
 	'class'	=> 'btn',
 ] );
@@ -51,14 +52,14 @@ $buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 $iconParse		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 $buttonParse	= '';
 if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
-	$buttonParse	= HtmlTag::create( 'a', $iconParse.'&nbsp;noch einmal einlesen', [
+	$buttonParse	= HtmlTag::create( 'a', $iconParse.'&nbsp;'.$w->buttonParse, [
 		'href'		=> './work/mail/group/message/parseAgainFromRaw/'.$message->mailGroupMessageId,
 		'class'		=> 'btn btn-small',
 	] );
 }
 
 return $tabs.HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Mail: '.$message->object->getSubject() ),
+	HtmlTag::create( 'h3', sprintf( $w->heading, $message->object->getSubject() ) ),
 	HtmlTag::create( 'div', [
 		$fieldText,
 		$fieldHtml,

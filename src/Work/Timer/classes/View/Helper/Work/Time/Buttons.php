@@ -114,7 +114,8 @@ class View_Helper_Work_Time_Buttons
 					$iconMessage	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o'] );
 					if( $userIsOwner || !$userIsWorker ){
 						$modal		= new BootstrapModalDialog( 'work-time-timer-message-'.$timer->workTimerId );
-						$modal->setHeading( 'Nachricht bezüglicher dieser Aufgabe' );
+						$words		= $this->env->getLanguage()->getSection( 'work/time', 'buttons' );
+						$modal->setHeading( $words['headingMessage'] );
 						$modal->setBody( '...' );
 //						$modal->setFormUrl( '...' );
 						$modals[]	= $modal;

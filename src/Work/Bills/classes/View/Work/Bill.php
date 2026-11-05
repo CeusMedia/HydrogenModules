@@ -49,10 +49,11 @@ class View_Work_Bill extends View
 	public function renderTable( array $bills, $path = NULL, bool $colored = TRUE ): string
 	{
 		$words		= $this->getWords();
-		$table		= '<div><em class="muted">Keine Einträge vorhanden.</em></div><br/>';
+		$w			= (object) $words['table'];
+		$table		= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
 		if( $bills ){
-			$iconIn	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => 'an andere'] );
-			$iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => 'von anderen'] );
+			$iconIn	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => $w->titleIn] );
+			$iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => $w->titleOut] );
 			$rows		= [];
 			$helper		= new View_Helper_TimePhraser( $this->env );
 			$format		= Timestamp::$formatDatetime;
@@ -63,13 +64,13 @@ class View_Work_Bill extends View
 				$link	= HtmlTag::create( 'a', $label, ['href' => './work/bill/edit/'.$bill->billId] );
 				$price	= $this->renderPrice( $bill->price, $bill->type, '&nbsp;&euro;' );
 				$date	= strtotime( $bill->date );
-				$date	= $bill->date < date( "Ymd" ) ? $helper->convert( $date, TRUE, 'vor' ) : date( 'd.m.Y', $date );
+				$date	= $bill->date < date( "Ymd" ) ? $helper->convert( $date, TRUE, $w->timePrefix, $w->timeSuffix ) : date( 'd.m.Y', $date );
 				$action	= "";
 				if( $bill->status < 1 ){
 					$url	= './work/bill/setStatus/'.$bill->billId.'/1';
 					if( $path )
 						$url	.= '?from='.$path;
-					$label	= '<i class="icon-ok icon-white"></i>&nbsp;bezahlt';
+					$label	= '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonPaid;
 					$action	= HtmlTag::create( 'a', $label, [
 						'class' => 'btn btn-mini btn-success',
 						'href'	=> $url
@@ -79,7 +80,7 @@ class View_Work_Bill extends View
 					$url	= './work/bill/setStatus/'.$bill->billId.'/0';
 					if( $path )
 						$url	.= '?from='.$path;
-					$label	= '<i class="icon-remove icon-white"></i>&nbsp;storniert';
+					$label	= '<i class="icon-remove icon-white"></i>&nbsp;'.$w->buttonCancelled;
 					$action	= HtmlTag::create( 'a', $label, [
 						'class' => 'btn btn-mini btn-danger',
 						'href'	=> $url
@@ -97,10 +98,10 @@ class View_Work_Bill extends View
 				], ['class' => $class] );
 			}
 			$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-				'Title',
-				'Betrag',
-				'Zustand',
-				'Fälligkeit',
+				$w->headTitle,
+				$w->headPrice,
+				$w->headStatus,
+				$w->headDue,
 			] ) );
 			$colgroup	= HtmlElements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
 			$tbody		= HtmlTag::create( 'tbody', $rows );

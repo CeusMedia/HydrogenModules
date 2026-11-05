@@ -70,19 +70,19 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 	<div id="myModalWorkTimeAdd" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Starte Zeiterfassung</h3>
+			<h3 id="myModalLabel">'.$w->headingModal.'</h3>
 		</div>
 		<div class="modal-body">
 			'.$fieldRelation.'
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title" class="mandatory required">Titel</label>
+					<label for="input_title" class="mandatory required">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_description">Beschreibung</label>
+					<label for="input_description">'.$w->labelDescription.'</label>
 					<textarea name="description" id="input_description" rows="5" class="span12"></textarea>
 				</div>
 			</div>

@@ -59,7 +59,7 @@ switch( $filterMode ){
 
 return '
 <div class="content-panel content-panel-list">
-	<h3><span class="muted">Aufgaben: </span>6-Tage-Aussicht</h3>
+	<h3><span class="muted">'.$w->headingPrefix.' </span>'.$w->headingNow.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/mission/bulk" method="post">
 			'.$content.'

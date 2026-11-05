@@ -83,7 +83,7 @@ $(document).ready(function(){
 
 	protected function renderControls( $year, $month ): string
 	{
-		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> '.$this->words['calendar']['buttonExportIcalShort'], [
 			'href'		=> './work/mission/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',
@@ -100,12 +100,10 @@ $(document).ready(function(){
 
 	public function renderLarge( $userId ): string
 	{
-		$statuses	= [
-			'0'		=> 'Neu',
-			'1'		=> 'Angenommen',
-			'2'		=> 'In Arbeit',
-			'3'		=> 'Abnahmebereit',
-		];
+		$w			= (object) $this->words['kanban'];
+		$statuses	= [];
+		foreach( [0, 1, 2, 3] as $status )
+			$statuses[(string) $status]	= ucfirst( $this->words['states'][$status] );
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$filters		= $this->env->getSession()->getAll( 'filter.work.mission.kanban.', TRUE );
 		if( $filters->has( 'projects' ) )
@@ -126,32 +124,32 @@ $(document).ready(function(){
 				$rows	= [];
 				foreach( $missions as $mission ){
 					$missionCount++;
-					$buttonView	= HtmlTag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', [
+					$buttonView	= HtmlTag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">'.$w->buttonView.'</span>', [
 						'href'	=> './work/mission/view/'.$mission->missionId,
 						'class'	=> 'btn btn-small',
-						'alt'	=> 'anzeigen',
-						'title'	=> 'anzeigen',
+						'alt'	=> $w->buttonView,
+						'title'	=> $w->buttonView,
 					] );
-					$buttonEdit	= HtmlTag::create( 'a', '<i class="fa fa-pencil"></i>&nbsp;<span class="hidden-tablet">bearbeiten</span>', [
+					$buttonEdit	= HtmlTag::create( 'a', '<i class="fa fa-pencil"></i>&nbsp;<span class="hidden-tablet">'.$w->buttonEdit.'</span>', [
 						'href'	=> './work/mission/edit/'.$mission->missionId,
 						'class'	=> 'btn btn-small',
-						'alt'	=> 'bearbeiten',
-						'title'	=> 'bearbeiten',
+						'alt'	=> $w->buttonEdit,
+						'title'	=> $w->buttonEdit,
 					] );
 					$cells	= [];
 					$cells[]	= HtmlTag::create( 'div', $mission->title, ['class' => 'mission-title'] );
 					if( $mission->workerId ){
-						$worker	= '<del class="muted">entfernt</del>';
+						$worker	= '<del class="muted">'.$w->labelRemoved.'</del>';
 						if( isset( $this->userMap[$mission->workerId] ) )
 							$worker	= $this->userMap[$mission->workerId]->username;
-						$label		= HtmlTag::create( 'small', 'Bearbeiter: '.$worker );
+						$label		= HtmlTag::create( 'small', sprintf( $w->labelWorker, $worker ) );
 						$cells[]	= HtmlTag::create( 'div', $label );
 					}
 					if( $mission->projectId ){
-						$projectLabel	= '<del class="muted">entfernt</del>';
+						$projectLabel	= '<del class="muted">'.$w->labelRemoved.'</del>';
 						if( isset( $this->projects[$mission->projectId] ) )
 							$projectLabel	= $this->projects[$mission->projectId]->title;
-						$label		= HtmlTag::create( 'small', 'Project: '.$projectLabel );
+						$label		= HtmlTag::create( 'small', sprintf( $w->labelProject, $projectLabel ) );
 						$cells[]	= HtmlTag::create( 'div', $label );
 					}
 					$cells[]	= HtmlTag::create( 'div', $buttonView.$buttonEdit, ['class' => 'btn-group'] );
@@ -165,7 +163,7 @@ $(document).ready(function(){
 			if( !$missionCount )
 				continue;
 
-			$laneLabel	= HtmlTag::create( 'h3', '<span class="muted">Projekt:</span>&nbsp;'.$project->title );
+			$laneLabel	= HtmlTag::create( 'h3', '<span class="muted">'.$w->headingLane.'</span>&nbsp;'.$project->title );
 			$columns	= HtmlTag::create( 'div', $columns, ['class' => 'row-fluid'] );
 			$lanes[]	= HtmlTag::create( 'div', [$laneLabel, $columns], [
 				'class'		=> 'row-fluid work-mission-kanban-lane-item',

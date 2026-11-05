@@ -27,14 +27,15 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 			'workerId'	=> $logicAuth->getCurrentUserId(),
 			'status'	=> [1, 2],
 		] );
+		$w			= (object) $this->getWords( 'dashboard-my', 'work/time' );
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 		$fromAdd	= 'info/dashboard';
-		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', [
+		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 			'href'	=> './work/time/add?from='.$fromAdd,
 			'class'	=> 'btn btn-block btn-success',
 		] );
 		if( !$hasTimers ){
-			$content	= '<div class="alert alert-info">Keine laufende oder pausierte Aktivität vorhanden.</div>'.$buttonAdd;
+			$content	= '<div class="alert alert-info">'.$w->empty.'</div>'.$buttonAdd;
 		}
 		else{
 			$timer		= $modelTimer->getAllByIndices( [
@@ -53,9 +54,9 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 				$button		= HtmlTag::create( 'a', $icon, [
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-warning',
-					'title'	=> 'pausieren',
+					'title'	=> $w->buttonPause,
 				] );
-				$button		= HtmlTag::create( 'a', $icon.'&nbsp;pausieren', [
+				$button		= HtmlTag::create( 'a', $icon.'&nbsp;'.$w->buttonPause, [
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-block btn-warning',
 				] );
@@ -71,9 +72,9 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 				$button		= HtmlTag::create( 'a', $icon, [
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-success',
-					'title'	=> 'starten',
+					'title'	=> $w->buttonStart,
 				] );
-				$button		= HtmlTag::create( 'a', $icon.'&nbsp;starten', [
+				$button		= HtmlTag::create( 'a', $icon.'&nbsp;'.$w->buttonStart, [
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-block btn-success',
 				] );
@@ -107,14 +108,14 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 							'.$linkRelation.'
 						</div>
 						<div class="autocut">
-							<small class="muted">Projekt:</small><br/>
+							<small class="muted">'.$w->labelProject.'</small><br/>
 							'.$linkProject.'
 						</div>
 <!--						<hr/>-->
 <!--						<div class="pull-right">'.$button.'</div>-->
 						<div class="dashboard-panel-work-timer-container-time">
 							<span style="font-size: 1.75em">'.$timeNeeded.'</span><br>
-							<small class="not-muted">geplant: <span>'.$timePlanned.'</span></small>
+							<small class="not-muted">'.$w->labelPlanned.' <span>'.$timePlanned.'</span></small>
 						</div>
 						'.$button.'
 						'.$buttonAdd.'

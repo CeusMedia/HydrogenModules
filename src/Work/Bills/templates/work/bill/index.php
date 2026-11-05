@@ -41,8 +41,8 @@ $conditions	= [
 $orders		= ['date' => 'ASC'];
 $bills		= $model->getAll( $conditions, $orders );
 */
-$iconIn		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => 'an andere'] );
-$iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => 'von anderen'] );
+$iconIn		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => $words['table']['titleIn']] );
+$iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => $words['table']['titleOut']] );
 
 $table		= $view->renderTable( $bills );
 $filter		= $view->loadTemplateFile( 'work/bill/index.filter.php' );
@@ -63,11 +63,11 @@ return '
 	<div class="span9">
 		<div class="content-panel">
 			<div class="content-panel-inner">
-				<h4>Rechnungen</h4>
+				<h4>'.$w->heading.'</h4>
 				'.$table.'
 				'.$pagination.'
 				<div class="buttonbar">
-					<a href="./work/bill/add" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;neue Rechnung</a>
+					<a href="./work/bill/add" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;'.$w->buttonAdd.'</a>
 				</div>
 			</div>
 		</div>

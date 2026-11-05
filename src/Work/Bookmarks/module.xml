@@ -7,11 +7,12 @@
 
 Needs composer package "paquettg/php-html-parser": "^1.7".
 ]]></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add composer package.</log>
 	<log version="0.2.2">Improve code style.</log>
+	<log version="0.2.3">Extract hard-coded texts to locales (de, en).</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" site="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -24,6 +25,7 @@ Needs composer package "paquettg/php-html-parser": "^1.7".
 		<template>work/bookmark/index.php</template>
 		<template>work/bookmark/view.php</template>
 		<locale>de/work/bookmark.ini</locale>
+		<locale>en/work/bookmark.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>

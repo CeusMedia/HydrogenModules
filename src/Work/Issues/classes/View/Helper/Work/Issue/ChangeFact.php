@@ -80,8 +80,8 @@ class View_Helper_Work_Issue_ChangeFact
 		switch( $this->change->type ){
 			case 1:
 			case 2:
-				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
-				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
+				$from	= HtmlTag::create( 'small', $words['change']['unknown'], ['class' => 'muted'] );
+				$to		= HtmlTag::create( 'small', $words['change']['unknown'], ['class' => 'muted'] );
 				if( $this->change->from && $this->modelUser->has( $this->change->from ) ){
 					$from	= $this->modelUser->get( $this->change->from )->username;
 					$from	= HtmlTag::create( 'a', $from, ['href' => './user/view/'.$this->change->from] );
@@ -97,8 +97,8 @@ class View_Helper_Work_Issue_ChangeFact
 			case 3:
 				/** @var Logic_Project $logic */
 				$logic	= Logic_Project::getInstance( $this->env );
-				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
-				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
+				$from	= HtmlTag::create( 'small', $words['change']['unknown'], ['class' => 'muted'] );
+				$to		= HtmlTag::create( 'small', $words['change']['unknown'], ['class' => 'muted'] );
 				if( $this->change->from )
 					$from	= HtmlTag::create( 'span', $logic->get( $this->change->from )->title, ['class' => ''] );
 				if( $this->change->to )

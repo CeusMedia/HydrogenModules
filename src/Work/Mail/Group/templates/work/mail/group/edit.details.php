@@ -10,6 +10,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object[] $servers */
 /** @var object[] $roles */
 /** @var array $words */
+
+$w	= (object) $words['edit'];
 /** @var object $group */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
@@ -38,12 +40,12 @@ foreach( $servers as $server )
 $optServerId		= HtmlElements::Options( $optServerId, @$data->mailGroupServerId );
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'E-Mail-Gruppe bearbeiten' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Title', [
+					HtmlTag::create( 'label', $w->labelTitle, [
 						'for'	=> 'input_title',
 						'class'	=> 'mandatory',
 					] ),
@@ -57,7 +59,7 @@ return HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span7'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Server', [
+					HtmlTag::create( 'label', $w->labelServer, [
 						'for'	=> 'input_mailGroupServerId',
 					] ),
 					HtmlTag::create( 'select', $optServerId, [
@@ -69,7 +71,7 @@ return HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'E-Mail-Adresse', [
+					HtmlTag::create( 'label', $w->labelAddress, [
 						'for'	=> 'input_address',
 						'class'	=> 'mandatory',
 					] ),
@@ -84,7 +86,7 @@ return HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span5'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Passwort', [
+					HtmlTag::create( 'label', $w->labelPassword, [
 						'for'	=> 'input_password',
 						'class'	=> 'mandatory',
 					] ),
@@ -97,7 +99,7 @@ return HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span3'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Zustand', [
+					HtmlTag::create( 'label', $w->labelStatus, [
 						'for'	=> 'input_status',
 					] ),
 					HtmlTag::create( 'select', $optStatus, [
@@ -109,7 +111,7 @@ return HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Administrator', [
+					HtmlTag::create( 'label', $w->labelManager, [
 						'for'	=> 'input_managerId',
 						'class'	=> 'mandatory',
 					] ),
@@ -120,7 +122,7 @@ return HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span6'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Standard-Rolle', [
+					HtmlTag::create( 'label', $w->labelRole, [
 						'for'	=> 'input_roleId',
 						'class'	=> 'mandatory',
 					] ),
@@ -133,7 +135,7 @@ return HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Beitritt', [
+					HtmlTag::create( 'label', $w->labelType, [
 						'for'	=> 'input_type',
 						'class'	=> 'mandatory',
 					] ),
@@ -144,7 +146,7 @@ return HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span7'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Sichtbarkeit', [
+					HtmlTag::create( 'label', $w->labelVisibility, [
 						'for'	=> 'input_visibility',
 						'class'	=> 'mandatory',
 					] ),
@@ -157,7 +159,7 @@ return HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Beschreibung der Gruppe', [
+					HtmlTag::create( 'label', $w->labelDescription, [
 						'for'	=> 'input_description',
 					] ),
 					HtmlTag::create( 'textarea', htmlentities( $group->description, ENT_QUOTES, 'UTF-8' ), [
@@ -169,11 +171,11 @@ return HtmlTag::create( 'div', [
 				], ['class' => 'span12'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', [
-				HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', [
+				HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 					'href'	=> './work/mail/group',
 					'class'	=> 'btn',
 				] ),
-				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+				HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',

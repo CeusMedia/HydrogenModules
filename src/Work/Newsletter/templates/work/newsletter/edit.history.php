@@ -24,13 +24,15 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 $iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
+$w			= (object) $words->edit_history;
+
 $labelLetterButtonRemove	= $iconRemove.' '.$words->edit->buttonQueueRemove;
 $labelLetterButtonRetry		= $iconRefresh.' '.$words->edit->buttonQueueRetry;
 $labelLetterButtonView		= $iconView.' '.$words->edit->buttonQueueView;
 $labelLetterButtonSend		= $iconSend.' '.$words->edit->buttonQueueAgain;
 
 if( $nrLetters > 50 && [] === $letterHistory ){
-	return '<div class="alert alert-info"><em class="not-muted">Der Newsletter wurde an '.$nrLetters.' Empfänger verschickt. Die Liste ist zu groß, um hier angezeigt zu werden.</em></div>';
+	return '<div class="alert alert-info"><em class="not-muted">'.sprintf( $w->alertTooMany, $nrLetters ).'</em></div>';
 }
 else if( [] !== $letterHistory ){
 	$rows	= [];
@@ -42,7 +44,7 @@ else if( [] !== $letterHistory ){
 		$urlSend		= './work/newsletter/sendLetter/'.$readerLetter->newsletterReaderLetterId;
 		$urlRemove		= './work/newsletter/dequeueLetter/'.$readerLetter->newsletterReaderLetterId;
 		$urlView		= $frontendUrl.'info/newsletter/view/'.$readerLetter->newsletterReaderLetterId.'?dry';
-		$buttonSend		= '<button class="btn btn-small btn-primary" type="button" onclick="if(confirm(\''.$words->edit->buttonQueueAgainConfirm.'\'))document.location.href=\''.$urlSend.'\';">'.$labelLetterButtonSend.'</button>';
+		$buttonSend		= '<button class="btn btn-small btn-primary" type="button" onclick="if(confirm(\''.htmlspecialchars( addslashes( $words->edit->buttonQueueAgainConfirm ), ENT_QUOTES, 'UTF-8' ).'\'))document.location.href=\''.$urlSend.'\';">'.$labelLetterButtonSend.'</button>';
 		$buttonRemove	= '<a class="btn btn-small btn-danger" href="'.$urlRemove.'">'.$labelLetterButtonRemove.'</a>';
 		$buttonView		= '<a class="btn btn-small" href="'.$urlView.'" target="_blank">'.$labelLetterButtonView.'</a>';
 		switch( $readerLetter->status ){
@@ -65,16 +67,16 @@ else if( [] !== $letterHistory ){
 		] ).'</td></tr>';
 	}
 	$columns	= HtmlElements::ColumnGroup( "25%", "30%", "15%", "30%" );
-	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';
+	$thead		= '<thead><tr><th>'.$w->columnReader.'</th><th>'.$w->columnEmail.'</th><th>'.$w->columnStatus.'</th><th>'.$w->columnAction.'</th></tr></thead>';
 	$tbody		= '<tbody>'.join( $rows ).'</tbody>';
 	$table		= '<table class="table table-condensed">'.$columns.$thead.$tbody.'</table>';
 }
 else
-	$table		= '<em><small class="muted">Nichts versendet bisher.</small></em>';
+	$table		= '<em><small class="muted">'.$w->empty.'</small></em>';
 
 return '
 <div class="content-panel">
-	<h3>Versendete E-Mails</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 	</div>

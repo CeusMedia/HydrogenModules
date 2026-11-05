@@ -78,7 +78,7 @@ $buttonAdd	= BootstrapModalTrigger::create( $env )
 if( $limiter && $limiter->denies( 'Work.Newsletter.Newsletter:maxItems', count( $newsletters ) + 1 ) ){
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
 		'class'		=> 'btn btn-small btn-success disabled',
-		'onclick'	=> 'alert("Weitere Kampagnen sind in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert("'.addslashes( $w->alertDemoLimit ).'")',
 	] );
 }
 

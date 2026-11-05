@@ -1,24 +1,28 @@
 <?php
 
+/** @var array<string,array<string,string>> $words */
+$wg	= (object) $words['general'];
+$wfa	= (object) $words['facts'];
+
 /** @var object $graph */
 
 $description	= strlen( trim( $graph->description ) ) ? trim( $graph->description )."\n" : '';
 
 /* @todo investigate default values */
 $facts	= [
-	['Node Shape', $graph->nodeShape, 'box'],
-	['Node Style', $graph->nodeStyle, NULL],
-	['Node Color', $graph->nodeColor, NULL],
-	['Node Fill Color', $graph->nodeFillcolor, NULL],
-	['Node Width', $graph->nodeWidth, 0.8],
-	['Node Height', $graph->nodeHeight, 0.5],
-	['Node Font Size', $graph->nodeFontsize, 14],
-	['Node Font Color', $graph->nodeFontcolor, NULL],
-	['Edge Arrow Head', $graph->edgeArrowhead, NULL],
-	['Edge Arrow Size', $graph->edgeArrowsize, NULL],
-	['Edge Color', $graph->edgeColor, NULL],
-	['Edge Font Size', $graph->edgeFontsize, NULL],
-	['Edge Font Color', $graph->edgeFontcolor, NULL],
+	[$wfa->nodeShape, $graph->nodeShape, 'box'],
+	[$wfa->nodeStyle, $graph->nodeStyle, NULL],
+	[$wfa->nodeColor, $graph->nodeColor, NULL],
+	[$wfa->nodeFillColor, $graph->nodeFillcolor, NULL],
+	[$wfa->nodeWidth, $graph->nodeWidth, 0.8],
+	[$wfa->nodeHeight, $graph->nodeHeight, 0.5],
+	[$wfa->nodeFontSize, $graph->nodeFontsize, 14],
+	[$wfa->nodeFontColor, $graph->nodeFontcolor, NULL],
+	[$wfa->edgeArrowHead, $graph->edgeArrowhead, NULL],
+	[$wfa->edgeArrowSize, $graph->edgeArrowsize, NULL],
+	[$wfa->edgeColor, $graph->edgeColor, NULL],
+	[$wfa->edgeFontSize, $graph->edgeFontsize, NULL],
+	[$wfa->edgeFontColor, $graph->edgeFontcolor, NULL],
 ];
 
 return '
@@ -29,7 +33,7 @@ return '
 	</div>
 	<div class="span9">
 		<div class="content-panel">
-			<h3>Graph image</h3>
+			<h3>'.$wg->headingImage.'</h3>
 			<div class="content-panel-inner">
 				<a href="./work/graph/view/'.$graphId.'"><img src="./work/graph/view/'.$graphId.'"/></a>
 			</div>
@@ -41,7 +45,7 @@ return '
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
-			<h3><span class="muted">Graph: </span>'.$graph->title.'</h3>
+			<h3><span class="muted">'.$wg->prefixGraph.'</span>'.$graph->title.'</h3>
 			<div class="content-panel-inner">
 				<p>
 					'.nl2br( $description ).'
@@ -50,10 +54,10 @@ return '
 					'.$view->renderFacts( $facts ).'
 				</p>
 				<div class="buttonbar">
-					<a href="#modalEditGraph" role="button" class="btn btn-primary btn-small" data-toggle="modal"><i class="icon-pencil icon-white"></i> Edit</a>
+					<a href="#modalEditGraph" role="button" class="btn btn-primary btn-small" data-toggle="modal"><i class="icon-pencil icon-white"></i> '.$wg->buttonEdit.'</a>
 					<div class="btn-group">
-						<a href="#modalAddNode" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> Node</a>
-						<a href="#modalAddEdge" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> Edge</a>
+						<a href="#modalAddNode" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> '.$wg->buttonAddNode.'</a>
+						<a href="#modalAddEdge" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> '.$wg->buttonAddEdge.'</a>
 					</div>
 				</div>
 			</div>

@@ -14,7 +14,7 @@ class View_Work_FTP extends View
 		$entries		= $this->getData( 'entries' );
 
 		$this->addData( 'table', $this->renderFileTable( $pathCurrent, $entries ) );
-		$this->addData( 'position', $this->renderPosition( $pathCurrent, $pathDeepest ) );
+		$this->addData( 'position', $this->renderPosition( $pathCurrent, $pathDeepest, $this->getWords( 'index', 'work/ftp' )->labelHome, $this->getWords( 'index', 'work/ftp' )->labelPosition ) );
 	}
 
 	public function login(): void
@@ -50,6 +50,7 @@ class View_Work_FTP extends View
 
 	protected function renderFileTable( string $path, array $entries ): string
 	{
+		$w			= $this->getWords( 'index', 'work/ftp' );
 		$rows		= [];
 		$folders	= [];
 		$files		= [];
@@ -88,7 +89,7 @@ class View_Work_FTP extends View
 		ksort( $files );
 		$list		= $folders + $files;
 		$colgroup	= HtmlElements::ColumnGroup( ["50%", "15%", "15%", "15%"] );
-		$heads		= HtmlElements::TableHeads( ['Name', 'Size', 'Date', 'Permissions'] );
+		$heads		= HtmlElements::TableHeads( [$w->headName, $w->headSize, $w->headDate, $w->headPermissions] );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', HtmlTag::create( 'tr', $list ) );
 		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed table-striped'] );

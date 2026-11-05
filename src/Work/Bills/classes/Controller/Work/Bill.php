@@ -11,19 +11,20 @@ class Controller_Work_Bill extends Controller
 	public function add(): void
 	{
 		$request	= $this->env->getRequest();
+		$words		= (object) $this->getWords( 'msg' );
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
 			$data['userId']	= $this->userId;
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
-				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
+				$this->env->getMessenger()->noteError( $words->errorTitleMissing );
 			if( !strlen( trim( $request->get( 'price' ) ) ) )
-				$this->env->getMessenger()->noteError( 'Der Betrag fehlt.' );
+				$this->env->getMessenger()->noteError( $words->errorPriceMissing );
 			if( !strlen( trim( $request->get( 'date' ) ) ) )
-				$this->env->getMessenger()->noteError( 'Das Datum der Fälligkeit fehlt.' );
+				$this->env->getMessenger()->noteError( $words->errorDateMissing );
 			if( !$this->env->getMessenger()->gotError() ){
 				$data['date']	= date( 'Ymd', strtotime( $data['date'] ) );
 				$this->model->add( $data );
-				$this->env->getMessenger()->noteSuccess( 'Gespeichert.' );
+				$this->env->getMessenger()->noteSuccess( $words->successSaved );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -32,23 +33,24 @@ class Controller_Work_Bill extends Controller
 	public function edit( string $billId ): void
 	{
 		$request	= $this->env->getRequest();
+		$words		= (object) $this->getWords( 'msg' );
 		$bill	= $this->model->get( $billId );
 		if( !$bill ){
-			$this->env->getMessenger()->noteError( 'Invalid bill ID: '.$billId );
+			$this->env->getMessenger()->noteError( sprintf( $words->errorInvalidId, $billId ) );
 			$this->restart( NULL, TRUE );
 		}
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
-				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
+				$this->env->getMessenger()->noteError( $words->errorTitleMissing );
 			if( !strlen( trim( $request->get( 'price' ) ) ) )
-				$this->env->getMessenger()->noteError( 'Der Betrag fehlt.' );
+				$this->env->getMessenger()->noteError( $words->errorPriceMissing );
 			if( !strlen( trim( $request->get( 'date' ) ) ) )
-				$this->env->getMessenger()->noteError( 'Das Datum der Fälligkeit fehlt.' );
+				$this->env->getMessenger()->noteError( $words->errorDateMissing );
 			if( !$this->env->getMessenger()->gotError() ){
 				$data['date']	= date( 'Ymd', strtotime( $data['date'] ) );
 				$this->model->edit( $billId, $data );
-				$this->env->getMessenger()->noteSuccess( 'Gespeichert.' );
+				$this->env->getMessenger()->noteSuccess( $words->successSaved );
 				$this->restart( NULL, TRUE );
 			}
 		}

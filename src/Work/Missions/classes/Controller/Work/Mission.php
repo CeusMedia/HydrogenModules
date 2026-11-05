@@ -586,25 +586,26 @@ class Controller_Work_Mission extends Controller
 	public function import(): void
 	{
 		$this->checkIsEditor();
+		$words	= (object) $this->getWords( 'msg', 'work/mission' );
 		$file	= $this->env->getRequest()->get( 'serial' );
 		if( $file['error'] != 0 ){
 			$handler	= new UploadErrorHandler();
-			$this->messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
+			$this->messenger->noteError( $words->errorUpload, $handler->getErrorMessage( $file['error'] ) );
 		}
 		else{
 			$gz			= FileReader::load( $file['tmp_name'] );
 			$serial		= @gzinflate( substr( $gz, 10, -8 ) );
 			$missions	= @unserialize( $serial );
 			if( !$serial )
-				$this->messenger->noteError( 'Das Entpacken der Daten ist fehlgeschlagen.' );
+				$this->messenger->noteError( $words->errorImportUnpack );
 			else if( !$missions )
-				$this->messenger->noteError( 'Keine Daten enthalten.' );
+				$this->messenger->noteError( $words->errorImportEmpty );
 			else{
 				$model	= new Model_Mission( $this->env );
 				$model->truncate();
 				foreach( $missions as $mission )
 					$model->add( (array) $mission );
-				$this->messenger->noteSuccess( 'Die Daten wurden importiert.' );
+				$this->messenger->noteSuccess( $words->successImported );
 			}
 		}
 		$this->restart( NULL, TRUE );
@@ -969,7 +970,7 @@ class Controller_Work_Mission extends Controller
 		if( $this->isEditor )
 			return TRUE;
 		if( $strict ){
-			$words		= (object) $this->getWords( 'msg' );
+			$words		= (object) $this->getWords( 'msg', 'work/mission' );
 			$message	= $words->errorNoRightToAdd;
 			$redirect	= NULL;
 			if( $missionId ){
@@ -995,15 +996,16 @@ class Controller_Work_Mission extends Controller
 		//	check missionId against user
 		//	check missionDocumentId against missionId
 
+		$words		= (object) $this->getWords( 'msg', 'work/mission' );
 		$model		= new Model_Mission_Document( $this->env );
 		$document	= $model->get( $missionDocumentId );
 		if( !$document ){
-			$this->messenger->noteError( 'Document ID is invalid' );
+			$this->messenger->noteError( $words->errorDocumentInvalid );
 			$this->restart( './view/'.$missionId );
 		}
 		$pathname	= "contents/documents/missions/".$document->hashname;
 		if( !file_exists( $pathname ) ){
-			$this->messenger->noteError( 'Document is not existing' );
+			$this->messenger->noteError( $words->errorDocumentMissing );
 			$this->restart( './view/'.$missionId );
 		}
 		$timestamp	= max( $document->createdAt, $document->modifiedAt );
@@ -1129,7 +1131,7 @@ class Controller_Work_Mission extends Controller
 		if( is_array( $serial ) ){
 			foreach( $serial as $key => $value )
 				$this->session->set( $this->filterKeyPrefix.$key, $value );
-			$this->env->getMessenger()->noteNotice( 'Filter für Aufgaben aus der letzten Sitzung wurden reaktiviert.' );
+			$this->env->getMessenger()->noteNotice( $this->env->getLanguage()->getSection( 'work/mission', 'msg' )['noticeFiltersRestored'] );
 			$this->restart( NULL, TRUE );
 		}
 	}

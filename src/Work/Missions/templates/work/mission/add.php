@@ -139,16 +139,17 @@ $panelAdd	= '
 
 $panelContent	= '';
 if( strtoupper( $format ) === "MARKDOWN" ){
+	$hintMarkdown	= sprintf( $w->hintMarkdown, '<a href="'.$w->hintMarkdownLink.'" target="_blank">'.$w->hintMarkdownLabel.'</a>' );
 
 	$panelContentSplitted	= '
 	<div class="row-fluid">
 		<div class="span6">
 			<div class="content-panel content-panel-form">
 				<div class="content-panel-inner">
-					<h3>Inhalt</h3>
+					<h3>'.$w->headingContent.'</h3>
 					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 					<p>
-						<span class="muted">Du kannst hier den <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+						<span class="muted">'.$hintMarkdown.'</span>
 					</p>
 				</div>
 			</div>
@@ -156,7 +157,7 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 		<div class="span6">
 			<div class="content-panel content-panel-form">
 				<div class="content-panel-inner" style="min-height: 220px">
-					<h3>Ansicht</h3>
+					<h3>'.$w->headingView.'</h3>
 					<div id="content-editor">
 						<div id="mission-content-html"></div>
 					</div>
@@ -167,18 +168,18 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 
 	$panelContentTabbed	= '
 	<div class="content-panel">
-		<h4>Inhalt / Beschreibung</h4>
+		<h4>'.$w->headingContentTabbed.'</h4>
 		<div class="content-panel-inner">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#tab1" data-toggle="tab">Editor</a></li>
-				<li><a href="#tab2" data-toggle="tab">Ansicht</a></li>
+				<li class="active"><a href="#tab1" data-toggle="tab">'.$w->tabEdit.'</a></li>
+				<li><a href="#tab2" data-toggle="tab">'.$w->tabView.'</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab1">
 					<div id="mirror-container">
 						<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 						<p>
-							<span class="muted">Du kannst hier den <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+							<span class="muted">'.$hintMarkdown.'</span>
 						</p>
 					</div>
 				</div>

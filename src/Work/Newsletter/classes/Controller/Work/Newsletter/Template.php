@@ -84,7 +84,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		$model			= new Model_Newsletter_Template( $this->env );
 		$totalTemplates	= $model->count();
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Template:maxItems', $totalTemplates + 1 ) ){
-			$this->messenger->noteNotice( 'Limit erreicht. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeLimitReached'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'totalTemplates', $totalTemplates );
@@ -199,7 +199,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		$theme		= $this->modelTheme->getFromId( $themeId );
 		$pathThemes	= $this->logic->getNewsletterThemesPath();
 		if( NULL === $theme ){
-			$this->messenger->noteError( 'Invalid theme ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidThemeId'] );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -362,7 +362,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->addData( 'themePath', $this->logic->getNewsletterThemesPath() );
 		}
 		catch( Exception ){
-			$this->messenger->noteError( 'Invalid theme ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidThemeId'] );
 			$this->restart( NULL, TRUE );
 		}
 	}

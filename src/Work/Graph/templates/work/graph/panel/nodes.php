@@ -1,9 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+$wp	= (object) $words['panel.nodes'];
+
 if( empty( $nodeId ) )
 	$nodeId	= NULL;
-$listNodes		= '<em class="muted">Keine vorhanden.</em>';
+$listNodes		= '<em class="muted">'.$wp->empty.'</em>';
 if( $nodes ){
 	$listNodes		= [];
 	foreach( $nodes as $node ){
@@ -23,7 +26,7 @@ if( $nodes ){
 
 return '
 <div class="content-panel">
-	<h3>Nodes</h3>
+	<h3>'.$wp->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$listNodes.'
 	</div>

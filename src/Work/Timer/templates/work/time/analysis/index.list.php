@@ -13,6 +13,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $allUsers */
 /** @var array $data */
 
+$w	= (object) $words['index-list'];
+
 $indicator	= new HtmlIndicator( [
 	'useColor'	=> FALSE,
 ] );
@@ -25,7 +27,7 @@ function renderTime( int $seconds ): string
 }
 
 
-function renderTimers( Web $env, $timers ): string
+function renderTimers( Web $env, $timers, string $labelUntitled ): string
 {
 	if( !$timers )
 		return '';
@@ -43,7 +45,7 @@ function renderTimers( Web $env, $timers ): string
 			$linkRelation	= HtmlTag::create( 'div', $linkRelation, ['class' => 'autocut'] );
 		}
 		$time	= HtmlTag::create( 'small', '('.renderTime( $timer->secondsNeeded ).')', ['class' => 'muted'] );
-		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
+		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">'.$labelUntitled.'</em>';
 		$title	= $title.'&nbsp;'.$time;
 		$title	= HtmlTag::create( 'a', $title, ['href' => './work/time/edit/'.$timer->workTimerId.'?from=work/time/analysis'] );
 		$title	= HtmlTag::create( 'div', $title, ['class' => 'autocut'] );
@@ -67,7 +69,7 @@ if( $filterMode === "users" ){
 			continue;
 		if( !$entry->secondsPlanned )
 			continue;
-		$timers	= renderTimers( $env, $entry->timers );
+		$timers	= renderTimers( $env, $entry->timers, $w->untitled );
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $allProjects[$projectId]->title.$timers ),
 			HtmlTag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), ['style' => 'text-align: right'] ),
@@ -75,14 +77,14 @@ if( $filterMode === "users" ){
 		] );
 	}
 	$rows[]	= HtmlTag::create( 'tr', [
-		HtmlTag::create( 'td', HtmlTag::create( 'big', 'Gesamt' ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'big', $w->labelTotal ) ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
 	] );
 	$thead	= HtmlTag::create( 'thead', [
-		HtmlTag::create( 'th', 'Projekt' ),
-		HtmlTag::create( 'th', 'geplant', ['style' => 'text-align: right'] ),
-		HtmlTag::create( 'th', 'erfasst', ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headProject ),
+		HtmlTag::create( 'th', $w->headPlanned, ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headNeeded, ['style' => 'text-align: right'] ),
 	] );
 	$colgroup	= HtmlElements::ColumnGroup( '', '120', '120' );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
@@ -95,7 +97,7 @@ else {
 			continue;
 		if( !$entry->secondsPlanned )
 			continue;
-		$timers	= renderTimers( $env, $entry->timers );
+		$timers	= renderTimers( $env, $entry->timers, $w->untitled );
 		$username	= HtmlTag::create( 'small', '('.$allUsers[$userId]->firstname.' '.$allUsers[$userId]->surname.')', ['class' => 'muted'] );
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $allUsers[$userId]->username.'&nbsp;'.$username.$timers ),
@@ -104,14 +106,14 @@ else {
 		] );
 	}
 	$rows[]	= HtmlTag::create( 'tr', [
-		HtmlTag::create( 'td', HtmlTag::create( 'big', 'Gesamt' ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'big', $w->labelTotal ) ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
 	] );
 	$thead	= HtmlTag::create( 'thead', [
-		HtmlTag::create( 'th', 'Bearbeiter' ),
-		HtmlTag::create( 'th', 'geplant', ['style' => 'text-align: right'] ),
-		HtmlTag::create( 'th', 'erfasst', ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headWorker ),
+		HtmlTag::create( 'th', $w->headPlanned, ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headNeeded, ['style' => 'text-align: right'] ),
 	] );
 	$colgroup	= HtmlElements::ColumnGroup( '', '120', '120' );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
@@ -123,11 +125,11 @@ else {
 
 return '
 <div class="content-panel">
-	<h3>Analysis</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">
-			<button type="button" class="btn btn-small not-btn-info"><i class="fa fa-fw fa-download"></i>&nbsp;exportieren als CSV</button>
+			<button type="button" class="btn btn-small not-btn-info"><i class="fa fa-fw fa-download"></i>&nbsp;'.$w->buttonExport.'</button>
 		</div>
 	</div>
 </div>

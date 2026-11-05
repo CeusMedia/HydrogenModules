@@ -26,14 +26,15 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 	public function address( string $addressId ): void
 	{
 		/** @var array<string,array<string,string>> $words */
-		$words		= $this->env->getLanguage()->getWords( 'work.mail.check' );
+		$words		= $this->env->getLanguage()->getWords( 'work/mail/check' );
+		$wa			= (object) $words['address'];
 
 		/** @var object $address */
 		$address	= $this->modelAddress->get( $addressId );
 		if( NULL === $address )
 			$this->respondError( 0, 'Invalid address ID' );
 
-		$runs 			= HtmlTag::create('div', 'Keine Prüfungen bisher.', ['class' => 'text text-info']);
+		$runs 			= HtmlTag::create('div', $wa->noChecks, ['class' => 'text text-info']);
 		$address->runs	= $this->modelCheck->getAllByIndex( 'mailCheckAddressId', $addressId, ['createdAt' => 'DESC'] );
 		if( $address->runs ){
 			$rows	= [];
@@ -45,10 +46,10 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 				$errorDesc	= $words['errorLabels'][$run->error];
 
 				$facts		= $this->renderFacts( [
-					'SMTP-Code'			=> $codeLabel.' <small class="muted">'.$codeDesc.'</small>',
-					'Fehler'			=> $errorLabel.' <small class="muted">'.$errorDesc.'</small>',
-					'Servermeldung'		=> '<not-pre>'.$run->message.'</not-pre>',
-					'Datum / Uhrzeit'	=> date( 'Y-m-d', $run->createdAt ).' <small class="muted">'.date( 'H:i:s', $run->createdAt ).'</small>',
+					$wa->factCode			=> $codeLabel.' <small class="muted">'.$codeDesc.'</small>',
+					$wa->factError			=> $errorLabel.' <small class="muted">'.$errorDesc.'</small>',
+					$wa->factMessage		=> '<not-pre>'.$run->message.'</not-pre>',
+					$wa->factDatetime	=> date( 'Y-m-d', $run->createdAt ).' <small class="muted">'.date( 'H:i:s', $run->createdAt ).'</small>',
 				] );
 				$rows[] = HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', $facts ),
@@ -59,8 +60,8 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 		/** @noinspection XmlDeprecatedElement */
 		/** @noinspection HtmlDeprecatedTag */
 		$html	= '
-<big><span class="muted">Adresse: </span>'.$address->address.'</big>
-<h4>Prüfungen <small class="muted">('.count( $address->runs ).')</small></h4>
+<big>'.sprintf( $wa->heading, $address->address ).'</big>
+<h4>'.$wa->headingChecks.' <small class="muted">('.count( $address->runs ).')</small></h4>
 '.$runs.'
 <br/>
 <br/>';

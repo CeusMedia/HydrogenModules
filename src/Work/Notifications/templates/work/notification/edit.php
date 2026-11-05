@@ -172,7 +172,7 @@ function renderEditPanel( array $words, Entity_Notification_Message $message, ar
 						], ['class' => 'row-fluid'] ),
 					], ['class' => 'span9'] ),
 					HtmlTag::create( 'div', [
-						HtmlTag::create( 'label', 'Empfänger' ),
+						HtmlTag::create( 'label', $w->labelRecipients ),
 						HtmlTag::create( 'div', [
 							renderRecipientList( $words, $recipientsNew ),
 						], ['class' => 'boxed boxed-large user-avatar-list'] ),

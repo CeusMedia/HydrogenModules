@@ -75,21 +75,21 @@ $pagination		= new PageControl( './work/newsletter/reader', $filterPage, ceil( $
 $buttonImport	= '';
 if( $canImport ){
 	$buttonImport	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'a', $iconImport.'importieren&nbsp;<span class="caret"></span>', [
+		HtmlTag::create( 'a', $iconImport.$w->buttonImport.'&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
 			'class'			=> 'btn btn-small dropdown-toggle',
 			'data-toggle'	=> 'dropdown'
 		] ),
 		HtmlTag::create( 'ul', [
 			HtmlTag::create( 'li', [
-				HtmlTag::create( 'a', 'aus Empfängerliste', [
+				HtmlTag::create( 'a', $w->linkImportList, [
 					'href'			=> '#modalImportList',
 					'role'			=> 'button',
 					'data-toggle'	=> 'modal',
 				] )
 			] ),
 			HtmlTag::create( 'li', [
-				HtmlTag::create( 'a', 'aus CSV-Exportdatei', [
+				HtmlTag::create( 'a', $w->linkImportCsv, [
 					'href'			=> '#modalImportCsv',
 					'role'			=> 'button',
 					'data-toggle'	=> 'modal',
@@ -99,29 +99,29 @@ if( $canImport ){
 	], ['class' => 'btn-group'] );
 }
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
-	$buttonImport	= HtmlTag::create( 'button', $iconImport.'importieren&nbsp;<span class="caret"></span>', [
+	$buttonImport	= HtmlTag::create( 'button', $iconImport.$w->buttonImport.'&nbsp;<span class="caret"></span>', [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small disabled',
-		'onclick'	=> 'alert("Importieren von Abonnenten ist in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertImportDisabled ), ENT_QUOTES, 'UTF-8' ).')',
 	] );
 }
 
 $buttonExport	= '';
 if( $canExport ){
 	$buttonExport	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'a', $iconExport.'exportieren&nbsp;<span class="caret"></span>', [
+		HtmlTag::create( 'a', $iconExport.$w->buttonExport.'&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
 			'class'			=> 'btn btn-small dropdown-toggle',
 			'data-toggle'	=> 'dropdown'
 		] ),
 		HtmlTag::create( 'ul', [
 			HtmlTag::create( 'li', [
-				HtmlTag::create( 'a', 'in Empfängerliste', [
+				HtmlTag::create( 'a', $w->linkExportList, [
 					'href'	=> './work/newsletter/reader/export/list',
 				] )
 			] ),
 			HtmlTag::create( 'li', [
-				HtmlTag::create( 'a', 'in CSV-Exportdatei', [
+				HtmlTag::create( 'a', $w->linkExportCsv, [
 					'href'	=> './work/newsletter/reader/export/csv',
 				] )
 			] ),
@@ -129,22 +129,22 @@ if( $canExport ){
 	], ['class' => 'btn-group'] );
 }
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
-	$buttonExport	= HtmlTag::create( 'button', $iconExport.'exportieren&nbsp;<span class="caret"></span>', [
+	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport.'&nbsp;<span class="caret"></span>', [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small disabled',
-		'onclick'	=> 'alert("Exportieren von Abonnenten ist in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertExportDisabled ), ENT_QUOTES, 'UTF-8' ).')',
 	] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'neuer Abonnent', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 	'href'		=> './work/newsletter/reader/add',
 	'class'		=> 'btn btn-success btn-small',
 ] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 1 ) )
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.'neuer Leser', [
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small btn-success disabled',
-		'onclick'	=> 'alert("Weitere Abonnenten sind in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertLimitReached ), ENT_QUOTES, 'UTF-8' ).')',
 	] );
 
 $filter		= $view->loadTemplateFile( 'work/newsletter/reader/index.list.filter.php' );

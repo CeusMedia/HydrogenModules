@@ -57,7 +57,7 @@ return '
 								</div>
 							</div>
 							<hr/>
-							<h4>E-Mail-Absender</h4>
+							<h4>'.$w->headingSender.'</h4>
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_senderName" class="mandatory">'.$w->labelSenderName.'</label>
@@ -82,7 +82,7 @@ return '
 								</div>
 							</div>
 							<hr/>
-							<h4>Ersteller dieser Vorlage</h4>
+							<h4>'.$w->headingAuthor.'</h4>
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_authorName">'.$w->labelAuthorName.'</label>
@@ -139,11 +139,11 @@ return '
 						</div>
 					</div>
 					<div class="buttonbar">
-						'.HtmlTag::create( 'a', $iconCancel.'zurück', [
+						'.HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 							'href'		=> './work/newsletter/template/'.$template->newsletterTemplateId,
 							'class'		=> 'btn',
 						] ).'
-						'.HtmlTag::create( 'button', $iconExport.'&nbsp;exportieren', [
+						'.HtmlTag::create( 'button', $iconExport.'&nbsp;'.$w->buttonSave, [
 							'type'		=> 'submit',
 							'name'		=> 'save',
 							'class'		=> 'btn btn-primary',

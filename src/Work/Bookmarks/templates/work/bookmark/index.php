@@ -3,9 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var ?string $filterQuery */
 /** @var array<object> $bookmarks */
+/** @var array<string,array<string,string>> $words */
 
+$w		= (object) $words['index'];
 
-$table	= '<div class="alert alert-warning">No entries found.</div>';
+$table	= '<div class="alert alert-warning">'.$w->noEntries.'</div>';
 if( $bookmarks ){
 	$iconVisit	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right'] );
 	$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open fa fa-eye'] );
@@ -65,19 +67,19 @@ if( $bookmarks ){
 						'href'		=> './work/bookmark/visit/'.$bookmark->bookmarkId,
 						'target'	=> '_blank',
 						'class'		=> 'btn btn-mini',
-						'title'		=> 'visit',
+						'title'		=> $w->buttonVisit,
 					] ),
 					'<br/>',
 					HtmlTag::create( 'a', $iconView, [
 						'href'		=> './work/bookmark/view/'.$bookmark->bookmarkId,
 						'class'		=> 'btn btn-mini',
-						'title'		=> 'details',
+						'title'		=> $w->buttonView,
 					] ),
 					'<br/>',
 					HtmlTag::create( 'a', $iconEdit, [
 						'href'		=> './work/bookmark/edit/'.$bookmark->bookmarkId,
 						'class'		=> 'btn btn-mini',
-						'title'		=> 'edit',
+						'title'		=> $w->buttonEdit,
 					] ),
 				], ['class' => 'not-btn-group pull-right'] ),
 			], ['class' => NULL] ),
@@ -87,7 +89,7 @@ if( $bookmarks ){
 }
 
 $panelList	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Table' ),
+	HtmlTag::create( 'h3', $w->headingList ),
 	HtmlTag::create( 'div', [
 		$table
 	], ['class' => 'content-panel-inner'] ),
@@ -95,39 +97,41 @@ $panelList	= HtmlTag::create( 'div', [
 
 
 $form	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Table' ),
+	HtmlTag::create( 'h3', $w->headingList ),
 	HtmlTag::create( 'div', [
 		$table
 	], ['class' => 'content-panel-inner'] ),
 ], ['class' => 'content-panel content-panel-list content-panel-table'] );
 
 
+$wa		= (object) $words['index.add'];
 $panelAdd	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Add' ),
+	HtmlTag::create( 'h3', $wa->heading ),
 	HtmlTag::create( 'div', '
 		<form action="./work/bookmark/add" method="POST">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_url">URL</label>
+					<label for="input_url">'.$wa->labelUrl.'</label>
 					<input type="text" name="url" id="input_url" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$wa->labelTitle.'</label>
 					<input type="text" name="title" id="input_title"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary">save</button>
+				<button type="submit" name="save" class="btn btn-primary">'.$wa->buttonSave.'</button>
 			</div>
 		</form>
 	', ['class' => 'content-panel-inner'] ),
 ], ['class' => 'content-panel content-panel-form'] );
 
 
+$wf		= (object) $words['index.filter'];
 $panelFilter	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Filter' ),
+	HtmlTag::create( 'h3', $wf->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
@@ -143,12 +147,12 @@ $panelFilter	= HtmlTag::create( 'div', [
 				], ['class' => 'span4'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', 'filter', [
+				HtmlTag::create( 'button', $wf->buttonFilter, [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-small btn-primary',
 				] ),
-				HtmlTag::create( 'a', 'reset', [
+				HtmlTag::create( 'a', $wf->buttonReset, [
 					'href'	=> './work/bookmark/filter/reset',
 					'class'	=> 'btn btn-small btn-inverse',
 				] ),

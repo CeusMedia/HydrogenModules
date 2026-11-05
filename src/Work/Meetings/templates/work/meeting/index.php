@@ -81,7 +81,7 @@ if( $limiter && $limiter->denies( 'Work.Meeting:maxItems', count( $meetings ) + 
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, [
 		'type'		=> 'button',
 		'class'		=> 'btn not-btn-small btn-success disabled',
-		'onclick'	=> 'alert("Weitere Meetings sind in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.json_encode( $w->msgLimitReached ).')',
 	] );
 }
 

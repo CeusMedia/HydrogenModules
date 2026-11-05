@@ -1,0 +1,15 @@
+Hello <%?user.firstname%> <%?user.surname%>!
+
+*<%values.type%> "<%mission.title%>" has been created by <%values.modifier%>.*
+
+
+Facts
+----------------------------------------
+
+<%lists.facts%>
+
+
+Description
+----------------------------------------
+
+<%?values.content%>

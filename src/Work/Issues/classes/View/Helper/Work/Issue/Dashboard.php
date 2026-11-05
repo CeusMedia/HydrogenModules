@@ -31,8 +31,9 @@ class View_Helper_Work_Issue_Dashboard
 		$logicProject	= Logic_Project::getInstance( $this->env );
 
 		$userProjects	= $logicProject->getUserProjects( $this->currentUserId, TRUE );
+		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
 		if( !$userProjects ){
-			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
+			return HtmlTag::create( 'div', $words['dashboard']['noProjects'], ['class' => 'alert alert-info'] );
 		}
 
 		if( 0 !== count( $this->issues ) )
@@ -47,9 +48,9 @@ class View_Helper_Work_Issue_Dashboard
 
 		$rows	= [];
 		$icons			= [
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => $words['types'][0]] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => $words['types'][1]] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => $words['types'][2]] ),
 		];
 		foreach( $issues as $issue ) {
 			$icon	= $icons[$issue->type];

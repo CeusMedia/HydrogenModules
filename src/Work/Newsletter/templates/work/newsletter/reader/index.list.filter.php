@@ -18,12 +18,12 @@ use CeusMedia\HydrogenFramework\View;
 if( isset( $totalReaders ) && is_array( $totalReaders ) && count( $totalReaders ) < 3 )
 	return "";
 
-$optStatus		= ['' => '- alle -'];
+$optStatus		= ['' => $words->index_filter['optionAll']];
 foreach( $words->states as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optGroup		= ['' => '- alle -'];
+$optGroup		= ['' => $words->index_filter['optionAll']];
 foreach( $groups as $group )
 	$optGroup[$group->newsletterGroupId]	= $group->title;
 $optGroup		= HtmlElements::Options( $optGroup, $filterGroupId );

@@ -45,7 +45,7 @@ $nextActions	= new View_Helper_FormNextAction();
 $nextActions->addAction( 'add', $words->add->labelNextAdd, $limitReached );
 $nextActions->addAction( 'edit', $words->add->labelNextEdit );
 $nextActions->addAction( 'index', $words->add->labelNextIndex );
-$nextActions->setSelected( 'edit' )->setHeading( '<h4>Anschließend:</h4>' );
+$nextActions->setSelected( 'edit' )->setHeading( '<h4>'.$words->add->headingNext.'</h4>' );
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/add/', ['words' => $words] ) );
 
@@ -56,7 +56,7 @@ return $textTop.'
 	<div class="row-fluid">
 		<div class="span8">
 			<div class="content-panel">
-				<h4>Daten</h4>
+				<h4>'.$words->add->headingData.'</h4>
 				<div class="content-panel-inner">
 					<form action="./work/newsletter/reader/add" method="post">
 						<div class="row-fluid">
@@ -97,13 +97,13 @@ return $textTop.'
 								<label class="checkbox">
 									<input type="checkbox" name="inform" id="input_inform" class="optional status status-1" checked="checked"/>
 									<input type="checkbox" name="inform" id="input_inform_display" class="optional status status-0" checked="checked" disabled="disabled"/>
-									<span>neuen Abonnenten mit E-Mail informieren</span>
+									<span>'.$words->add->labelInform.'</span>
 								</label>
 							</div>
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
-								<h4>Empfängerlistenzuordnung:</h4>
+								<h4>'.$words->add->labelGroups.'</h4>
 								<div class="checkbox-list" id="reader-group-relations">
 									'.$listGroups.'
 								</div>
@@ -116,8 +116,8 @@ return $textTop.'
 						</div>
 						<div class="row-fluid">
 							<div class="buttonbar">
-								<a class="btn btn-small" href="./work/newsletter/reader">'.$iconCancel.'zurück</span></a>
-								<button type="submit" class="btn btn-primary" name="save">'.$iconSave.'speichern</button>
+								<a class="btn btn-small" href="./work/newsletter/reader">'.$iconCancel.$words->add->buttonCancel.'</a>
+								<button type="submit" class="btn btn-primary" name="save">'.$iconSave.$words->add->buttonSave.'</button>
 							</div>
 						</div>
 					</form>

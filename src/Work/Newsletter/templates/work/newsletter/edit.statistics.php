@@ -14,7 +14,7 @@ $lettersSent	= $model->count( ['newsletterId' => $newsletter->newsletterId, 'sta
 $lettersOpen	= $model->count( ['newsletterId' => $newsletter->newsletterId, 'status' => '>= 2'] );
 
 if( !$lettersSent )
-	return HtmlTag::create( 'div', 'Noch nicht versendet.', ['class' => 'alert alert-info'] );
+	return HtmlTag::create( 'div', $words->statistics['alertNotSent'], ['class' => 'alert alert-info'] );
 
 $start	= strtotime( date( "Y-m-d", (int) $newsletter->sentAt )." 00:00:00" );
 $end	= strtotime( date( "Y-m-d", time() )." 23:59:59" ) + 1;
@@ -23,10 +23,10 @@ $days	= round( ( $end - $start ) / 86400 );
 
 if( $days > 1 ){
 	$list	= [[
-		'Monat',
-		'Geöffnet',
+		$words->statistics['columnMonth'],
+		$words->statistics['columnOpened'],
 	//	'Geklickt',
-		'Versendet'
+		$words->statistics['columnSent']
 	]];
 	for( $i=-1; $i<=$days; $i++ ){
 		$timestamp	= $start + $i * 86400;
@@ -45,10 +45,10 @@ else{
 	$hours	= ceil( ( $end - $start ) / $dura );
 
 	$list	= [[
-		'Stunde',
-		'Geöffnet',
+		$words->statistics['columnHour'],
+		$words->statistics['columnOpened'],
 	//	'Geklickt',
-		'Versendet'
+		$words->statistics['columnSent']
 	]];
 	$hour	= (int) date( "H", $start );
 	for( $i=-1; $i<=$hours; $i++ ){
@@ -67,9 +67,9 @@ return '
 	<h3>'.$words->statistics['heading'].'</h3>
 	<div class="content-panel-inner">
 		<ul>
-			<li>versendet vor <b>'.View_Helper_TimePhraser::convertStatic( $env, $newsletter->sentAt, TRUE ).'</b><!-- <small class="muted">(am '.date( 'd.m.Y', $start ).')</small>--></li>
-			<li>gesendet an <b>'.$lettersSent.' Abonnenten</b></li>
-			<li>geöffnet von <b>'.$lettersOpen.' Abonnenten</b>, Rate: <b>'.round( $lettersOpen / $lettersSent * 100 ).'%</b></li>
+			<li>'.sprintf( $words->statistics['labelSentAgo'], View_Helper_TimePhraser::convertStatic( $env, $newsletter->sentAt, TRUE ) ).'<!-- <small class="muted">(am '.date( 'd.m.Y', $start ).')</small>--></li>
+			<li>'.sprintf( $words->statistics['labelSentTo'], $lettersSent ).'</li>
+			<li>'.sprintf( $words->statistics['labelOpenedBy'], $lettersOpen, round( $lettersOpen / $lettersSent * 100 ) ).'</li>
 			<!--<li><b>0 mal</b> angeklickt, Rate: <b>'.round( 0 / $lettersSent * 100 ).'%</b></li>-->
 		</ul>
 		<br/>

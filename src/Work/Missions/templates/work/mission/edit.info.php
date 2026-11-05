@@ -24,13 +24,14 @@ function renderUserLabel( $user ): string
 	return HtmlTag::create( 'span', $label, ['class' => $spanClass] );
 }
 
+$w			= (object) $words['edit-info'];
 $phraser	= new View_Helper_TimePhraser( $env );
 
 $infos		= [];
 
 if( isset( $mission->creator ) )
 	$infos['creator']	= [
-		'label'	=> 'Erstellt von',
+		'label'	=> $w->labelCreator,
 		'value'	=> renderUserLabel( $mission->creator ),
 	];
 
@@ -39,7 +40,7 @@ $typeIcons	= [
 	1 => HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] ),
 ];
 $infos['type']	= [
-	'label'	=> 'Missionstyp',
+	'label'	=> $w->labelType,
 	'value'	=> '<span class="mission mission-type type'.$mission->type.'">'.$typeIcons[$mission->type].'&nbsp;'.$words['types'][$mission->type].'</span>'
 ];
 
@@ -48,40 +49,40 @@ $typeIcons	= [
 	1 => HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] ),
 ];
 $infos['type']	= [
-	'label'	=> 'Typ',
+	'label'	=> $w->labelType,
 	'value'	=> '<span class="mission mission-type type'.$mission->type.'">'.$typeIcons[$mission->type].'&nbsp;'.$words['types'][$mission->type].'</span>'
 ];
 
 $infos['state']	= [
-	'label'	=> 'aktueller Zustand',
+	'label'	=> $w->labelStatus,
 	'value'	=> '<span class="mission mission-status status'.$mission->status.'">'.$words['states'][$mission->status].'</span>'
 ];
 
 $infos['priority']	= [
-	'label'	=> 'Priorität',
+	'label'	=> $w->labelPriority,
 	'value'	=> '<span class="mission mission-priority priority'.$mission->priority.'">'.$words['priorities'][$mission->priority].'</span>'
 ];
 
 if( isset( $mission->worker ) )
 	$infos['worker']	= [
-		'label'	=> 'Zugewiesen an',
+		'label'	=> $w->labelWorker,
 		'value'	=> renderUserLabel( $mission->worker ),
 	];
 
 if( isset( $mission->createdAt ) )
 	$infos['date-creation']	= [
-		'label'	=> 'Erstellung',
-		'value'	=> '<span class="date">vor '.$phraser->convert( $mission->createdAt, TRUE ).'</span>'
+		'label'	=> $w->labelCreatedAt,
+		'value'	=> '<span class="date">'.sprintf( $w->timeAgo, $phraser->convert( $mission->createdAt, TRUE ) ).'</span>'
 	];
 
 if( isset( $mission->modifiedAt ) )
 	$infos['date-modification']	= [
-		'label'	=> 'Zuletzt geändert',
-		'value'	=> '<span class="date">vor '.$phraser->convert( $mission->modifiedAt, TRUE ).'</span>'
+		'label'	=> $w->labelModifiedAt,
+		'value'	=> '<span class="date">'.sprintf( $w->timeAgo, $phraser->convert( $mission->modifiedAt, TRUE ) ).'</span>'
 	];
 if( isset( $mission->modifier ) )
 	$infos['modifier']	= [
-		'label'	=> 'Geändert von',
+		'label'	=> $w->labelModifier,
 		'value'	=> renderUserLabel( $mission->modifier ),
 	];
 if( isset( $mission->projectId ) ){
@@ -91,7 +92,7 @@ if( isset( $mission->projectId ) ){
 		$value	= HtmlTag::create( 'a', $value, ['href' => $url] );
 	}
 	$infos['project']	= [
-		'label'	=> 'Projekt',
+		'label'	=> $w->labelProject,
 		'value'	=> $value,
 	];
 }
@@ -105,14 +106,14 @@ if( count( $missionUsers ) > 1 ){
 
 	ksort( $list, defined( 'SORT_FLAG_CASE' ) ? SORT_FLAG_CASE : SORT_REGULAR );
 	$infos['list-users-viewers']	= [
-		'label'	=> 'Sichtbar für',
+		'label'	=> $w->labelViewers,
 		'value'	=> $list
 	];
 }
 
 $infos['links']	= [
-	'label'	=> '<a href="./work/mission/'.$mission->missionId.'" target="_blank">Link</a>',
-	'value'	=> '<a href="./work/mission/'.$mission->missionId.'" class="btn btn-mini" target="_blank">in neuem Tab öffnen</a>'
+	'label'	=> '<a href="./work/mission/'.$mission->missionId.'" target="_blank">'.$w->labelLink.'</a>',
+	'value'	=> '<a href="./work/mission/'.$mission->missionId.'" class="btn btn-mini" target="_blank">'.$w->buttonOpenInTab.'</a>'
 ];
 
 /*
@@ -175,7 +176,7 @@ $list		= HtmlTag::create( 'dl', join( $list ), ['class' => 'dl-horizontal'] );
 
 return '
 <div class="content-panel content-panel-info">
-	<h3>Informationen</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 	</div>

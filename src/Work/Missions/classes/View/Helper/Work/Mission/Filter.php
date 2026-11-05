@@ -96,7 +96,7 @@ class View_Helper_Work_Mission_Filter
 			'disabled'			=> "disabled",/*$changedFilters ? NULL : "disabled",*/
 			'class'				=> 'btn',/*'btn '.( $changedFilters ? 'btn-inverse' : "" ),*/
 			'id'				=> 'button_filter_reset',					//  remove query only: 'button_filter_search_reset',
-			'title'				=> 'alle Filter zurücksetzen',
+			'title'				=> $this->words['index']['buttonResetFilters'],
 		] );
 		return $buttonSearchReset;
 	}

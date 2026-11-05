@@ -11,16 +11,18 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object[] $groups */
 /** @var array $words */
 
-$optGroup	= ['' => '- alle -'];
+$w	= (object) $words['index'];
+
+$optGroup	= ['' => $w->optionAll];
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
 $optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
 $panelFilter	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Filter' ),
+	HtmlTag::create( 'h3', $w->headingFilter ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
-			HtmlTag::create( 'label', 'Mail-Gruppe' ),
+			HtmlTag::create( 'label', $w->labelGroup ),
 			HtmlTag::create( 'select', $optGroup, [
 				'name'		=> 'groupId',
 				'id'		=> 'input_groupId',
@@ -28,7 +30,7 @@ $panelFilter	= HtmlTag::create( 'div', [
 				'onchange'	=> 'this.form.submit()',
 			] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', 'filtern', [
+				HtmlTag::create( 'button', $w->buttonFilter, [
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',
@@ -38,7 +40,7 @@ $panelFilter	= HtmlTag::create( 'div', [
 	], ['class' => 'content-panel-inner'] ),
 ], ['class' => 'content-panel'] );
 
-$list	= HtmlTag::create( 'div', 'Keine gefunden.', ['class' => 'alert alert-info'] );
+$list	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 if( count( $messages ) ){
 	$list	= [];
 	foreach( $messages as $message ){
@@ -74,10 +76,10 @@ if( count( $messages ) ){
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'#',
-		'Betreff',
-		'Absender',
-		'Zustand',
-		'Datum',
+		$w->headSubject,
+		$w->headSender,
+		$w->headStatus,
+		$w->headDate,
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-condensed'] );
@@ -86,7 +88,7 @@ if( count( $messages ) ){
 $pagination	= new PageControl( './work/mail/group/message', $page, $pages );
 
 $panelList	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Mails' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$list,
 		HtmlTag::create( 'div', $pagination, ['class' => 'buttonbar'] ),

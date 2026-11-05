@@ -46,7 +46,7 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 		$urlPreview	= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
-				HtmlTag::create( 'span', 'HTML-Vorschau' ),
+				HtmlTag::create( 'span', ( (object) $this->getWords( 'preview', 'work/newsletter/template' ) )->headingHtml ),
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
 						HtmlTag::create( 'button', '<i class="fa fa-fw fa-mobile fa-mobile-alt"></i>&nbsp;<i class="fa fa-fw fa-tablet"></i>&nbsp;<i class="fa fa-fw fa-desktop"></i>', [
@@ -89,7 +89,7 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 		$urlPreview	= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
-				HtmlTag::create( 'span', 'Text-Vorschau' ),
+				HtmlTag::create( 'span', ( (object) $this->getWords( 'preview', 'work/newsletter/template' ) )->headingText ),
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
 						HtmlTag::create( 'button', '<i class="fa fa-fw fa-mobile fa-mobile-alt"></i>&nbsp;<i class="fa fa-fw fa-tablet"></i>&nbsp;<i class="fa fa-fw fa-desktop"></i>', [

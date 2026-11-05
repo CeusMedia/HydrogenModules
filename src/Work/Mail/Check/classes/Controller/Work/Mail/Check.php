@@ -20,6 +20,7 @@ class Controller_Work_Mail_Check extends Controller
 	protected Model_Mail_Check_Address $modelAddress;
 	protected Model_Mail_Check_Address_Run $modelRun;
 	protected Model_Mail_Check_Group $modelGroup;
+	protected object $words;
 
 	public function add(): void
 	{
@@ -34,7 +35,7 @@ class Controller_Work_Mail_Check extends Controller
 					continue;
 				$indices	= ['mailCheckGroupId' => $groupId, 'address' => $address];
 				if( $this->modelAddress->getByIndices( $indices ) ){
-					$this->messenger->noteError( 'Address &quot;%s&quot; is already existing in group &quot;%s&quot;.', $address, $group->title );
+					$this->messenger->noteError( $this->words->errorAddressExists, htmlentities( $address, ENT_QUOTES, 'UTF-8' ), $group->title );
 					$this->restart( NULL, TRUE );
 				}
 				$addressId	= $this->modelAddress->add( [
@@ -43,7 +44,7 @@ class Controller_Work_Mail_Check extends Controller
 					'status'			=> 0,
 					'createdAt'			=> time(),
 				] );
-				$this->messenger->noteSuccess( 'Added address "%s".', htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
+				$this->messenger->noteSuccess( $this->words->successAddressAdded, htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
 			}
 		}
 		$this->restart( NULL, TRUE );
@@ -56,7 +57,7 @@ class Controller_Work_Mail_Check extends Controller
 			$mailColumn	= $this->request->get( 'mailColumn' );
 			$columns	= array_filter( explode( "\n", trim( $this->request->get( 'columns' ) ) ) );
 			if( !strlen( trim( $title ) ) ){
-				$this->messenger->noteError( 'Group title is missing.' );
+				$this->messenger->noteError( $this->words->errorGroupTitleMissing );
 				$this->restart( 'group', TRUE );
 			}
 			if( !strlen( trim( $mailColumn ) ) )
@@ -71,7 +72,7 @@ class Controller_Work_Mail_Check extends Controller
 				'createdAt'		=> time(),
 			] );
 	//		$this->messenger->noteSuccess( 'Group "%s" added.', htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
-			$this->messenger->noteSuccess( 'Group "%s" added.', $title );
+			$this->messenger->noteSuccess( $this->words->successGroupAdded, $title );
 		}
 		$this->restart( 'group', TRUE );
 	}
@@ -89,7 +90,7 @@ class Controller_Work_Mail_Check extends Controller
 		foreach( $addressIds as $addressId ){
 			$address	= $this->modelAddress->get( $addressId );
 			if( !$address ){
-				$this->messenger->noteError( 'Invalid address ID.' );
+				$this->messenger->noteError( $this->words->errorInvalidAddressId );
 				$this->restart( NULL, TRUE );
 			}
 			$this->modelAddress->edit( $addressId, ['status' => 1] );
@@ -168,7 +169,7 @@ class Controller_Work_Mail_Check extends Controller
 			$type		= $this->request->get( 'type' );
 			$groupId	= $this->request->get( 'groupId' );
 			if( !$groupId ){
-				$this->messenger->noteError( 'Group ID is missing.' );
+				$this->messenger->noteError( $this->words->errorGroupIdMissing );
 				$this->restart( 'export', TRUE );
 			}
 			$group		= $this->modelGroup->get( $groupId );
@@ -292,7 +293,7 @@ class Controller_Work_Mail_Check extends Controller
 			$column			= $this->request->get( 'column' );
 			$group			= $this->request->get( 'group' );
 			if( !strlen( trim( $group ) ) ){
-				$this->messenger->noteError( 'No group name given.' );
+				$this->messenger->noteError( $this->words->errorGroupNameMissing );
 				$this->restart( 'import', TRUE );
 			}
 			$groupId	= $this->modelGroup->add( [
@@ -449,6 +450,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
+		$this->words			= (object) $this->getWords( 'msg' );
 		$this->moduleOptions	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
 
 		//  --  PREPARE MODELS  --  //
@@ -480,7 +482,7 @@ class Controller_Work_Mail_Check extends Controller
 			return $group;
 		if( $strict )
 			throw new InvalidArgumentException( 'Invalid group ID' );
-		$this->messenger->noteError( 'Invalid group ID.' );
+		$this->messenger->noteError( $this->words->errorInvalidGroupId );
 		if( $from )
 			$this->restart( $from, $withinModule );
 		$this->restart( NULL, $withinModule );
