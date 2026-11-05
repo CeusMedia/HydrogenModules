@@ -1,0 +1,13 @@
+
+Hello <%user.title%>!
+
+A member has been activated in the group "<%group.title%>".
+
+Member:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+
+Group:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>

@@ -12,27 +12,14 @@ class Mail_Job_Report extends Mail_Abstract
 	protected function generate(): static
 	{
 		$data	= $this->data;
-//		$words	= $this->env->getLanguage()->getWords( 'resource/jobs' );
-		$words	= [
-			'job-run-statuses'	=> [
-				Model_Job_Run::STATUS_TERMINATED	=> 'terminiert',
-				Model_Job_Run::STATUS_FAILED		=> 'gescheitert',
-				Model_Job_Run::STATUS_ABORTED		=> 'abgebrochen',
-				Model_Job_Run::STATUS_PREPARED		=> 'vorbereitet',
-				Model_Job_Run::STATUS_RUNNING		=> 'läuft',
-				Model_Job_Run::STATUS_DONE			=> 'erledigt',
-			],
-			'job-run-types'		=> [
-				Model_Job_Run::TYPE_MANUALLY		=> 'manuell',
-				Model_Job_Run::TYPE_SCHEDULED		=> 'geplant',
-			]
-		];
+		$words	= $this->getWords( 'resource/jobs' );
 
 		$data['words']	= $words;
+		$this->data['words']	= $words;
 
 		$this->addCommonStyle( 'module.resource.jobs-mail.css' );
 //		print_m( $data );
-		$this->setSubject( vsprintf( 'Job: %s: %s', [
+		$this->setSubject( vsprintf( $words['mail']['subject'], [
 			$data['definition']->identifier,
 			$words['job-run-statuses'][$data['run']->status],
 		] ) );
@@ -46,14 +33,15 @@ class Mail_Job_Report extends Mail_Abstract
 		$blockException	= $this->renderExceptionBlockAsHtml( $this->data );
 		$blockFacts		= $this->renderFactsBlockAsHtml( $this->data );
 
+		$w		= (object) $this->data['words']['mail'];
 		$title	= $this->data['run']->title  ?: $this->data['definition']->identifier;
 		$html	= '
 		<div>
-			<h2><span class="muted">Job:</span> '.$title.'</h2>
+			<h2><span class="muted">'.$w->heading.':</span> '.$title.'</h2>
 			'.$blockFacts.'
 			'.$blockException.'
 			<small>
-				<h4>Raw Data Object</h4>
+				<h4>'.$w->headingRawData.'</h4>
 				'.print_m( $this->data, NULL, NULL, TRUE, 'html' ).'
 			</small>
 		</div>
@@ -97,17 +85,18 @@ class Mail_Job_Report extends Mail_Abstract
 		$message		= json_decode( $data['run']->message );
 		if( $message->type !== 'throwable' )
 			return '';
+		$w			= (object) $data['words']['mail'];
 		$trace		= $this->renderTraceStringAsHtml( $message->trace );
 		$file		= $this->stripAppPathFromAbsoluteFilePath( $message->file );
 		$exception	= '
 		<div class="content-block block-exception">
-			<h4>Exception</h4>
+			<h4>'.$w->headingException.'</h4>
 			<div class="facts-list">
-				<div class="fact-label">Message</div>
+				<div class="fact-label">'.$w->labelMessage.'</div>
 				<div class="fact-value">'.$message->message.'</div>
-				<div class="fact-label">File / Line</div>
+				<div class="fact-label">'.$w->labelFileLine.'</div>
 				<div class="fact-value">'.$file.' #'.$message->line.'</div>
-				<div class="fact-label">Stack Trace</div>
+				<div class="fact-label">'.$w->labelTrace.'</div>
 				<div>'.$trace.'</div>
 			</dl>
 		</div>';
@@ -135,17 +124,18 @@ class Mail_Job_Report extends Mail_Abstract
 		$duration		= $seconds ? $durationHelper->convertSecondsToDuration( $seconds, ' ' ) : '0s';
 		$message		= json_decode( $data['run']->message );
 
+		$w		= (object) $data['words']['mail'];
 		$facts	= [];
 		if( $data['run']->title )
-			$facts['Job-ID']	= $data['definition']->identifier;
-		$facts['Typ']		= $typeLabel;
-		$facts['Status']	= $statusLabel;
-		$facts['Gestartet']	= date( 'd.m.Y H:i:s', $data['run']->ranAt );
-		$facts['Beendet']	= date( 'd.m.Y H:i:s', $data['run']->finishedAt );
-		$facts['Laufzeit']	= $duration;
-		$facts['Ergebnis']	= $message->type;
+			$facts[$w->labelJobId]	= $data['definition']->identifier;
+		$facts[$w->labelType]		= $typeLabel;
+		$facts[$w->labelStatus]	= $statusLabel;
+		$facts[$w->labelStartedAt]	= date( 'd.m.Y H:i:s', $data['run']->ranAt );
+		$facts[$w->labelFinishedAt]	= date( 'd.m.Y H:i:s', $data['run']->finishedAt );
+		$facts[$w->labelDuration]	= $duration;
+		$facts[$w->labelResult]	= $message->type;
 
-		$facts	= '<div class="content-block block-facts"><h4>Fakten</h4>'.$this->renderFactsAsHtml( $facts ).'</div>';
+		$facts	= '<div class="content-block block-facts"><h4>'.$w->headingFacts.'</h4>'.$this->renderFactsAsHtml( $facts ).'</div>';
 		return $facts;
 	}
 

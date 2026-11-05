@@ -1,19 +1,24 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<array<string,string>> $words */
+
+$wf				= (object) $words['facts'];
+$w				= (object) $words['join'];
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $nrMembers		= count( $group->members );
-$labelMembers	= $nrMembers == 1 ? $nrMembers.' Mitglied' : $nrMembers.' Mitglieder';
-$description	= $group->description ?: '<em class="muted">Keine Beschreibung derzeit.</em>';
+$labelMembers	= sprintf( $nrMembers == 1 ? $wf->membersOne : $wf->membersMany, $nrMembers );
+$description	= $group->description ?: '<em class="muted">'.$wf->noDescription.'</em>';
 $participation	= HtmlTag::create( 'abbr', $words['types'][$group->type], ['title' => $words['types-description'][$group->type]] );
 $address		= HtmlTag::create( 'kbd', $group->address );
 $facts			= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', [
 	$labelMembers,
-	'Teilnahme: '.$participation,
-	'Adresse: '.$address,
+	$wf->labelParticipation.': '.$participation,
+	$wf->labelAddress.': '.$address,
 ] );
 
 $termsOfUse		= $view->loadContentFile( 'html/info/mail/group/termsOfUse.html' );
@@ -39,7 +44,7 @@ $panelLegal		= '
 		<div class="span12">
 			<label class="checkbox">
 				<input type="checkbox" name="accept" id="input_accept"/>
-				Ich habe die Nutzungsbedingungen und die Datenschutzbestimmungen gelesen und stimme der Nutzung des Services unter den aufgeführten Bedingungen zu.
+				'.$w->labelAccept.'
 			</label>
 		</div>
 	</div>
@@ -48,7 +53,7 @@ $panelLegal		= '
 
 $panelForm	= '
 <div class="content-panel">
-	<h3>Für Gruppe registrieren</h3>
+	<h3>'.$w->headingRegister.'</h3>
 	<div class="content-panel-inner">
 		<br/>
 		<div class="group-title" style="font-size: 1.3em; line-height: 1.6em">'.$group->title.'</div>
@@ -59,22 +64,22 @@ $panelForm	= '
 			<input type="hidden" name="ht" value=""/>
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="input_address_name"><abbr title="wird, falls vorhanden, anstelle der E-Mail-Adresse angezeigt">Ihr Name</abbr>  <small class="muted">(optional)</small></label>
+					<label for="input_address_name"><abbr title="'.htmlentities( $w->labelName_title, ENT_QUOTES, 'UTF-8' ).'">'.$w->labelName.'</abbr>  <small class="muted">'.$w->labelOptional.'</small></label>
 					<input type="text" name="address_name" id="input_address_name" class="span12" value="'.htmlentities( @$data->name, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span7">
-					<label for="input_address_email"><abbr title="Sie erhalten zuerst eine E-Mail zur Bestätigung Ihrer Mitgliedschaft.">Ihre E-Mail-Adresse</label>
+					<label for="input_address_email"><abbr title="'.htmlentities( $w->labelEmail_title, ENT_QUOTES, 'UTF-8' ).'">'.$w->labelEmail.'</label>
 					<input type="email" name="address_email" id="input_address_email" class="span12" required="required" value="'.htmlentities( @$data->email, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<hr/>
 			<p>
-				Die Mitglieder der Gruppe werden über Ihren Beitritt informiert.<br/>
-				<em>Wollen Sie die Mitglieder begrüßen und sich kurz vorstellen?</em>
+				'.$w->textMembersInformed.'<br/>
+				<em>'.$w->textGreetingQuestion.'</em>
 			</p>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_message">Kurze Begrüßung von Ihrer Seite <small class="muted">(optional)</small></label>
+					<label for="input_message">'.$w->labelGreeting.' <small class="muted">'.$w->labelOptional.'</small></label>
 					<textarea name="message" id="input_message" rows="5" class="span12"></textarea>
 				</div>
 			</div>
@@ -83,8 +88,8 @@ $panelForm	= '
 			'.$panelLegal.'
 			<br/>
 			<div class="buttonbar">
-				<a href="./info/mail/group" class="btn not-btn-small">'.$iconList.'&nbsp;zur Liste</a>
-				<button type="submit" name="save" class="btn btn-primary not-btn-large">'.$iconSave.'&nbsp;abmelden</button>
+				<a href="./info/mail/group" class="btn not-btn-small">'.$iconList.'&nbsp;'.$w->buttonList.'</a>
+				<button type="submit" name="save" class="btn btn-primary not-btn-large">'.$iconSave.'&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

@@ -48,18 +48,19 @@ class Hook_Resource_Address extends Hook
 		];
 		$addresses		= $modelAddress->getAllByIndices( $indices, $orders );
 
-		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-map-marker', 'title' => 'Adresse'] );
-
 		$words			= $this->env->getLanguage()->getWords( 'address' );
+		$wordsRelations	= (object) $words['hook-relations'];
+
+		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-map-marker', 'title' => $wordsRelations->iconTitle] );
 
 		$list			= [];
 		/** @var object{mailId: int, status: int, 'subject: string, enqueuedAt: int} $mail */
 		foreach( $addresses as $address ){
 			$label	= match( $address->type ){
-				Model_Address::TYPE_LOCATION	=> 'Ort',
-				Model_Address::TYPE_BILLING		=> 'Rechnungsanschrift',
-				Model_Address::TYPE_DELIVERY	=> 'Lieferanschrift',
-				default							=> 'Adresse',
+				Model_Address::TYPE_LOCATION	=> $wordsRelations->typeLocation,
+				Model_Address::TYPE_BILLING		=> $wordsRelations->typeBilling,
+				Model_Address::TYPE_DELIVERY	=> $wordsRelations->typeDelivery,
+				default							=> $wordsRelations->typeDefault,
 			};
 			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $linkable ? $address->addressId : NULL,

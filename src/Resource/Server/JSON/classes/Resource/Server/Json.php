@@ -109,8 +109,8 @@ class Resource_Server_Json
 			}
 		}
 		catch( Exception $e ){
-			$message	= "Der Server ist momentan nicht erreichbar.";
-			$env->getMessenger()->noteFailure( $message );
+			$words		= $env->getLanguage()->getSection( 'resource/server/json', 'msg' );
+			$env->getMessenger()->noteFailure( $words['failureServerUnavailable'] );
 			return;
 		}
 

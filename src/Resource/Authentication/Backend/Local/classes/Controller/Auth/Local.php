@@ -834,7 +834,7 @@ class Controller_Auth_Local extends Controller
 		}
 		catch( Exception $e ){
 //			$this->messenger->noteFailure( $words->msgSendingMailFailed );
-			$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
+			$this->messenger->noteFailure( $words->msgErrorOccurred, $e->getMessage() );
 			$payload	= ['exception' => $e];
 			$this->callHook( 'Env', 'logException', $this, $payload );
 		}

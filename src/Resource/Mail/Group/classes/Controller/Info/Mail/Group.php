@@ -29,11 +29,11 @@ class Controller_Info_Mail_Group extends Controller
 		$indices	= ['mailGroupActionId' => $actionId, 'uuid' => $hash];
 		$action		= $this->modelAction->getByIndices( $indices );
 		if( !$action ){
-			$this->messenger->noteError( 'Invalid action.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidAction'] );
 			$this->restart( );
 		}
 		if( $action->status == 1 ){
-			$this->messenger->noteError( 'Der Bestätigungslink ist nicht mehr gültig.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorLinkExpired'] );
 			$this->restart();
 		}
 		try{
@@ -124,7 +124,7 @@ class Controller_Info_Mail_Group extends Controller
 				$group		= $this->logic->getMailGroupFromAddress( $address, TRUE, FALSE );
 
 			if( !isset( $group ) )
-				$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorGroupNotFound'] );
 			else{
 				$groupId 	= $group->mailGroupId;
 				$member		= $this->logic->getGroupMemberByAddress( $group->mailGroupId, $email, FALSE, FALSE );
@@ -143,11 +143,11 @@ class Controller_Info_Mail_Group extends Controller
 				else{
 					$memberId	= $member->mailGroupMemberId;
 					if( $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED )
-						$this->messenger->noteError( 'Sie sind bereits an der Gruppe registriert und ihre Mitgliedschaft ist aktiv.' );
+						$this->messenger->noteError( $this->getWords( 'msg' )['errorAlreadyActive'] );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED )
-						$this->messenger->noteError( 'Sie haben sich bereits registriert, aber die Zusage steht noch aus.' );
+						$this->messenger->noteError( $this->getWords( 'msg' )['errorAlreadyRegistered'] );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
-						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.' );
+						$this->messenger->noteError( $this->getWords( 'msg' )['errorAddressDeactivated'] );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED ){
 						$this->modelMember->edit( $memberId, [
 							'roleId'		=> $group->defaultRoleId,
@@ -171,7 +171,7 @@ class Controller_Info_Mail_Group extends Controller
 					$language	= $this->env->getLanguage()->getLanguage();
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					$this->logicMail->sendMail( $mail, $receiver );
-					$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
+					$this->messenger->noteSuccess( $this->getWords( 'msg' )['successJoinRequested'] );
 					$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
 				}
 			}
@@ -215,19 +215,19 @@ class Controller_Info_Mail_Group extends Controller
 				$group		= $this->logic->getMailGroupFromAddress( $address, TRUE, FALSE );
 
 			if( !isset( $group ) )
-				$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorGroupNotFound'] );
 			else{
 				$groupId 	= $group->mailGroupId;
 				$member		= $this->logic->getGroupMemberByAddress( $group->mailGroupId, $email, FALSE, FALSE );
 				if( !$member ){
-					$this->messenger->noteError( 'Zu dieser Adresse gibt es bei dieser Gruppe keine Mitgliedschaft.' );
+					$this->messenger->noteError( $this->getWords( 'msg' )['errorNoMembership'] );
 				}
 				else{
 					$memberId	= $member->mailGroupMemberId;
 					if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
-						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.' );
+						$this->messenger->noteError( $this->getWords( 'msg' )['errorAddressDeactivated'] );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED )
-						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber bereits abgemeldet.' );
+						$this->messenger->noteError( $this->getWords( 'msg' )['errorAddressLeft'] );
 					else{
 						$action	= $this->logic->registerMemberAction( 'deactivateAfterLeaving', $groupId, $memberId, $greeting );
 
@@ -243,7 +243,7 @@ class Controller_Info_Mail_Group extends Controller
 						$language	= $this->env->getLanguage()->getLanguage();
 						$this->logicMail->appendRegisteredAttachments( $mail, $language );
 						$this->logicMail->handleMail( $mail, $receiver, $language );
-						$this->messenger->noteSuccess( 'Okay.' );
+						$this->messenger->noteSuccess( $this->getWords( 'msg' )['successLeaveRequested'] );
 						$this->restart( NULL, TRUE );
 					}
 				}
@@ -299,7 +299,7 @@ class Controller_Info_Mail_Group extends Controller
 			return $group;
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Die angesteuerte Gruppe existent nicht, nicht mehr oder ist nicht mehr sichtbar.<br/>Weiterleitung zur Übersicht.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorGroupUnavailable'] );
 			if( $restart )
 				$this->restart( NULL, TRUE );
 		}
@@ -317,7 +317,7 @@ class Controller_Info_Mail_Group extends Controller
 			return $this->checkId( $idOrAddress, $strict );
 		if( ( $group = $this->logic->getMailGroupFromAddress( $idOrAddress, TRUE ) ) )
 			return $group;
-		$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
+		$this->messenger->noteError( $this->getWords( 'msg' )['errorGroupNotFound'] );
 		return FALSE;
 	}
 }

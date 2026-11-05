@@ -5,7 +5,7 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated OAuth client functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -23,6 +23,7 @@
 	<log version="0.3.3">Refactoring to support new identified state.</log>
 	<log version="0.3.4">Improve code style.</log>
 	<log version="0.3.5">Support user logic extensions.</log>
+	<log version="0.3.6">Complete German and English locales and extract hard-coded texts (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

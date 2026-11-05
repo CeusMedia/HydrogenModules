@@ -6,7 +6,7 @@
 	<title>Resource: JSON Client</title>
 	<description><![CDATA[Access to a JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype in project Client:Chat.</log>
 	<log version="0.2">Separation into this module.</log>
 	<log version="0.2.1">Added response code handler.</log>
@@ -17,6 +17,7 @@
 	<log version="0.4.0">Import from old chat related module Resource_Server_Json.</log>
 	<log version="0.4.1">Extract hook to own class.</log>
 	<log version="0.4.2">Import JSON server ACL class from framework.</log>
+	<log version="0.4.3">Extract hard-coded texts to locales (de, en).</log>
 <!--	<log version="0.4.x">Allow multiple instances.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -24,6 +25,8 @@
 		<class>Resource/JSON/Client.php</class>
 		<class>Hook/Resource/JSON/Client.php</class>
 		<class>View/Helper/Resource/JSON/Client/ResponseCodeHandler.php</class>
+		<locale>de/resource/json/client.ini</locale>
+		<locale>en/resource/json/client.ini</locale>
 	</files>
 	<config protected="no" mandatory="yes" type="string" name="userAgent">CeusMedia::Hydrogen::Resource:JSON:Client</config>
 	<config protected="yes" mandatory="yes" type="string" name="envKey">jsonServerClient</config>

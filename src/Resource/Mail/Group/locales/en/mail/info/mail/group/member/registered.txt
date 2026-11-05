@@ -1,0 +1,20 @@
+Hello <%?member.title%>!
+
+You have requested to join the mail group "<%group.title%>".
+
+To make sure that the e-mail address used is really managed by you,
+you receive this e-mail with a confirmation link.
+Please open this link in a web browser, e.g. by simply clicking it.
+
+Confirmation link:
+<%link.confirm%>
+
+This group is supervised by a manager and new members need to be activated by them.
+Your confirmation will inform the manager about your registration.
+Your membership will be reviewed by a manager and activated if everything is in order.
+You will be informed about the result of the review by e-mail.
+
+By joining, you agree to the terms of use and the privacy policy.
+If you do not agree with these terms, please unsubscribe from the group.
+
+Unsubscribe link: <%link.leave%>

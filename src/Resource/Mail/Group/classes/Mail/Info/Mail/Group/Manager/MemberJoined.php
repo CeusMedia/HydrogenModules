@@ -8,7 +8,8 @@ class Mail_Info_Mail_Group_Manager_MemberJoined extends Mail_Abstract
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
 		$member	= $data['member']->title ?: $data['member']->address;
-		$this->setSubject( 'Gruppe "'.$data['group']->title.'": '.$member.' ist beigetreten' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['managerMemberJoined'], $data['group']->title, $member ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

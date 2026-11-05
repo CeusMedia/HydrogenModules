@@ -1,20 +1,25 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<array<string,string>> $words */
+
+$wf				= (object) $words['facts'];
+$w				= (object) $words['joined'];
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$labelMessages	= $group->messages == 1 ? $group->messages.' Nachricht' : $group->messages.' Nachrichten';
-$labelMembers	= $group->members == 1 ? $group->members.' Mitglied' : $group->members.' Mitglieder';
-$description	= $group->description ?: '<em class="muted">Keine Beschreibung derzeit.</em>';
+$labelMessages	= sprintf( $group->messages == 1 ? $wf->messagesOne : $wf->messagesMany, $group->messages );
+$labelMembers	= sprintf( $group->members == 1 ? $wf->membersOne : $wf->membersMany, $group->members );
+$description	= $group->description ?: '<em class="muted">'.$wf->noDescription.'</em>';
 $participation	= HtmlTag::create( 'abbr', $words['types'][$group->type], ['title' => $words['types-description'][$group->type]] );
 $address		= HtmlTag::create( 'kbd', $group->address );
 $facts			= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', [
 	$labelMessages,
 	$labelMembers,
-	'Teilnahme: '.$participation,
-	'Adresse: '.$address,
+	$wf->labelParticipation.': '.$participation,
+	$wf->labelAddress.': '.$address,
 ] );
 
 return '<div class="row-fluid">
@@ -22,7 +27,7 @@ return '<div class="row-fluid">
 		<br/>
 		<br/>
 		<div class="content-panel">
-			<h3>Beitritt beantragt</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span10 offset1">
@@ -31,13 +36,12 @@ return '<div class="row-fluid">
 						<p>'.$description.'</p>
 						<small class="not-muted">'.$facts.'</small>
 						<hr/>
-						<div class="alert alert-success">Der Betritt zur Gruppe "'.$group->title.'" wurde beantragt.</div>
-						<h4>Bestätigung notwendig</h4>
+						<div class="alert alert-success">'.sprintf( $w->textSuccess, $group->title ).'</div>
+						<h4>'.$w->headingConfirm.'</h4>
 						<p>
-							Wir haben eine E-Mail an die Adresse <strong>'.$member->address.'</strong> geschickt.<br/>
-							Darin enthalten ist ein Link zur Bestätigung der verwendeten E-Mail-Adresse.
+							'.sprintf( $w->textMailSent, $member->address ).'
 						</p>
-						<p><strong>Bitte klicken Sie diesen Link an oder öffnen die Link-Adresse im Browser.</strong></p>
+						<p><strong>'.$w->textClickLink.'</strong></p>
 					</div>
 				</div>
 				<br/>

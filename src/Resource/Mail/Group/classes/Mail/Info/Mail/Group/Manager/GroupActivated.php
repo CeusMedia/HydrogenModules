@@ -7,7 +7,8 @@ class Mail_Info_Mail_Group_Manager_GroupActivated extends Mail_Abstract
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
-		$this->setSubject( 'Gruppe "'.$data['group']->title.'" aktiviert' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['managerGroupActivated'], $data['group']->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

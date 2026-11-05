@@ -1,0 +1,27 @@
+
+New member in group "<%group.title%>"
+--------------------------------------------------------------------------------
+
+Member:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+- Link:      <%member.link%>
+
+Group:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>
+
+Greeting:
+<%?greeting%>
+
+
+Action required
+--------------------------------------------------------------------------------
+
+The member still needs to be approved or rejected.
+
+Approve:    <%link.activate%>
+Reject:     <%link.deactivate%>
+
+Group:      <%link.group%>

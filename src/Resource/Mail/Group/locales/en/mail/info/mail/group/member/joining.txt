@@ -1,0 +1,21 @@
+Hello <%?member.title%>!
+
+You have requested to join the mail group "<%group.title%>".
+
+To make sure that the e-mail address used is really managed by you,
+you receive this e-mail with a confirmation link.
+Please open this link in a web browser, e.g. by simply clicking it.
+
+Confirmation link:
+<%link.confirm%>
+
+By joining, you agree to the terms of use and the privacy policy.
+If you do not agree with these terms, please unsubscribe from the group.
+
+Unsubscribe link: <%link.leave%>
+
+All e-mails you send to the group before confirming will only be delivered to the members
+once your membership has been confirmed by you and reviewed and activated by the manager of the group.
+
+If you do not confirm the membership, your registration will expire after one week.
+E-mails written to the group until then will expire as well.

@@ -1,0 +1,9 @@
+Hello <%?member.title%>!
+
+You have confirmed joining the mail group "<%group.title%>".
+
+Your membership will now be reviewed by the manager of the group.
+You will be informed promptly about the approval or rejection.
+
+All e-mails you send to the group before approval will only be delivered to the members
+once your membership has been reviewed and activated.

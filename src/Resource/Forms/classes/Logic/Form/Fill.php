@@ -292,7 +292,7 @@ class Logic_Form_Fill extends Logic
 //		if( isset( $form->senderAddress ) && $form->senderAddress )
 //			$sender		= $form->senderAddress;
 
-		$subject	= $formMail->subject ?: 'Anfrage erhalten';
+		$subject	= $formMail->subject ?: $this->env->getLanguage()->getSection( 'resource/forms', 'mail' )['subjectCustomerResult'];
 		$mail		= new Mail_Form_Customer_Result( $this->env, [
 			'fill'				=> $fill,
 			'form'				=> $form,
@@ -319,7 +319,8 @@ class Logic_Form_Fill extends Logic
 
 		/** @var ?Entity_Form $form */
 		$form		= $this->modelForm->get( $formId );
-		$subject	= 'Fehler bei Formular "'.$form->title.'" ('.date( 'd.m.Y' ).')';
+		$wordsMail	= $this->env->getLanguage()->getSection( 'resource/forms', 'mail' );
+		$subject	= sprintf( $wordsMail['subjectManagerError'], $form->title, date( $wordsMail['formatDate'] ) );
 		$mail		= new Mail_Form_Manager_Error( $this->env, [
 			'form'				=> $form,
 			'data'				=> $data,

@@ -1,0 +1,15 @@
+Hello <%?member.title%>!
+
+You have requested to leave the mail group "<%group.title%>".
+
+To make sure that this action was really initiated by you,
+you receive this e-mail with a confirmation link.
+Please open this link in a web browser, e.g. by simply clicking it.
+
+Confirmation link:
+<%link.confirm%>
+
+This confirmation completes your departure.
+
+If you did NOT request to leave, you can ignore this e-mail.
+Your membership will remain.

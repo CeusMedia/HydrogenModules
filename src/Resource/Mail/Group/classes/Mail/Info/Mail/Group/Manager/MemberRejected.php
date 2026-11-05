@@ -8,7 +8,8 @@ class Mail_Info_Mail_Group_Manager_MemberRejected extends Mail_Abstract
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
 //		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
-		$this->setSubject( 'Mitgliedschaft in der Gruppe "'.$data['group']->title.'" abgelehnt' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['managerMemberRejected'], $data['group']->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

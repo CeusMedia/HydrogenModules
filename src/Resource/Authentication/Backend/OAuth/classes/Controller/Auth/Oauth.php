@@ -220,7 +220,7 @@ class Controller_Auth_Oauth extends Controller
 				}
 			}
 			else{
-				$this->messenger->noteError( 'Login failed' );
+				$this->messenger->noteError( $this->getWords( 'login' )['msgLoginFailed'] );
 			}
 		}
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action

@@ -226,14 +226,14 @@ class View_Helper_Newsletter_Mail
 
 		if( (bool) ( $this->data['preview'] ?? FALSE ) ){
 			if( $mode === self::MODE_HTML ){
-				$data['linkView']		= "javascript: alert('Disabled in preview.'); void(0);";
-				$data['linkUnregister']	= "javascript: alert('Disabled in preview.'); void(0);";
+				$data['linkView']		= "javascript: alert('".addslashes( $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledAlert'] )."'); void(0);";
+				$data['linkUnregister']	= "javascript: alert('".addslashes( $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledAlert'] )."'); void(0);";
 				$data['linkTracking']	= "";
 				$data['tracking']		= "";
 			}
 			else if( $mode === self::MODE_PLAIN ){
-				$data['linkView']		= "[Disabled in preview]";
-				$data['linkUnregister']	= "[Disabled in preview]";
+				$data['linkView']		= $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledPlain'];
+				$data['linkUnregister']	= $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledPlain'];
 				$data['linkTracking']	= "";
 				$data['tracking']		= "[trackingLink=[#trackingUrl#]]";
 			}

@@ -33,8 +33,8 @@ class Controller_Provision extends Controller{
 			$this->addData( 'registerLicense', $this->session->get( 'register_license' ) );
 		}
 		catch( Exception $e ){
-			$msg		= 'Der Provision-Server ist zur Zeit nicht erreichbar ('.$e->getMessage().'). Bitte später noch einmal probieren!';
-			$this->env->getMessenger()->noteError( $msg );
+			$words		= (object) $this->getWords( 'msg' );
+			$this->env->getMessenger()->noteError( $words->errorServerUnavailable, $e->getMessage() );
 			$this->redirect( 'provision' );
 			return;
 		}

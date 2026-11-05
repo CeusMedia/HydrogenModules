@@ -12,7 +12,8 @@ class Mail_Info_Mail_Group_Member_Leaving extends Mail_Abstract
 		$this->setSender( $sender );
 
 		$member	= $data['member']->title ?: $data['member']->address;
-		$this->setSubject( 'Ihr Austritt aus der Gruppe "'.$data['group']->title.'"' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['memberLeaving'], $data['group']->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

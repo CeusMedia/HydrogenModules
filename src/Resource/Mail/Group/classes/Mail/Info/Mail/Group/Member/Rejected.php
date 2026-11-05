@@ -12,7 +12,8 @@ class Mail_Info_Mail_Group_Member_Rejected extends Mail_Abstract
 		$this->setSender( $sender );
 
 //		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
-		$this->setSubject( 'Beitritt zur Gruppe "'.$data['group']->title.'" abgelehnt' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['memberRejected'], $data['group']->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

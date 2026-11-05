@@ -1,0 +1,13 @@
+
+The mail group "<%group.title%>" has been deactivated
+--------------------------------------------------------------------------------
+
+E-Mail:    <%group.address%>
+Link:      <%link.group%>
+
+You can no longer send e-mails to the group.
+If the group is planned to be reactivated later, you will be able to
+participate actively again.
+
+However, you can also leave the now inactive group:
+<%link.leave%>
