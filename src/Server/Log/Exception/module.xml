@@ -50,7 +50,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.6.3</version>
+	<version>0.6.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -72,6 +72,7 @@ Please think about using the hook instead.
 	<log version="0.6.1">Reduce log entry size by using Server:Log:Request.</log>
 	<log version="0.6.2">Add entity classes.</log>
 	<log version="0.6.3">Add public stats.</log>
+	<log version="0.6.4">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

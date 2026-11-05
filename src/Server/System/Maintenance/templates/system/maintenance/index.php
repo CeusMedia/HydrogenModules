@@ -1,3 +1,5 @@
 <?php
 
-return 'Maintenance';
+/** @var array<string,array<string,string>> $words */
+
+return $words['index']['heading'];

@@ -31,7 +31,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	}
 }
 
-$list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
+$list	= '<div class="muted"><em><small>'.$w->empty.'</small></em></div>';
 if( $exceptions ){
 	$list	= [];
 	foreach( $exceptions as $item ){

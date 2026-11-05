@@ -15,7 +15,8 @@ class Hook_System_Maintenance extends Hook
 	 */
 	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
-		$env->getMessenger()->noteNotice( 'System Maintenance is <strong>ON</strong>.' );
+		$words	= $env->getLanguage()->getWords( 'system/maintenance' );
+		$env->getMessenger()->noteNotice( $words['hook']['noticeActive'] );
 		$env->getPage()->js->addScriptOnReady( 'UI.Form.Changes.init();', 9 );
 	}
 
