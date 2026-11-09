@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
+    <title>Security: IP Check</title>
+    <description format="markdown"><![CDATA[
+## IP Reputation Check
+
+Checks a client IP address (IPv4 or IPv6) against known blocklists (Spamhaus SBL/XBL/PBL/EHN,
+Barracuda BRBL, SpamCop SCBL, Abusix Mail Intelligence, Invaluement, Sorbs DNSBL [deprecated],
+Bogon ranges) and returns a reputation-based result.
+
+Each blocklist can be individually enabled or disabled via the `use.list.*` configuration flags.
+
+**API endpoint:** `api/ipcheck/check`
+
+### Usage
+
+```
+GET /api/ipcheck/check?ip=1.2.3.4
+GET /api/ipcheck/check?ip=2001:db8::1
+```
+
+### Response
+
+```json
+{
+    "status": "data",
+    "data": {
+        "ip": "1.2.3.4",
+        "ip_version": 4,
+        "clean": false,
+        "score": -50,
+        "sources": {
+            "spamhaus_sbl": { "listed": false, "description": "Spamhaus SBL" },
+            "bogons":       { "listed": true,  "description": "Bogon addresses" }
+        }
+    }
+}
+```
+
+### Configuration
+
+- `active` — Module main switch (boolean)
+- `cache_ttl` — DNS lookup cache TTL in seconds (default: 3600)
+- `use.list.bogons` — Enable bogon range check (default: yes)
+- `use.list.spamhaus_sbl` — Enable Spamhaus SBL check (default: yes)
+- `use.list.spamhaus_xbl` — Enable Spamhaus XBL check (default: yes)
+- `use.list.spamhaus_pbl` — Enable Spamhaus PBL check (default: yes)
+- `use.list.spamhaus_ehn` — Enable Spamhaus EHN check (default: yes)
+- `use.list.sorbs` — Enable Sorbs DNSBL check (default: yes, deprecated)
+- `use.list.barracuda` — Enable Barracuda BRBL check (default: yes)
+- `use.list.spamcop` — Enable SpamCop SCBL check (default: yes)
+- `use.list.abusix` — Enable Abusix Mail Intelligence check (default: yes)
+- `use.list.invaluement` — Enable Invaluement DNSBL check (default: yes)
+- `skip_local_ips` — Skip all checks for local/private IPs (for local development, default: no)
+- `log.rejected` — Log rejected IPs to database (default: yes)
+- `log.post_data` — Include POST data in rejected IP logs (default: yes)
+- `log.headers` — Include request headers in rejected IP logs (default: yes)
+- `log.retention.days` — Delete log entries older than N days (default: 90)
+
+]]></description>
+    <category>Security</category>
+    <version>0.9</version>
+    <log version="0.1">Initial release — IP reputation check against Spamhaus and bogon lists.</log>
+    <log version="0.2">Add IPv6 support. Make each blocklist individually toggleable via config.</log>
+    <log version="0.3">Moved to Security/IP/Check. Renamed classes from IPReputation to IpCheck.</log>
+    <log version="0.4">Added Barracuda BRBL, SpamCop SCBL, Abusix, and Invaluement DNSBLs. Marked Sorbs as deprecated.</log>
+    <log version="0.5">Replaced sequential gethostbyname() with parallel curl_multi DNS-over-HTTPS via Cloudflare 1.1.1.1.</log>
+    <log version="0.6">Added skip_local_ips config flag for local development. Bogon check now detects IP spoofing for all IPs.</log>
+    <log version="0.7">Added database logging for rejected requests (log_api_rejects table). Configurable POST data and header logging.</log>
+    <log version="0.8">Added admin interface for viewing, filtering, exporting, and deleting rejected IP log entries.</log>
+    <log version="0.9">Moved install SQL into module definition. Renamed table columns from snake_case to camelCase.</log>
+    <company site="https://ceusmedia.de/">Ceus Media</company>
+    <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+    <license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+    <files>
+        <class>Controller/Api/IP/Check.php</class>
+        <class>Logic/IP/Check.php</class>
+        <class>Model/Log/API/Reject.php</class>
+        <class>Entity/Log/API/Reject.php</class>
+        <class>Controller/Admin/IP/Check.php</class>
+        <class>View/Admin/IP/Check.php</class>
+        <template>admin/ip/check/index.php</template>
+        <template>admin/ip/check/view.php</template>
+        <locale>de/admin/ip/check.ini</locale>
+        <locale>en/admin/ip/check.ini</locale>
+    </files>
+    <relations>
+        <needs type="extension">php-curl</needs>
+    </relations>
+    <config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
+    <config protected="yes" type="integer" name="cache_ttl" title="DNS cache TTL in seconds">3600</config>
+    <config protected="yes" type="boolean" name="use.list.bogons" title="Check bogon ranges">yes</config>
+    <config protected="yes" type="boolean" name="use.list.spamhaus_sbl" title="Check Spamhaus SBL">yes</config>
+    <config protected="yes" type="boolean" name="use.list.spamhaus_xbl" title="Check Spamhaus XBL">yes</config>
+    <config protected="yes" type="boolean" name="use.list.spamhaus_pbl" title="Check Spamhaus PBL">yes</config>
+    <config protected="yes" type="boolean" name="use.list.spamhaus_ehn" title="Check Spamhaus EHN">yes</config>
+    <config protected="yes" type="boolean" name="use.list.sorbs" title="Check Sorbs DNSBL (deprecated)">yes</config>
+    <config protected="yes" type="boolean" name="use.list.barracuda" title="Check Barracuda BRBL">yes</config>
+    <config protected="yes" type="boolean" name="use.list.spamcop" title="Check SpamCop SCBL">yes</config>
+    <config protected="yes" type="boolean" name="use.list.abusix" title="Check Abusix Mail Intelligence">yes</config>
+    <config protected="yes" type="boolean" name="use.list.invaluement" title="Check Invaluement DNSBL">yes</config>
+    <config protected="yes" type="boolean" name="skip_local_ips" title="Skip checks for local/private IPs (development mode)">no</config>
+    <config protected="yes" type="boolean" name="log.rejected" title="Log rejected IPs to database">yes</config>
+    <config protected="yes" type="boolean" name="log.post_data" title="Include POST data in rejected IP logs">yes</config>
+    <config protected="yes" type="boolean" name="log.headers" title="Include request headers in rejected IP logs">yes</config>
+    <config protected="yes" type="integer" name="log.retention.days" title="Delete log entries older than N days">90</config>
+    <link access="public" path="api/ipcheck/check"/>
+    <link xml:lang="de" rank="96" access="acl" path="admin/ip/check">IP Check Logs</link>
+    <link xml:lang="en" rank="96" access="acl" path="admin/ip/check">IP Check Logs</link>
+    <sql on="install" type="mysql" version="0.7"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_api_rejects`;
+CREATE TABLE IF NOT EXISTS `log_api_rejects` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime NOT NULL,
+  `ip` varchar(45) NOT NULL,
+  `ipVersion` tinyint(3) UNSIGNED NOT NULL,
+  `score` smallint(6) NOT NULL,
+  `reasons` json NOT NULL,
+  `requestMethod` varchar(10) NOT NULL,
+  `requestUri` varchar(500) NOT NULL,
+  `requestHeaders` json DEFAULT NULL,
+  `postData` json DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `createdAt` (`createdAt`),
+  KEY `ip` (`ip`),
+  KEY `score` (`score`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+    <sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_api_rejects`;
+]]></sql>
+</module>

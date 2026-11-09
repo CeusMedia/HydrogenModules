@@ -192,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fills` (
   KEY `formId` (`formId`),
   KEY `status` (`status`),
   KEY `email` (`email`),
+  KEY `referer` (`referer`),
   KEY `createdAt` (`createdAt`),
   KEY `modifiedAt` (`modifiedAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -430,7 +431,8 @@ ALTER TABLE `<%?prefix%>forms`
 	<sql type="mysql" on="update" version="0.4.6"><![CDATA[
 ALTER TABLE `<%?prefix%>form_fills`
   ADD COLUMN token VARCHAR(40) NULL DEFAULT '' after status,
-  ADD INDEX token (token);
+  ADD INDEX token (token),
+  ADD INDEX referer (referer);
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 		DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
