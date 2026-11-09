@@ -186,7 +186,7 @@ class Logic_IP_Check extends SharedLogic
 		// Collect all enabled DNS-based blocklist queries
 		$queries	= [];
 		foreach( $this->dnsBlocklists as $configKey => $config ){
-			if( empty( $this->enabledLists[$configKey] ) ){
+			if( empty( $this->enabledLists[ $configKey ] ) ){
 				continue;
 			}
 
@@ -206,8 +206,8 @@ class Logic_IP_Check extends SharedLogic
 		// Process results
 		foreach( $queries as $configKey => $queryInfo ){
 			$cacheKey	= $queryInfo['query'] . '.' . $queryInfo['domain'];
-			$listed		= $results[$configKey] ?? FALSE;
-			$this->dnsCache[$cacheKey] = ['result' => $listed, 'time' => time()];
+			$listed		= $results[ $configKey ] ?? FALSE;
+			$this->dnsCache[ $cacheKey ] = [ 'result' => $listed, 'time' => time() ];
 
 			$sources[$configKey] = Entity_IP_Check_Source::fromArray( [
 				'listed'		=> $listed,
@@ -233,7 +233,7 @@ class Logic_IP_Check extends SharedLogic
 	}
 
 	/**
-	 *	Log a rejected IP to the database via Model/Entity.
+	 * Log a rejected IP to the database via Model/Entity.
 	 *
 	 *	@param		string					$ip				The rejected IP address
 	 *	@param		Entity_IP_Check_Result	$result			The checkIp() result
@@ -368,6 +368,7 @@ class Logic_IP_Check extends SharedLogic
 		$expanded	= $this->expandIpv6( $ip );
 		if( '' === $expanded )
 			return '';
+		}
 
 		return strrev( $expanded ) . '.ip6.' . $domain;
 	}
@@ -388,6 +389,7 @@ class Logic_IP_Check extends SharedLogic
 		$results	= [];
 		if( 0 === count( $queries ) )
 			return $results;
+		}
 
 		// Check cache first — collect queries that need actual DNS lookup
 		$uncached	= [];
@@ -396,33 +398,35 @@ class Logic_IP_Check extends SharedLogic
 			if( isset( $this->dnsCache[$cacheKey] ) ){
 				$cacheEntry	= $this->dnsCache[$cacheKey];
 				if( ( time() - $cacheEntry['time'] ) < $this->cacheTtl ){
-					$results[$configKey] = $cacheEntry['result'];
+					$results[ $configKey ] = $cacheEntry['result'];
 					continue;
 				}
 			}
-			$uncached[$configKey] = $queryInfo;
+			$uncached[ $configKey ] = $queryInfo;
 		}
 
 		// If all queries are cached, return early
 		if( 0 === count( $uncached ) )
 			return $results;
+		}
 
 		// Perform parallel DNS-over-HTTPS lookups via curl_multi
 		$mh			= curl_multi_init();
 		$handleMap	= []; // curl_handle => configKey
 
 		foreach( $uncached as $configKey => $queryInfo ){
+			print_r($queryInfo);
 			$ch	= curl_init();
 			curl_setopt_array( $ch, [
 				CURLOPT_URL            => 'https://1.1.1.1/dns-query?name=' . urlencode( $queryInfo['query'] ) . '&type=A',
-				CURLOPT_HTTPHEADER     => ['Accept: application/dns-json'],
+				CURLOPT_HTTPHEADER     => [ 'Accept: application/dns-json' ],
 				CURLOPT_RETURNTRANSFER => TRUE,
 				CURLOPT_TIMEOUT        => 5,
 				CURLOPT_CONNECTTIMEOUT => 2,
 				CURLOPT_DNS_USE_GLOBAL_CACHE => FALSE,
 			] );
 			curl_multi_add_handle( $mh, $ch );
-			$handleMap[spl_object_id( $ch )] = ['handle' => $ch, 'configKey' => $configKey];
+			$handleMap[ spl_object_id( $ch ) ] = [ 'handle' => $ch, 'configKey' => $configKey ];
 		}
 
 		// Execute all handles in parallel
@@ -458,7 +462,7 @@ class Logic_IP_Check extends SharedLogic
 				}
 			}
 
-			$results[$configKey] = $isListed;
+			$results[ $configKey ] = $isListed;
 		}
 
 		curl_multi_close( $mh );
@@ -474,6 +478,7 @@ class Logic_IP_Check extends SharedLogic
 		$packed	= inet_pton( $ip );
 		if( FALSE === $packed )
 			return '';
+		}
 
 		// Convert each byte to 2-hex-char and concatenate
 		return bin2hex( $packed );
@@ -488,6 +493,7 @@ class Logic_IP_Check extends SharedLogic
 		$filterResult	= filter_var( $ip, FILTER_VALIDATE_IP, $flags );
 		if( FALSE === $filterResult )
 			return 0; // invalid
+		}
 
 		return FALSE !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ? 4 : 6;
 	}
@@ -500,6 +506,7 @@ class Logic_IP_Check extends SharedLogic
 	{
 		if( 4 === $ipVersion )
 			return $this->isBogonIpv4( $ip );
+		}
 
 		return $this->isBogonIpv6( $ip );
 	}
