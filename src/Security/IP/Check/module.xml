@@ -84,6 +84,7 @@ GET /api/ipcheck/check?ip=2001:db8::1
         <class>Entity/IP/Check/Source.php</class>
         <class>Logic/IP/Check.php</class>
         <class>Model/Log/API/Reject.php</class>
+        <class>Entity/Log/API/Reject.php</class>
         <class>Controller/Admin/IP/Check.php</class>
         <class>View/Admin/IP/Check.php</class>
         <template>admin/ip/check/index.php</template>
@@ -118,6 +119,7 @@ GET /api/ipcheck/check?ip=2001:db8::1
 DROP TABLE IF EXISTS `<%?prefix%>log_api_rejects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_api_rejects` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime NOT NULL,
   `ip` varchar(45) NOT NULL,
   `ipVersion` tinyint(3) UNSIGNED NOT NULL,
   `score` smallint(6) NOT NULL,
@@ -128,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_api_rejects` (
   `postData` mediumtext DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `createdAt` (`createdAt`),
   KEY `ip` (`ip`),
   KEY `score` (`score`),
   KEY `createdAt` (`createdAt`)
