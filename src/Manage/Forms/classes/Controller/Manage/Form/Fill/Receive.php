@@ -53,6 +53,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			$this->checkCaptcha( $form, $inputs );
 			$this->checkAltcha( $form, $inputs );
 			$this->checkIsNotSpam( $form, $inputs );
+			$this->checkIsNotBlacklistedIp( $_SERVER['REMOTE_ADDR'] );
 
 			$fillId	= $this->createFillFromInputs( $form, $inputs );
 			/** @var Entity_Form_Fill $fill */
@@ -189,6 +190,36 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		if( $strict )
 			throw new RuntimeException( 'AJAX requests allowed only' );
 		return FALSE;
+	}
+
+	/**
+	 *	@param		string		$ip			Client IP address
+	 *	@param		bool		$strict		Flag: throw exception if blacklisted or no IP given and strict mode (default)
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	protected function checkIsNotBlacklistedIp( string $ip, bool $strict = TRUE ): bool
+	{
+		if( !$this->env->getModules()->has( 'Security:IP:Check' ) )
+			return TRUE;
+		$logic	= Logic_IP_Check::getInstance( $this->env );
+		if( '' === $ip ){
+			if( $strict )
+				throw new RuntimeException( 'No IP given to check' );
+			header( 'Content-Type: application/json' );
+			print( json_encode( ['status' => 'ip', 'message' => 'No IP given to check' ] ) );
+			exit;
+		}
+
+		/** @var array{ip: string, ip_version: int, clean: bool, score: int, sources: array<string, array{listed: bool, description: string}>} $result */
+		$result	= $logic->checkIp( $ip );
+		if( $result['clean'] )
+			return TRUE;
+		if( $strict )
+			throw new RuntimeException( 'IP is blacklisted' );
+		header( 'Content-Type: application/json' );
+		print( json_encode( ['status' => 'ip', 'message' => 'IP is blacklisted' ] ) );
+		exit;
 	}
 
 	/**

@@ -43,5 +43,15 @@ class Controller_Api_Altcha extends ApiController
 	protected function __onInit(): void
 	{
 		$this->logic	= Logic_Altcha::getInstance( $this->env );
+		$this->sendAllowOriginHeaders();
+	}
+
+	protected function sendAllowOriginHeaders(): void
+	{
+		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
+		$origin	= $origin ?: $this->env->getBaseUrl();
+		$origin	= rtrim( $origin, '/' );
+		header( 'Access-Control-Allow-Origin: '.$origin );
+		header( 'Access-Control-Allow-Credentials: true' );
 	}
 }
