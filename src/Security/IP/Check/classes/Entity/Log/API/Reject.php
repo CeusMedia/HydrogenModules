@@ -14,14 +14,14 @@ use CeusMedia\HydrogenFramework\Entity;
  */
 class Entity_Log_API_Reject extends Entity
 {
-	public int|NULL $id				= NULL;
-	public string $createdAt;
-	public string $ip;
-	public int $ipVersion;
-	public int $score;
-	public string $reasons;
-	public string $requestMethod;
-	public string $requestUri;
+	public int|NULL $id					= NULL;
+	public string $ip					= '';
+	public int $ipVersion				= 4;
+	public int $score					= 0;
+	public string $reasons				= '';
+	public string $requestMethod		= '';
+	public string $requestUri			= '';
 	public string|NULL $requestHeaders	= NULL;
 	public string|NULL $postData		= NULL;
+	public string $createdAt;
 }

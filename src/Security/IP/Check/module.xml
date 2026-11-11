@@ -62,7 +62,7 @@ GET /api/ipcheck/check?ip=2001:db8::1
 
 ]]></description>
     <category>Security</category>
-    <version>0.9</version>
+    <version>0.9.1</version>
     <log version="0.1">Initial release — IP reputation check against Spamhaus and bogon lists.</log>
     <log version="0.2">Add IPv6 support. Make each blocklist individually toggleable via config.</log>
     <log version="0.3">Moved to Security/IP/Check. Renamed classes from IPReputation to IpCheck.</log>
@@ -72,14 +72,18 @@ GET /api/ipcheck/check?ip=2001:db8::1
     <log version="0.7">Added database logging for rejected requests (log_api_rejects table). Configurable POST data and header logging.</log>
     <log version="0.8">Added admin interface for viewing, filtering, exporting, and deleting rejected IP log entries.</log>
     <log version="0.9">Moved install SQL into module definition. Renamed table columns from snake_case to camelCase.</log>
+    <log version="0.9.1">Add data entities for check query, source and result.</log>
     <company site="https://ceusmedia.de/">Ceus Media</company>
     <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
     <license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
     <files>
         <class>Controller/Api/IP/Check.php</class>
+        <class>Entity/Log/API/Reject.php</class>
+        <class>Entity/IP/Check/Query.php</class>
+        <class>Entity/IP/Check/Result.php</class>
+        <class>Entity/IP/Check/Source.php</class>
         <class>Logic/IP/Check.php</class>
         <class>Model/Log/API/Reject.php</class>
-        <class>Entity/Log/API/Reject.php</class>
         <class>Controller/Admin/IP/Check.php</class>
         <class>View/Admin/IP/Check.php</class>
         <template>admin/ip/check/index.php</template>
@@ -107,26 +111,26 @@ GET /api/ipcheck/check?ip=2001:db8::1
     <config protected="yes" type="boolean" name="log.post_data" title="Include POST data in rejected IP logs">yes</config>
     <config protected="yes" type="boolean" name="log.headers" title="Include request headers in rejected IP logs">yes</config>
     <config protected="yes" type="integer" name="log.retention.days" title="Delete log entries older than N days">90</config>
-    <link access="public" path="api/ipcheck/check"/>
+    <link access="public" path="api/ip/check"/>
     <link xml:lang="de" rank="96" access="acl" path="admin/ip/check">IP Check Logs</link>
     <link xml:lang="en" rank="96" access="acl" path="admin/ip/check">IP Check Logs</link>
     <sql on="install" type="mysql" version="0.7"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_api_rejects`;
-CREATE TABLE IF NOT EXISTS `log_api_rejects` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_api_rejects` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `createdAt` datetime NOT NULL,
   `ip` varchar(45) NOT NULL,
   `ipVersion` tinyint(3) UNSIGNED NOT NULL,
   `score` smallint(6) NOT NULL,
-  `reasons` json NOT NULL,
+  `reasons` text NOT NULL,
   `requestMethod` varchar(10) NOT NULL,
   `requestUri` varchar(500) NOT NULL,
-  `requestHeaders` json DEFAULT NULL,
-  `postData` json DEFAULT NULL,
+  `requestHeaders` text DEFAULT NULL,
+  `postData` mediumtext DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `createdAt` (`createdAt`),
   KEY `ip` (`ip`),
-  KEY `score` (`score`)
+  KEY `score` (`score`),
+  KEY `createdAt` (`createdAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
     <sql on="uninstall" type="mysql"><![CDATA[
