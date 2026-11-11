@@ -27,47 +27,47 @@ class Logic_IP_Check extends SharedLogic
 	 * @var array<string, array{domain: string, description: string, penalty: int}>
 	 */
 	protected array $dnsBlocklists = [
-		'use.list.spamhaus_sbl' => [
+		'spamhaus_sbl' => [
 			'domain'      => 'sbl.spamhaus.org',
 			'description' => 'Spamhaus SBL — Spam Block List',
 			'penalty'     => -40,
 		],
-		'use.list.spamhaus_xbl' => [
+		'spamhaus_xbl' => [
 			'domain'      => 'xbl.spamhaus.org',
 			'description' => 'Spamhaus XBL — Exploits Block List',
 			'penalty'     => -40,
 		],
-		'use.list.spamhaus_pbl' => [
+		'spamhaus_pbl' => [
 			'domain'      => 'pbl.spamhaus.org',
 			'description' => 'Spamhaus PBL — Policy Block List',
 			'penalty'     => -30,
 		],
-		'use.list.spamhaus_ehn' => [
+		'spamhaus_ehn' => [
 			'domain'      => 'ehn.spamhaus.org',
 			'description' => 'Spamhaus EHN — Emerging Hosts Network',
 			'penalty'     => -20,
 		],
-		'use.list.barracuda' => [
+		'barracuda' => [
 			'domain'      => 'b.barracudacentral.org',
 			'description' => 'Barracuda BRBL — Reputation Block List',
 			'penalty'     => -40,
 		],
-		'use.list.spamcop' => [
+		'spamcop' => [
 			'domain'      => 'bl.spamcop.net',
 			'description' => 'SpamCop SCBL — SpamCop Block List',
 			'penalty'     => -40,
 		],
-		'use.list.abusix' => [
+		'abusix' => [
 			'domain'      => 'dnsbl.abusix.zone',
 			'description' => 'Abusix Mail Intelligence DNSBL',
 			'penalty'     => -40,
 		],
-		'use.list.invaluement' => [
+		'invaluement' => [
 			'domain'      => 'dnsbl.invaluement.com',
 			'description' => 'Invaluement DNSBL',
 			'penalty'     => -40,
 		],
-		'use.list.sorbs' => [
+		'sorbs' => [
 			'domain'      => 'dnsbl.sorbs.net',
 			'description' => 'Sorbs DNSBL (deprecated — service reportedly shutting down)',
 			'penalty'     => -50,
@@ -134,10 +134,10 @@ class Logic_IP_Check extends SharedLogic
 	 * 2. For production: a bogon IP in the request means IP spoofing (e.g. manipulated X-Forwarded-For
 	 *    header behind a proxy) — it is penalized with score -50.
 	 *
-	 * @param string $ip The IP address to check
-	 * @return array{ip: string, ip_version: int, clean: bool, score: int, sources: array<string, array{listed: bool, description: string}>}
+	 *	@param		string		$ip			The IP address to check
+	 *	@return		Entity_IP_Check_Result
 	 */
-	public function checkIp( string $ip ): array
+	public function checkIp( string $ip ): Entity_IP_Check_Result
 	{
 		$ipVersion	= $this->getIpVersion( $ip );
 		$sources	= [];
@@ -150,53 +150,53 @@ class Logic_IP_Check extends SharedLogic
 		$isBogonIp	= $this->isBogon( $ip, $ipVersion );
 		if( $isBogonIp['listed'] && $this->skipLocalIps ){
 			// Local development mode: skip all checks for bogon IPs
-			$sources['bogons'] = [
+			$sources['bogons'] = Entity_IP_Check_Source::fromArray( [
 				'listed'		=> FALSE,
 				'description'	=> 'Skipped — local IP address (' . $isBogonIp['description'] . ')',
-			];
-			return [
-				'ip'			=> $ip,
-				'ip_version'	=> $ipVersion,
-				'checked'		=> FALSE,
+			] );
+			return Entity_IP_Check_Result::fromArray( [
+				'ip'		=> $ip,
+				'ipVersion'	=> $ipVersion,
+				'checked'	=> FALSE,
 				'clean'		=> TRUE,
 				'score'		=> 0,
 				'sources'	=> $sources,
-			];
+			] );
 		}
 
 		// The bogon check in the results is only included when use.list.bogons is enabled.
-		if( !empty( $this->enabledLists['use.list.bogons'] ) ){
+		if( !empty( $this->enabledLists['bogons'] ) ){
 			if( $isBogonIp['listed'] ){
 				// Production mode: bogon IP detected — penalize as potential spoofing
-				$sources['bogons'] = [
+				$sources['bogons'] = Entity_IP_Check_Source::fromArray( [
 					'listed'		=> TRUE,
 					'description'	=> $isBogonIp['description'],
-				];
+				] );
 				$score += -50;
 			}
 			else{
 				// IP is public — bogon check passed, no spoofing detected
-				$sources['bogons'] = [
+				$sources['bogons'] = Entity_IP_Check_Source::fromArray( [
 					'listed'		=> FALSE,
 					'description'	=> 'Bogon addresses',
-				];
+				] );
 			}
 		}
 
 		// Collect all enabled DNS-based blocklist queries
 		$queries	= [];
 		foreach( $this->dnsBlocklists as $configKey => $config ){
-			if( empty( $this->enabledLists[ $configKey ] ) ){
+			if( empty( $this->enabledLists[$configKey] ) ){
 				continue;
 			}
 
 			$query	= $this->buildDnsQuery( $ip, $ipVersion, $config['domain'] );
 			if( '' !== $query ){
-				$queries[ $configKey ] = [
+				$queries[$configKey] = Entity_IP_Check_Query::fromArray( [
 					'query'		=> $query,
 					'domain'	=> $config['domain'],
 					'config'	=> $config,
-				];
+				] );
 			}
 		}
 
@@ -206,48 +206,47 @@ class Logic_IP_Check extends SharedLogic
 		// Process results
 		foreach( $queries as $configKey => $queryInfo ){
 			$cacheKey	= $queryInfo['query'] . '.' . $queryInfo['domain'];
-			$listed		= $results[ $configKey ] ?? FALSE;
-			$this->dnsCache[ $cacheKey ] = [ 'result' => $listed, 'time' => time() ];
+			$listed		= $results[$configKey] ?? FALSE;
+			$this->dnsCache[$cacheKey] = ['result' => $listed, 'time' => time()];
 
-			// Use a clean key for the response (strip "use.list." prefix)
-			$responseKey	= str_replace( 'use.list.', '', $configKey );
-			$sources[ $responseKey ] = [
+			$sources[$configKey] = Entity_IP_Check_Source::fromArray( [
 				'listed'		=> $listed,
 				'description'	=> $queryInfo['config']['description'],
-			];
+			] );
 			if( $listed ){
 				$score += $queryInfo['config']['penalty'];
 			}
 		}
 
 		// Track whether at least one list was actually checked
-		$checked	= !empty( $this->enabledLists['use.list.bogons'] ) ||
+		$checked	= !empty( $this->enabledLists['bogons'] ) ||
 			count( array_filter( array_intersect_key( $this->enabledLists, $this->dnsBlocklists ) ) ) > 0;
 
-		return [
-			'ip'			=> $ip,
-			'ip_version'	=> $ipVersion,
-			'checked'		=> $checked,
+		return Entity_IP_Check_Result::fromArray( [
+			'ip'		=> $ip,
+			'ipVersion'	=> $ipVersion,
+			'checked'	=> $checked,
 			'clean'		=> $score >= 0,
 			'score'		=> $score,
 			'sources'	=> $sources,
-		];
+		] );
 	}
 
 	/**
-	 * Log a rejected IP to the database via Model/Entity.
+	 *	Log a rejected IP to the database via Model/Entity.
 	 *
-	 * @param string $ip The rejected IP address
-	 * @param array{ip_version: int, score: int, sources: array} $result The checkIp() result
-	 * @param string|null $requestMethod HTTP method (GET, POST, etc.)
-	 * @param string|null $requestUri Request URI
-	 * @param array|null $postData POST body data (only if log.post_data is enabled)
-	 * @param array|null $headers Request headers (only if log.headers is enabled)
-	 * @return bool TRUE if logged successfully
+	 *	@param		string					$ip				The rejected IP address
+	 *	@param		Entity_IP_Check_Result	$result			The checkIp() result
+	 *	@param		string|NULL				$requestMethod	HTTP method (GET, POST, etc.)
+	 *	@param		string|NULL				$requestUri		Request URI
+	 *	@param		array|NULL				$postData		POST body data (only if log.post_data is enabled)
+	 *	@param		array|NULL				$headers		Request headers (only if log.headers is enabled)
+	 *	@return		bool					TRUE if logged successfully
+	 *	@throws		JsonException
 	 */
 	public function logRejectedIp(
 		string $ip,
-		array $result,
+		Entity_IP_Check_Result $result,
 		?string $requestMethod = NULL,
 		?string $requestUri = NULL,
 		?array $postData = NULL,
@@ -264,8 +263,8 @@ class Logic_IP_Check extends SharedLogic
 
 		// Collect reasons: only sources that flagged the IP
 		$reasons	= [];
-		foreach( $result['sources'] as $sourceKey => $source ){
-			if( !empty( $source['listed'] ) ){
+		foreach( $result->sources as $sourceKey => $source ){
+			if( !empty( $source->listed ) ){
 				$reasons[]	= $sourceKey;
 			}
 		}
@@ -274,8 +273,8 @@ class Logic_IP_Check extends SharedLogic
 		$data	= [
 			'createdAt'		=> date( 'Y-m-d H:i:s' ),
 			'ip'			=> $ip,
-			'ipVersion'		=> (int) $result['ip_version'],
-			'score'			=> (int) $result['score'],
+			'ipVersion'		=> $result->ipVersion,
+			'score'			=> $result->score,
 			'reasons'		=> json_encode( $reasons, JSON_THROW_ON_ERROR ),
 			'requestMethod'	=> $requestMethod ?: 'UNKNOWN',
 			'requestUri'	=> $requestUri ?: 'UNKNOWN',
@@ -290,12 +289,11 @@ class Logic_IP_Check extends SharedLogic
 		}
 
 		try{
-			$model	= Model_Log_API_Reject::getInstance( $this->env );
-			$entity	= Entity_Log_API_Reject::fromArray( $data );
-			$model->add( $entity );
+			Model_Log_API_Reject::getInstance( $this->env )
+				->add( Entity_Log_API_Reject::fromArray( $data ) );
 			return TRUE;
 		}
-		catch( \Throwable $e ){
+		catch( Throwable $e ){
 			$this->env->getLog()->logException( $e, 'Failed to log rejected IP: ' . $e->getMessage() );
 			return FALSE;
 		}
@@ -307,24 +305,18 @@ class Logic_IP_Check extends SharedLogic
 		$this->cacheTtl	= (int) $moduleConfig->get( 'cache_ttl', 3600 );
 
 		// Read enabled blocklist flags from config
-		$this->enabledLists['use.list.bogons']		= filter_var( $moduleConfig->get( 'use.list.bogons', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.spamhaus_sbl']	= filter_var( $moduleConfig->get( 'use.list.spamhaus_sbl', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.spamhaus_xbl']	= filter_var( $moduleConfig->get( 'use.list.spamhaus_xbl', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.spamhaus_pbl']	= filter_var( $moduleConfig->get( 'use.list.spamhaus_pbl', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.spamhaus_ehn']	= filter_var( $moduleConfig->get( 'use.list.spamhaus_ehn', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.sorbs']		= filter_var( $moduleConfig->get( 'use.list.sorbs', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.barracuda']	= filter_var( $moduleConfig->get( 'use.list.barracuda', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.spamcop']		= filter_var( $moduleConfig->get( 'use.list.spamcop', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.abusix']		= filter_var( $moduleConfig->get( 'use.list.abusix', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->enabledLists['use.list.invaluement']	= filter_var( $moduleConfig->get( 'use.list.invaluement', 'yes' ), FILTER_VALIDATE_BOOLEAN );
+		$lists	= $moduleConfig->getAll( 'use.list.', TRUE );
+		foreach( $lists->getKeys() as $key )
+			$this->enabledLists[$key]	= filter_var( $lists->get( $key, 'yes' ), FILTER_VALIDATE_BOOLEAN );
 
 		// Read skip_local_ips flag for local development mode
 		$this->skipLocalIps	= filter_var( $moduleConfig->get( 'skip_local_ips', 'no' ), FILTER_VALIDATE_BOOLEAN );
 
 		// Read logging config flags
-		$this->logRejected	= filter_var( $moduleConfig->get( 'log.rejected', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->logPostData	= filter_var( $moduleConfig->get( 'log.post_data', 'yes' ), FILTER_VALIDATE_BOOLEAN );
-		$this->logHeaders	= filter_var( $moduleConfig->get( 'log.headers', 'yes' ), FILTER_VALIDATE_BOOLEAN );
+		$logs	= $moduleConfig->getAll( 'log.', TRUE );
+		$this->logRejected	= filter_var( $logs->get( 'rejected', 'yes' ), FILTER_VALIDATE_BOOLEAN );
+		$this->logPostData	= filter_var( $logs->get( 'post_data', 'yes' ), FILTER_VALIDATE_BOOLEAN );
+		$this->logHeaders	= filter_var( $logs->get( 'headers', 'yes' ), FILTER_VALIDATE_BOOLEAN );
 	}
 
 	/**
@@ -343,9 +335,8 @@ class Logic_IP_Check extends SharedLogic
 
 		// IPv6: expand to full 32-hex-char string and reverse as nibbles
 		$expanded	= $this->expandIpv6( $ip );
-		if( '' === $expanded ){
+		if( '' === $expanded )
 			return '';
-		}
 
 		return strrev( $expanded ) . '.ip6.' . $domain;
 	}
@@ -357,64 +348,61 @@ class Logic_IP_Check extends SharedLogic
 	 * and executed in parallel. This reduces the total lookup time from the sum of
 	 * all individual lookups to the time of the slowest single lookup.
 	 *
-	 * @param array<string, array{query: string, domain: string, config: array}> $queries
+	 * @param array<string, Entity_IP_Check_Query> $queries
 	 *        Associative array of configKey => query info
 	 * @return array<string, bool> Associative array of configKey => isListed
 	 */
 	protected function dnsLookupParallel( array $queries ): array
 	{
 		$results	= [];
-		if( 0 === count( $queries ) ){
+		if( 0 === count( $queries ) )
 			return $results;
-		}
 
 		// Check cache first — collect queries that need actual DNS lookup
 		$uncached	= [];
 		foreach( $queries as $configKey => $queryInfo ){
-			$cacheKey	= $queryInfo['query'] . '.' . $queryInfo['domain'];
-			if( isset( $this->dnsCache[ $cacheKey ] ) ){
-				$cacheEntry	= $this->dnsCache[ $cacheKey ];
+			$cacheKey	= $queryInfo->query . '.' . $queryInfo->domain;
+			if( isset( $this->dnsCache[$cacheKey] ) ){
+				$cacheEntry	= $this->dnsCache[$cacheKey];
 				if( ( time() - $cacheEntry['time'] ) < $this->cacheTtl ){
-					$results[ $configKey ] = $cacheEntry['result'];
+					$results[$configKey] = $cacheEntry['result'];
 					continue;
 				}
 			}
-			$uncached[ $configKey ] = $queryInfo;
+			$uncached[$configKey] = $queryInfo;
 		}
 
 		// If all queries are cached, return early
-		if( 0 === count( $uncached ) ){
+		if( 0 === count( $uncached ) )
 			return $results;
-		}
 
 		// Perform parallel DNS-over-HTTPS lookups via curl_multi
 		$mh			= curl_multi_init();
 		$handleMap	= []; // curl_handle => configKey
 
 		foreach( $uncached as $configKey => $queryInfo ){
-			print_r($queryInfo);
 			$ch	= curl_init();
 			curl_setopt_array( $ch, [
 				CURLOPT_URL            => 'https://1.1.1.1/dns-query?name=' . urlencode( $queryInfo['query'] ) . '&type=A',
-				CURLOPT_HTTPHEADER     => [ 'Accept: application/dns-json' ],
+				CURLOPT_HTTPHEADER     => ['Accept: application/dns-json'],
 				CURLOPT_RETURNTRANSFER => TRUE,
 				CURLOPT_TIMEOUT        => 5,
 				CURLOPT_CONNECTTIMEOUT => 2,
 				CURLOPT_DNS_USE_GLOBAL_CACHE => FALSE,
 			] );
 			curl_multi_add_handle( $mh, $ch );
-			$handleMap[ spl_object_id( $ch ) ] = [ 'handle' => $ch, 'configKey' => $configKey ];
+			$handleMap[spl_object_id( $ch )] = ['handle' => $ch, 'configKey' => $configKey];
 		}
 
 		// Execute all handles in parallel
-		$running	= NULL;
+		$running	= 0;
 		try{
 			do{
 				curl_multi_exec( $mh, $running );
 				curl_multi_select( $mh, 1.0 );
 			} while( $running > 0 );
 		}
-		catch( \Throwable $e ){
+		catch(Throwable $e ){
 			$this->env->getLog()->logException( $e, 'DNS parallel lookup failed' );
 		}
 
@@ -439,7 +427,7 @@ class Logic_IP_Check extends SharedLogic
 				}
 			}
 
-			$results[ $configKey ] = $isListed;
+			$results[$configKey] = $isListed;
 		}
 
 		curl_multi_close( $mh );
@@ -453,9 +441,8 @@ class Logic_IP_Check extends SharedLogic
 	protected function expandIpv6( string $ip ): string
 	{
 		$packed	= inet_pton( $ip );
-		if( FALSE === $packed ){
+		if( FALSE === $packed )
 			return '';
-		}
 
 		// Convert each byte to 2-hex-char and concatenate
 		return bin2hex( $packed );
@@ -468,9 +455,8 @@ class Logic_IP_Check extends SharedLogic
 	{
 		$flags		= FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6;
 		$filterResult	= filter_var( $ip, FILTER_VALIDATE_IP, $flags );
-		if( FALSE === $filterResult ){
+		if( FALSE === $filterResult )
 			return 0; // invalid
-		}
 
 		return FALSE !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ? 4 : 6;
 	}
@@ -479,110 +465,148 @@ class Logic_IP_Check extends SharedLogic
 	 * Check whether an IP falls into a bogon (reserved/private) range.
 	 * Supports both IPv4 and IPv6.
 	 */
-	protected function isBogon( string $ip, int $ipVersion ): array
+	protected function isBogon( string $ip, int $ipVersion ): Entity_IP_Check_Source
 	{
-		if( 4 === $ipVersion ){
+		if( 4 === $ipVersion )
 			return $this->isBogonIpv4( $ip );
-		}
 
 		return $this->isBogonIpv6( $ip );
 	}
 
 	/**
 	 * Check IPv4 bogon ranges.
+	 * @param string $ip
+	 * @return Entity_IP_Check_Source
 	 */
-	protected function isBogonIpv4( string $ip ): array
+	protected function isBogonIpv4( string $ip ): Entity_IP_Check_Source
 	{
 		$octets	= explode( '.', $ip );
-		if( 4 !== count( $octets ) ){
-			return [ 'listed' => FALSE, 'description' => 'Bogon addresses' ];
-		}
+		if( 4 !== count( $octets ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed'		=> FALSE,
+				'description'	=> 'Bogon addresses'
+			] );
 
 		$first	= (int) $octets[0];
 		$second	= (int) $octets[1];
 		$third	= (int) $octets[2];
 
 		// 0.0.0.0/8
-		if( 0 === $first ){
-			return [ 'listed' => TRUE, 'description' => '0.0.0.0/8 — IETF Protocol Assignment' ];
-		}
+		if( 0 === $first )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '0.0.0.0/8 — IETF Protocol Assignment'
+			] );
 
 		// 10.0.0.0/8
-		if( 10 === $first ){
-			return [ 'listed' => TRUE, 'description' => '10.0.0.0/8 — Private (RFC 1918)' ];
-		}
+		if( 10 === $first )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '10.0.0.0/8 — Private (RFC 1918)'
+			] );
 
 		// 100.64.0.0/10 (100.64.0.0 - 100.127.255.255)
-		if( 100 === $first && $second >= 64 && $second <= 127 ){
-			return [ 'listed' => TRUE, 'description' => '100.64.0.0/10 — Carrier-grade NAT (RFC 6598)' ];
-		}
+		if( 100 === $first && $second >= 64 && $second <= 127 )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '100.64.0.0/10 — Carrier-grade NAT (RFC 6598)'
+			] );
 
 		// 127.0.0.0/8
-		if( 127 === $first ){
-			return [ 'listed' => TRUE, 'description' => '127.0.0.0/8 — Loopback' ];
-		}
+		if( 127 === $first )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '127.0.0.0/8 — Loopback'
+			] );
 
 		// 169.254.0.0/16
-		if( 169 === $first && 254 === $second ){
-			return [ 'listed' => TRUE, 'description' => '169.254.0.0/16 — Link-local (RFC 3927)' ];
-		}
+		if( 169 === $first && 254 === $second )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '169.254.0.0/16 — Link-local (RFC 3927)'
+			] );
 
 		// 172.16.0.0/12 (172.16.0.0 - 172.31.255.255)
-		if( 172 === $first && $second >= 16 && $second <= 31 ){
-			return [ 'listed' => TRUE, 'description' => '172.16.0.0/12 — Private (RFC 1918)' ];
-		}
+		if( 172 === $first && $second >= 16 && $second <= 31 )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '172.16.0.0/12 — Private (RFC 1918)'
+			] );
 
 		// 192.0.2.0/24 (TEST-NET-1) — must come before 192.0.0.0/24
-		if( 192 === $first && 0 === $second && 2 === $third ){
-			return [ 'listed' => TRUE, 'description' => '192.0.2.0/24 — TEST-NET-1 (RFC 5737)' ];
-		}
+		if( 192 === $first && 0 === $second && 2 === $third )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '192.0.2.0/24 — TEST-NET-1 (RFC 5737)'
+			] );
 
 		// 192.0.0.0/24
-		if( 192 === $first && 0 === $second ){
-			return [ 'listed' => TRUE, 'description' => '192.0.0.0/24 — IETF Protocol Assignment' ];
-		}
+		if( 192 === $first && 0 === $second )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '192.0.0.0/24 — IETF Protocol Assignment'
+			] );
 
 		// 192.88.99.0/24 (6to4 Relay)
-		if( 192 === $first && 88 === $second && 99 === $third ){
-			return [ 'listed' => TRUE, 'description' => '192.88.99.0/24 — 6to4 Relay (RFC 3068)' ];
-		}
+		if( 192 === $first && 88 === $second && 99 === $third )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '192.88.99.0/24 — 6to4 Relay (RFC 3068)'
+			] );
 
 		// 192.168.0.0/16
-		if( 192 === $first && 168 === $second ){
-			return [ 'listed' => TRUE, 'description' => '192.168.0.0/16 — Private (RFC 1918)' ];
-		}
+		if( 192 === $first && 168 === $second )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '192.168.0.0/16 — Private (RFC 1918)'
+			] );
 
 		// 192.175.48.0/24 (AS112-v4)
-		if( 192 === $first && 175 === $second && 48 === $third ){
-			return [ 'listed' => TRUE, 'description' => '192.175.48.0/24 — AS112-v4 (RFC 7450)' ];
-		}
+		if( 192 === $first && 175 === $second && 48 === $third )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '192.175.48.0/24 — AS112-v4 (RFC 7450)'
+			] );
 
 		// 198.18.0.0/15 — Benchmarking (RFC 2544) — covers 198.18.0.0 – 198.19.255.255
-		if( 198 === $first && $second >= 18 && $second <= 19 ){
-			return [ 'listed' => TRUE, 'description' => '198.18.0.0/15 — Benchmarking (RFC 2544)' ];
-		}
+		if( 198 === $first && $second >= 18 && $second <= 19 )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '198.18.0.0/15 — Benchmarking (RFC 2544)'
+			] );
 
 		// 198.51.100.0/24 (TEST-NET-2)
-		if( 198 === $first && 51 === $second && 100 === $third ){
-			return [ 'listed' => TRUE, 'description' => '198.51.100.0/24 — TEST-NET-2 (RFC 5737)' ];
-		}
+		if( 198 === $first && 51 === $second && 100 === $third )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '198.51.100.0/24 — TEST-NET-2 (RFC 5737)'
+			] );
 
 		// 203.0.113.0/24 (TEST-NET-3)
-		if( 203 === $first && 0 === $second && 113 === $third ){
-			return [ 'listed' => TRUE, 'description' => '203.0.113.0/24 — TEST-NET-3 (RFC 5737)' ];
-		}
+		if( 203 === $first && 0 === $second && 113 === $third )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '203.0.113.0/24 — TEST-NET-3 (RFC 5737)'
+			] );
 
 		// 224.0.0.0/4 (Multicast: 224-239)
-		if( $first >= 224 && $first <= 239 ){
-			return [ 'listed' => TRUE, 'description' => '224.0.0.0/4 — Multicast (RFC 5771)' ];
-		}
+		if( $first >= 224 && $first <= 239 )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '224.0.0.0/4 — Multicast (RFC 5771)'
+			] );
 
 		// 240.0.0.0/4 (Reserved: 240-255)
-		if( $first >= 240 ){
-			return [ 'listed' => TRUE, 'description' => '240.0.0.0/4 — Reserved (RFC 1122)' ];
-		}
+		if( $first >= 240 )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '240.0.0.0/4 — Reserved (RFC 1122)'
+			] );
 
-		return [ 'listed' => FALSE, 'description' => 'Bogon addresses' ];
+		return Entity_IP_Check_Source::fromArray( [
+			'listed' => FALSE,
+			'description' => 'Bogon addresses'
+		] );
 	}
 
 	/**
@@ -591,18 +615,22 @@ class Logic_IP_Check extends SharedLogic
 	 * fc00::/7 (unique local), 2001:db8::/32 (documentation), :: (unspecified),
 	 * 2001:20::/28 (ORCHIDv2), 2002::/16 (6to4), 2001::/32 (TEREDO), ff00::/8 (multicast).
 	 */
-	protected function isBogonIpv6( string $ip ): array
+	protected function isBogonIpv6( string $ip ): Entity_IP_Check_Source
 	{
 		$packed	= inet_pton( $ip );
-		if( FALSE === $packed ){
-			return [ 'listed' => FALSE, 'description' => 'Bogon addresses (IPv6)' ];
-		}
+		if( FALSE === $packed )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => FALSE,
+				'description' => 'Bogon addresses (IPv6)'
+			] );
 
 		// inet_pton returns 4 bytes for IPv4-mapped IPv6 addresses (::ffff:x.x.x.x)
 		// These are always in the ::/96 bogon range
-		if( 4 === strlen( $packed ) ){
-			return [ 'listed' => TRUE, 'description' => '::/96 — IPv4-mapped prefix (RFC 4291)' ];
-		}
+		if( 4 === strlen( $packed ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '::/96 — IPv4-mapped prefix (RFC 4291)'
+			] );
 
 		// Convert to a 128-bit integer representation for range checks.
 		// PHP integers on 64-bit can handle the high 64 bits directly.
@@ -621,58 +649,82 @@ class Logic_IP_Check extends SharedLogic
 					break;
 				}
 			}
-			if( $allZeroExceptLast && 1 === ord( $packed[15] ) ){
-				return [ 'listed' => TRUE, 'description' => '::1/128 — Loopback (RFC 4291)' ];
-			}
+			if( $allZeroExceptLast && 1 === ord( $packed[15] ) )
+				return Entity_IP_Check_Source::fromArray( [
+					'listed' => TRUE,
+					'description' => '::1/128 — Loopback (RFC 4291)'
+				] );
 
 			// ::/128 — Unspecified (all 16 bytes are zero)
-			if( $allZeroExceptLast && 0 === ord( $packed[15] ) ){
-				return [ 'listed' => TRUE, 'description' => '::/128 — Unspecified (RFC 4291)' ];
-			}
+			if( $allZeroExceptLast && 0 === ord( $packed[15] ) )
+				return Entity_IP_Check_Source::fromArray( [
+					'listed' => TRUE,
+					'description' => '::/128 — Unspecified (RFC 4291)'
+				] );
 
 			// ::/96 — IPv4-compatible/mapped prefix (first 8 bytes zero, remaining non-zero)
-			return [ 'listed' => TRUE, 'description' => '::/96 — IPv4-mapped prefix (RFC 4291)' ];
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '::/96 — IPv4-mapped prefix (RFC 4291)'
+			] );
 		}
 
 		// 2001:db8::/32 — Documentation (RFC 3849)
 		// 2001:0db8 = 0x20010db8
-		if( 0x20010db8 === $high ){
-			return [ 'listed' => TRUE, 'description' => '2001:db8::/32 — Documentation (RFC 3849)' ];
-		}
+		if( 0x20010db8 === $high )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '2001:db8::/32 — Documentation (RFC 3849)'
+			] );
 
 		// 2002::/16 — 6to4 (RFC 3056)
 		// 0x20020000
-		if( 0x20020000 === ( $high & 0xffff0000 ) ){
-			return [ 'listed' => TRUE, 'description' => '2002::/16 — 6to4 (RFC 3056)' ];
-		}
+		if( 0x20020000 === ( $high & 0xffff0000 ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '2002::/16 — 6to4 (RFC 3056)'
+			] );
 
 		// 2001::/32 — TEREDO prefix (RFC 4380)
-		if( 0x20010000 === $high ){
-			return [ 'listed' => TRUE, 'description' => '2001::/32 — TEREDO (RFC 4380)' ];
-		}
+		if( 0x20010000 === $high )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '2001::/32 — TEREDO (RFC 4380)'
+			] );
 
 		// 2001:20::/28 — ORCHIDv2 (RFC 7343)
-		if( 0x20010020 === ( $high & 0xfffffff0 ) ){
-			return [ 'listed' => TRUE, 'description' => '2001:20::/28 — ORCHIDv2 (RFC 7343)' ];
-		}
+		if( 0x20010020 === ( $high & 0xfffffff0 ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => '2001:20::/28 — ORCHIDv2 (RFC 7343)'
+			] );
 
 		// fe80::/10 — Link-local (RFC 4291)
 		// fe80 = 0xfe80, /10 means first 10 bits: 0xfe00 - 0xfeff in high byte range
-		if( 0xfe800000 === ( $high & 0xffc00000 ) ){
-			return [ 'listed' => TRUE, 'description' => 'fe80::/10 — Link-local (RFC 4291)' ];
-		}
+		if( 0xfe800000 === ( $high & 0xffc00000 ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => 'fe80::/10 — Link-local (RFC 4291)'
+			] );
 
 		// fc00::/7 — Unique local (RFC 4193)
 		// fc00-ffff, /7 means first 7 bits = 0xfc - 0xff
-		if( 0xfc000000 === ( $high & 0xfe000000 ) ){
-			return [ 'listed' => TRUE, 'description' => 'fc00::/7 — Unique local (RFC 4193)' ];
-		}
+		if( 0xfc000000 === ( $high & 0xfe000000 ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => 'fc00::/7 — Unique local (RFC 4193)'
+			] );
 
 		// ff00::/8 — Multicast (RFC 4291)
-		if( 0xff000000 === ( $high & 0xff000000 ) ){
-			return [ 'listed' => TRUE, 'description' => 'ff00::/8 — Multicast (RFC 4291)' ];
-		}
+		if( 0xff000000 === ( $high & 0xff000000 ) )
+			return Entity_IP_Check_Source::fromArray( [
+				'listed' => TRUE,
+				'description' => 'ff00::/8 — Multicast (RFC 4291)'
+			] );
 
-		return [ 'listed' => FALSE, 'description' => 'Bogon addresses (IPv6)' ];
+		return Entity_IP_Check_Source::fromArray( [
+			'listed' => FALSE,
+			'description' => 'Bogon addresses (IPv6)'
+		] );
 	}
 }
