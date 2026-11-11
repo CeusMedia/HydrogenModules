@@ -19,6 +19,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	 *	Constructor, disables automatic view instance.
 	 *	@param		WebEnvironment		$env
 	 *	@throws		ReflectionException
+	 *	@throws		JsonException
 	 */
 	public function __construct( WebEnvironment $env )
 	{
@@ -53,6 +54,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			$this->checkCaptcha( $form, $inputs );
 			$this->checkAltcha( $form, $inputs );
 			$this->checkIsNotSpam( $form, $inputs );
+			$this->checkIsNotBlacklistedIp( $this->env->getRequest()->getIp() );
 
 			$fillId	= $this->createFillFromInputs( $form, $inputs );
 			/** @var Entity_Form_Fill $fill */
@@ -207,6 +209,11 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		return FALSE;
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		int
+	 *	@throws		Exception
+	 */
 	protected function checkMandatoryFields( array $data ): int
 	{
 		$inputs	= $data['inputs'] ?? [];
