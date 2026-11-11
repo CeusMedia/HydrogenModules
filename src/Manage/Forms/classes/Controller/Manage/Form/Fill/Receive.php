@@ -216,6 +216,9 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		$result	= $logic->checkIp( $ip );
 		if( $result['clean'] )
 			return TRUE;
+		$logic->logRequestOfRejectedIp();
+
+
 		if( $strict )
 			throw new RuntimeException( 'IP is blacklisted' );
 		header( 'Content-Type: application/json' );

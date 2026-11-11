@@ -299,6 +299,37 @@ class Logic_IP_Check extends SharedLogic
 		}
 	}
 
+	public function logRequestOfRejectedIp(): bool
+	{
+		// Collect POST data if available
+		$request	= $this->env->getRequest();
+		$method		= (string) $request->getMethod();
+		$postData	= NULL;
+		if( in_array( $method, ['POST', 'PUT', 'PATCH'], TRUE ) ){
+			$body	= $request->getRawPostData();
+			if( '' !== $body ){
+				$decoded	= json_decode( $body, TRUE );
+				$postData	= is_array( $decoded ) ? $decoded : [ 'raw' => $body ];
+			}
+		}
+
+		// Collect relevant headers
+		$headers	= [
+			'user_agent'		=> (string) $request->get( 'HTTP_USER_AGENT', '' ),
+			'accept_language'	=> (string) $request->get( 'HTTP_ACCEPT_LANGUAGE', '' ),
+			'referer'			=> (string) $request->get( 'HTTP_REFERER', '' ),
+		];
+
+		return $this->logRejectedIp(
+			$ip,
+			$result,
+			$method,
+			(string) $request->getUrl( TRUE ),
+			$postData,
+			$headers
+		);
+	}
+
 	protected function __onInit(): void
 	{
 		$moduleConfig	= $this->env->getModules()->get( 'Security_IP_Check' )->getConfigAsDictionary();
