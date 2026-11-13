@@ -143,6 +143,8 @@
       <path value="$PROJECT_DIR$/vendor/markbaker/matrix" />
       <path value="$PROJECT_DIR$/vendor/altcha-org/altcha" />
       <path value="$PROJECT_DIR$/vendor/phpoffice/wmf" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/kzykhys/ciconia" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
