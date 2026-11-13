@@ -4,7 +4,7 @@ use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
-class Controller_Manage_Form_Fill_Receive extends AjaxController
+class Controller_Ajax_Manage_Form_Fill_Receive extends AjaxController
 {
 	protected HttpRequest $request;
 
@@ -35,7 +35,7 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 			/** @var ?Entity_Form $form */
 			$form		= $this->modelForm->get( $formId );
 			if( NULL === $form )
-				$this->respondError( 0, 'Form not existing anymore', 404 );
+				$this->respondError( 'form', 'Form not existing anymore', 404 );
 
 			$inputs	= $data['inputs'] ?? [];
 			$this->filterData( $inputs );
@@ -130,11 +130,11 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 			}
 		}
 		if( '' === $altcha )
-			$this->respondError( 0, 'Form field "altcha" is missing', 406 );
+			$this->respondError( 'altcha', 'Form field "altcha" is missing', 406 );
 
 		if( Logic_Altcha::getInstance( $this->env )->verify( $altcha )->verified )
 			return;
-		$this->respondError( 0, 'Invalid solution of ALTCHA challenge', 406 );
+		$this->respondError( 'altcha', 'Invalid solution of ALTCHA challenge', 406 );
 
 	}
 
@@ -156,12 +156,7 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 		}
 		if( $captcha ){
 			if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) )
-				$this->respondData( ['status' => 'captcha', 'data' => [
-					'captcha'	=> $captcha,
-					'real'		=> $this->env->getSession()->get( 'captcha' ),
-					'formId'	=> $form->formId,
-					'formType'	=> @$form->type,
-				] ], 406 );
+				$this->respondError( 'captcha', 'CAPTCHA challenge failed', 406 );
 		}
 	}
 
@@ -176,7 +171,7 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 	{
 		if( $this->request->isAjax() )
 			return;
-		$this->respondError( 0, 'AJAX requests allowed only', 405 );
+		$this->respondError( 'ajax', 'AJAX requests allowed only', 405 );
 	}
 
 	/**
@@ -198,7 +193,7 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 		$result	= $logic->checkIp( $ip );
 		if( $result['clean'] )
 			return;
-		$this->respondData( ['status' => 'ip', 'message' => 'IP is blacklisted' ], 406 );
+		$this->respondError( 'ip', 'IP is blacklisted', 406 );
 	}
 
 	/**
@@ -211,7 +206,7 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 	protected function checkIsPost(): void
 	{
 		if( !$this->request->getMethod()->isPost() )
-			$this->respondError( 0, NULL, 405 );
+			$this->respondError( 'post', NULL, 405 );
 	}
 
 	/**
@@ -226,14 +221,14 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 	{
 		$inputs	= $data['inputs'] ?? [];
 		if( [] === $inputs )
-			$this->respondError( 0, 'No form data inputs given', 400 );
+			$this->respondError( 'empty', 'No form data inputs given', 400 );
 
 		$formId	= trim( $data['formId'] ?? '' );
 		if( '' === $formId )
-			$this->respondError( 0, 'No form ID given', 400 );
+			$this->respondError( 'id', 'No form ID given', 400 );
 
 		if( !preg_match( '/^[0-9]+$/', $formId ) )
-			$this->respondError( 0, 'Invalid form ID given', 400 );
+			$this->respondError( 'id', 'Invalid form ID given', 400 );
 
 		return $formId;
 	}
@@ -260,7 +255,7 @@ class Controller_Manage_Form_Fill_Receive extends AjaxController
 
 		if( !$payload['isSpam'] )
 			return;
-		$this->respondError( 0, 'SPAM detected', 406 );
+		$this->respondError( 'spam', 'SPAM detected', 406 );
 	}
 
 	/**

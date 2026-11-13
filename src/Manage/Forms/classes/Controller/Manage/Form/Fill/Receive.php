@@ -212,11 +212,10 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			exit;
 		}
 
-		/** @var array{ip: string, ip_version: int, clean: bool, score: int, sources: array<string, array{listed: bool, description: string}>} $result */
 		$result	= $logic->checkIp( $ip );
-		if( $result['clean'] )
+		if( $result->clean )
 			return TRUE;
-		$logic->logRequestOfRejectedIp();
+		$logic->logRequestOfRejectedIp( $result );
 
 
 		if( $strict )
