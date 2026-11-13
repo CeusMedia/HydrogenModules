@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Database\PDO\Connection as DatabasePdoConnection;
+use CeusMedia\Database\PDO\Table\Reader as TableReader;
 use CeusMedia\Database\PDO\Table\Writer as TableWriter;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Model;
@@ -52,50 +53,67 @@ class Resource_Database_Undo
 		return NULL;
 	}
 
-	protected function noteByIds( Model $tableWriter, $ids, $mode )
+	protected function noteByIds( Model $model, $ids, $mode )
 	{
 
 	}
 
-	protected function note( Model $tableWriter, $conditions, $mode ): bool
+	protected function note( Model $model, $conditions, $mode ): bool
 	{
+		$tableName			= $model->getName();
+		$tableColumns		= $model->getColumns();
+		$tablePrimaryKey	= $model->getPrimaryKey();
+
 		$data	= [
 			'userId'		=> $this->userId,
 			'mode'			=> $mode,
-			'tableName'		=> $tableWriter->getName(),
-			'primaryKey'	=> $tableWriter->getPrimaryKey(),
+			'tableName'		=> $tableName,
+			'primaryKey'	=> $tablePrimaryKey,
 			'values'		=> [],
 			'timestamp'		=> time(),
 		];
-		$cond	= [];
+
+		//  old solution
+/*		$cond	= [];
 		foreach( $conditions as $key => $value )
 			$cond[]	= $key."='".$value."'";
 		$conditions	= join( " AND ", $cond );
-		$query	= 'SELECT * FROM '.$tableWriter->getName().' WHERE '.$conditions;
+		$query	= 'SELECT * FROM '.$tableName.' WHERE '.$conditions;
 		$dbc	= $this->env->getDatabase();
-		$rows	= $dbc->query( $query )->fetchAll( PDO::FETCH_ASSOC );
+		$rows	= $dbc->query( $query )->fetchAll( PDO::FETCH_ASSOC );*/
+
+		//  new solution @ 2026-06 (untested, use module Test_Undo from protected Ceus Media library)
+/*		$modelClone	= clone( $model );
+		$rows		= $modelClone->setFetchMode( PDO::FETCH_ASSOC )->getAll( $conditions );*/
+
+		//  even newer solution @ 2026-06 (untested, use module Test_Undo from protected Ceus Media library)
+		/** @var DatabasePdoConnection $dbc */;
+		$dbc	= $this->env->getDatabase();
+		$reader	= new TableReader( $dbc, $tableName, $tableColumns, $tablePrimaryKey );
+		$rows	= $reader->setFetchMode( PDO::FETCH_ASSOC )->find( $conditions );
 		if( !$rows )
 			throw new RuntimeException( 'No data found by given conditions' );
+
 		$data['values']		= json_encode( $rows );
 		$this->storage->add( $data );
 		return TRUE;
 	}
 
-	public function noteDelete( Model $tableWriter, $conditions ): bool
+	public function noteDelete( Model $model, $conditions ): bool
 	{
-		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_DELETE );
+		return $this->note( $model, $conditions, Model_Undo_Log::MODE_DELETE );
 	}
 
-	public function noteInsert( Model $tableWriter, $id ): bool
+	public function noteInsert( Model $model, $id ): bool
 	{
-		$primaryKey	= $tableWriter->getPrimaryKey();
+		$primaryKey	= $model->getPrimaryKey();
 		$conditions	= [$primaryKey => $id];
-		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_INSERT );
+		return $this->note( $model, $conditions, Model_Undo_Log::MODE_INSERT );
 	}
 
-	public function noteUpdate( Model $tableWriter, $conditions ): bool
+	public function noteUpdate( Model $model, $conditions ): bool
 	{
-		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_UPDATE );
+		return $this->note( $model, $conditions, Model_Undo_Log::MODE_UPDATE );
 	}
 
 	public function isLatestChangeOnTable( $changeId, $tableName ): bool
