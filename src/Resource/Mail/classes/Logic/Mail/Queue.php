@@ -18,7 +18,6 @@ use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
 class Logic_Mail_Queue extends Logic
 {
 	protected Logic_Mail_Compressor $compressor;
-	protected Logic_Mail $logicMail;
 	protected Model_Mail $modelQueue;
 	protected Dictionary $options;
 
@@ -73,7 +72,7 @@ class Logic_Mail_Queue extends Logic
 	 */
 	public function enqueueMail( Mail_Abstract $mail, string $language, int|string|object $receiver, ?string $senderId = NULL ): int|string
 	{
-		$receiver	= $this->logicMail->checkReceiver( $receiver );
+		$receiver	= Logic_Mail::getInstance( $this->env )->checkReceiver( $receiver );
 
 		$mailDataObject		= Entity_Mail::fromArray( [
 			'senderId'			=> (int) $senderId,
@@ -160,7 +159,7 @@ class Logic_Mail_Queue extends Logic
 		if( method_exists( $this->modelQueue, 'getDistinct' ) )
 			$mailClassNames	= $this->modelQueue->getDistinct( 'mailClass', $conditions, $orders );
 		else
-			$mailClassNames	= array_values( $this->logicMail->getMailClassNames() );
+			$mailClassNames	= array_values( Logic_Mail::getInstance( $this->env )->getMailClassNames() );
 		foreach( $mailClassNames as $mailClassName )
 			$list[$mailClassName]	= $this->modelQueue->count( ['mailClass' => $mailClassName] );
 		return $list;
@@ -261,7 +260,6 @@ class Logic_Mail_Queue extends Logic
 	protected function __onInit(): void
 	{
 		$this->compressor		= Logic_Mail_Compressor::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );

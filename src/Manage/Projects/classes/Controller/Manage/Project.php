@@ -526,7 +526,7 @@ class Controller_Manage_Project extends Controller
 		$this->modelProject		= $this->getModel( 'Project' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelProjectUser	= $this->getModel( 'Project_User' );
-		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId ?? '' );
+		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId );
 		$this->isEditor			= $this->env->getAcl()->has( 'manage_project', 'edit' );
 
 		if( !$this->session->get( 'filter_manage_project_limit' ) )

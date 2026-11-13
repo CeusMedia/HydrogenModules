@@ -60,7 +60,7 @@ class Job_Mail_Migration extends Job_Abstract
 			$mailClone	= clone( $mail );
 			try{
 				$this->_migrateCompression( $mailClone );
-				$this->logicMail->detectUsedMailCompression( $mailClone );
+				Logic_Mail_Compressor::detectUsedMailCompression( $mailClone );
 				$this->_detectMailClass( $mailClone );
 				$this->_migrateMailClass( $mailClone );
 				$this->_migrateSenderAddress( $mailClone );
@@ -120,12 +120,12 @@ class Job_Mail_Migration extends Job_Abstract
 			$mail			= $this->model->get( $mailId );
 			$compression	= $mail->compression;
 			try{
-				$objectString	= $logic->decompressString( $mail->object, $compression );
-				$messageRaw		= $logic->decompressString( $mail->raw, $compression );
+				$objectString	= Logic_Mail_Compressor::decompressString( $mail->object, $compression );
+				$messageRaw		= Logic_Mail_Compressor::decompressString( $mail->raw, $compression );
 				$mailClass		= preg_replace( $regex, '\\1', substr( $objectString, 0, 60 ) );
 				$object			= ObjectFactory::createObject( $mailClass );
 				$object->mail	= $parser->parse( $messageRaw );
-				$mail->object	= $logic->compressString( serialize( $object ), $compression );
+				$mail->object	= Logic_Mail_Compressor::compressString( serialize( $object ), $compression );
 				if( !$this->dryMode )
 					$this->model->edit( $mailId, ['object' => $mail->object], FALSE );
 				$this->showProgress( ++$count, count( $mailIds ), '+' );
@@ -187,7 +187,7 @@ class Job_Mail_Migration extends Job_Abstract
 	 */
 	private function _detectMailClass( Entity_Mail $mail ): bool
 	{
-		$this->logicMail->decompressMailObject( $mail, FALSE );
+		Logic_Mail_Compressor::decompressMailObject( $mail, FALSE );
 		$serial			= $mail->objectSerial;
 		$serialStart	= substr( $serial, 0, 80 );
 		$mailClass		= preg_replace( '/^O:[0-9]+:"([^"]+)":.+$/U', '\\1', $serialStart );
@@ -246,7 +246,7 @@ class Job_Mail_Migration extends Job_Abstract
 			return FALSE;
 		if( 0 !== (int) $mail->compression )
 			return FALSE;
-//		$this->logicMail->decompressMailObject( $mail, FALSE, FALSE );
+//		Logic_Mail_Compressor::decompressMailObject( $mail, FALSE, FALSE );
 		$prefix = substr( $mail->object, 0, 2 );
 		if( $prefix == "BZ" )
 			$this->model->edit( $mail->mailId, ['compression' => Model_Mail::COMPRESSION_BZIP] );
@@ -271,12 +271,12 @@ class Job_Mail_Migration extends Job_Abstract
 		if( !array_key_exists( $mail->mailClass, $classMigrations ) )
 			return FALSE;
 
-		$this->logicMail->decompressMailObject( $mail, FALSE, FALSE );
+		Logic_Mail_Compressor::decompressMailObject( $mail, FALSE, FALSE );
 		$newerClass	= $classMigrations[$mail->mailClass];
 		$find		= 'O:'.strlen( $mail->mailClass ).':"'.$mail->mailClass.'":';
 		$replace	= 'O:'.strlen( $newerClass ).':"'.$newerClass.'":';
 		$serial		= str_replace( $find, $replace, $mail->objectSerial );
-		$this->logicMail->compressMailObject( $mail );
+		Logic_Mail_Compressor::compressMailObject( $mail );
 		$mail->mailClass	= $newerClass;
 		$this->logMigration( $mail, 'Migrated mail class names' );
 		return TRUE;
@@ -291,7 +291,7 @@ class Job_Mail_Migration extends Job_Abstract
 	{
 		if( 0 !== strlen( trim( $mail->senderAddress ?? '' ) ) )
 			return FALSE;
-		$this->logicMail->decompressMailObject( $mail );
+		Logic_Mail_Compressor::decompressMailObject( $mail );
 		$mailInstance	= $mail->objectInstance->mail;
 		if( !method_exists( $mailInstance, 'getSender' ) )
 			return FALSE;
@@ -340,9 +340,9 @@ class Job_Mail_Migration extends Job_Abstract
 			return;
 		if( !empty( $mail->raw ) && !$force )
 			return;
-		$this->logicMail->decompressMailObject( $mail );
+		Logic_Mail_Compressor::decompressMailObject( $mail );
 		$raw = MailMessageRendererV2::render( $mail->objectInstance->mail );
-		$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
+		$mail->raw	= Logic_Mail_Compressor::compressString( $raw, $mail->compression );
 		$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v2' );
 	}
 }

@@ -66,5 +66,4 @@ class Logic_Mail_Transporter extends Logic
 			$options->get( 'password' )
 		)->setSecure( $options->get( 'secure' ) )->setVerbose( $verbose );
 	}
-
 }
