@@ -299,7 +299,7 @@ class Logic_IP_Check extends SharedLogic
 		}
 	}
 
-	public function logRequestOfRejectedIp(): bool
+	public function logRequestOfRejectedIp( Entity_IP_Check_Result $result ): bool
 	{
 		// Collect POST data if available
 		$request	= $this->env->getRequest();
@@ -321,7 +321,7 @@ class Logic_IP_Check extends SharedLogic
 		];
 
 		return $this->logRejectedIp(
-			$ip,
+			$request->getIp(),
 			$result,
 			$method,
 			(string) $request->getUrl( TRUE ),
