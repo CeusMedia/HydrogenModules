@@ -102,7 +102,7 @@ class Job_Mail_Sent extends Job_Abstract
 			}
 			catch( Throwable $t ){
 				$this->log( 'Mail #'.$mailId.': '.$t->getMessage() );
-//				$this->logicMail->decompressMailObject( $mail, FALSE );
+//				Logic_Mail_Compressor::decompressMailObject( $mail, FALSE );
 //				// ...
 			}
 			$this->showProgress( $nr + 1, $nrMails );
@@ -157,7 +157,7 @@ class Job_Mail_Sent extends Job_Abstract
 	{
 		if( '' === trim( $mail->raw ?? '' ) )
 			return FALSE;
-		$this->logicMail->decompressMailRaw( $mail );						//  ... but decompress it ...
+		Logic_Mail_Compressor::decompressMailRaw( $mail );						//  ... but decompress it ...
 		return $upload->storeRawMessage( $mail->rawInflated );			//  ... before upload to IMAP folder
 	}
 

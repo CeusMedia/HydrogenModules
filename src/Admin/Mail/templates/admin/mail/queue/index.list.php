@@ -112,7 +112,7 @@ if( $mails ){
 		$accessible	= FALSE;
 		$features	= [];
 		try{
-			$logic->decompressMailObject( $mail );
+			Logic_Mail_Compressor::decompressMailObject( $mail );
 			$accessible	= TRUE;
 			$link		= HtmlTag::create( 'a', $mail->subject, ['href' => './admin/mail/queue/view/'.$mail->mailId.$paramPage] );
 			if( $mail->objectInstance->mail->hasAttachments() )

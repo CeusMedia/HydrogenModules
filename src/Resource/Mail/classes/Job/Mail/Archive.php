@@ -187,11 +187,11 @@ class Job_Mail_Archive extends Job_Abstract
 			$mailClone	= clone( $mail );
 			try{
 				$compression	= (int) $mail->compression;
-				$objectSerial	= $this->logicMail->decompressString( $mail->object, $compression );
-				$raw			= $this->logicMail->decompressString( $mail->raw, $compression );
+				$objectSerial	= Logic_Mail_Compressor::decompressString( $mail->object, $compression );
+				$raw			= Logic_Mail_Compressor::decompressString( $mail->raw, $compression );
 				$object			= unserialize( $objectSerial );
 				$object->mail	= CeusMedia\Mail\Message\Parser::getInstance()->parse( $raw );
-				$newObject		= $this->logicMail->compressString( serialize( $object ), $compression );
+				$newObject		= Logic_Mail_Compressor::compressString( serialize( $object ), $compression );
 				$this->model->edit( $mailId, ['object' => $newObject], FALSE );
 				$this->showProgress( ++$count, count( $mailIds ) );
 			}
@@ -263,20 +263,20 @@ class Job_Mail_Archive extends Job_Abstract
 			try{
 				/** @var Entity_Mail $mail */
 				$mail			= $this->model->get( $mailId );
-				$this->logicMail->decompressMailObject( $mail );
+				Logic_Mail_Compressor::decompressMailObject( $mail );
 				$sizeBefore		= strlen( $mail->object );
 				$parts			= $mail->objectInstance->mail->getParts();
 				foreach( $parts as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
 					if( $part->isAttachment() ){
 						$mail->objectInstance->mail->removePart( $nr );
-						$this->logicMail->compressMailObject( $mail );
+						Logic_Mail_Compressor::compressMailObject( $mail );
 						$renderer	= new MailMessageRenderer();
 						$raw		= $renderer->render( $mail->objectInstance->mail );
 						if( !$this->dryMode ){
 							$this->model->edit( $mail->mailId, [
 								'object'	=> $mail->object,
-								'raw'		=> $this->logicMail->compressString( $raw ),
+								'raw'		=> Logic_Mail_Compressor::compressString( $raw ),
 							], FALSE );
 						}
 						$results->attachments++;
@@ -337,7 +337,7 @@ class Job_Mail_Archive extends Job_Abstract
 			}
 			/** @var Entity_Mail $mail */
 			$mail	= $this->model->get( $mailId );
-			$this->logicMail->decompressMailObject( $mail );
+			Logic_Mail_Compressor::decompressMailObject( $mail );
 			$uuid		= ID::uuid();
 			$shard		= $uuid[0].'/'.$uuid[1].'/'.$uuid[2].'/';
 			if( !empty( $mail->raw ) ){
