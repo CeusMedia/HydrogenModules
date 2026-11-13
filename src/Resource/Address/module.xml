@@ -21,8 +21,9 @@
 	<files>
 		<class>Model/Address.php</class>
 		<class>Entity/Address.php</class>
+		<class>Entity/Address.php</class>
 		<class>Hook/Resource/Address.php</class>
-<!--		<class>Logic/Address.php</class>-->
+		<class>Logic/Address.php</class>
 		<locale>de/address.ini</locale>
 		<locale>en/address.ini</locale>
 	</files>

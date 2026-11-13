@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -21,7 +22,14 @@ $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 $iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 $iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+if( $env->getModules()->has( 'UI_Bootstrap' ) ){
+	$iconAdd		= new Icon( 'plus' );
+	$iconEdit		= new Icon( 'pencil' );
+	$iconRemove		= new Icon( 'trash' );
+	$iconActivate	= new Icon( 'check' );
+	$iconDeactivate	= new Icon( 'times' );
+}
+else if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus fa-inverse'] );
 	$iconEdit		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-pencil'] );
 	$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-trash fa-inverse'] );
@@ -83,10 +91,11 @@ if( $reasons ){
 			HtmlTag::create( 'td', $httpCode, ['class' => 'lock-reason-code'] ),
 			HtmlTag::create( 'td', $link, ['class' => 'lock-reason-title'] ),
 			HtmlTag::create( 'td', '<small>'.$duration.'</small>', ['class' => 'lock-reason-duration'] ),
+			HtmlTag::create( 'td', $statusLabels[$reason->status], ['class' => 'lock-reason-duration'] ),
 			HtmlTag::create( 'td', '<small>'.$createdAt.'</small>', ['class' => 'lock-reason-created'] ),
 			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-reason-applied'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
-		], ['class' => $reason->status ? 'success' : 'warning'] );
+		] );
 	}
 	$heads	= [
 		HtmlTag::create( 'abbr', $w->headCode, ['title' => $w->headCode_title] ),
@@ -97,7 +106,7 @@ if( $reasons ){
 		HtmlTag::create( 'abbr', $w->headAppliedAt, ['title' => $w->headAppliedAt_title] ),
 		$w->headActions,
 	];
-	$colgroup	= HtmlElements::ColumnGroup( "50", "", "120", "110", "110", "100" );
+	$colgroup	= HtmlElements::ColumnGroup( "50", "", "120", "100", "110", "110", "100" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );

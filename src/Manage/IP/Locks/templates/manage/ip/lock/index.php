@@ -1,8 +1,15 @@
 <?php
 use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
 
 /** @var Web $env */
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var View $view */
+/** @var bool $canAdd */
+/** @var bool $canCancel */
+/** @var bool $canEdit */
+/** @var bool $canLock */
+/** @var bool $canOrder */
+/** @var bool $canUnlock */
 
 $panelFilter	= $view->loadTemplateFile( 'manage/ip/lock/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/ip/lock/index.list.php' );

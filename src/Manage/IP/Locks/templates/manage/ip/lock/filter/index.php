@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
@@ -33,7 +35,14 @@ $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 $iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 $iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+if( $env->getModules()->has( 'UI_Bootstrap' ) ){
+	$iconAdd		= new Icon( 'plus' );
+	$iconEdit		= new Icon( 'pencil' );
+	$iconRemove		= new Icon( 'trash' );
+	$iconActivate	= new Icon( 'check' );
+	$iconDeactivate	= new Icon( 'times' );
+}
+else if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus fa-inverse'] );
 	$iconEdit		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-pencil'] );
 	$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-trash fa-inverse'] );
@@ -63,14 +72,14 @@ if( $filters ){
 			] );
 		$buttonStatus	= "";
 
-		if( Model_IP_Lock_Filter::STATUS_DISABLED === $filter->status ){
+		if( $canActivate && Model_IP_Lock_Filter::STATUS_DISABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 				'href'		=> './manage/ip/lock/filter/activate/'.$filter->ipLockFilterId,
 				'class'		=> 'btn btn-success btn-small btn-mini',
 				'title'		=> $w->buttonActivate,
 			] );
 		}
-		else if( Model_IP_Lock_Filter::STATUS_ENABLED === $filter->status ){
+		else if( $canDeactivate && Model_IP_Lock_Filter::STATUS_ENABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/ip/lock/filter/deactivate/'.$filter->ipLockFilterId,
 				'class'		=> 'btn btn-inverse btn-small btn-mini',
@@ -89,7 +98,11 @@ if( $filters ){
 		$method		= $filter->method ?: '<span class="muted">'.$w->methodAll.'</span>';
 		$lockStatus	= $lockStates[$filter->lockStatus];
 		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, ['class' => 'btn-group'] );
-		$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );
+
+		$link		= $filter->title;
+		if( $canEdit )
+			$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );
+
 		$title		= HtmlTag::create( 'div', $link, ['class' => 'autocut'] );
 		$rowClass	= 'success';
 		if( $filter->status < Model_IP_Lock_Filter::STATUS_ENABLED )
@@ -103,10 +116,10 @@ if( $filters ){
 			HtmlTag::create( 'td', $title, ['class' => 'lock-filter-title'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-filter-reason'] ),
 			HtmlTag::create( 'td', $lockStatus, ['class' => 'lock-filter-lock-status'] ),
-			HtmlTag::create( 'td', $statuses[$filter->status], ['class' => 'lock-filter-status'] ),
+			HtmlTag::create( 'td', $statusLabels[$filter->status], ['class' => 'lock-filter-status'] ),
 			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-filter-applied'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
-		], ['class' => $rowClass] );
+		] );
 	}
 	$heads	= [
 		$w->headMethod,

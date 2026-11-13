@@ -1,11 +1,12 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
 
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var View $view */
 /** @var object $form */
 /** @var array<object> $mailsCustomer */
 /** @var array<object> $mailsManager */
@@ -78,10 +79,7 @@ if( 0 ){
 	], ['class' => 'content-panel'] );
 }
 
-
-return '
-<div class="content-panel">
-	<div class="content-panel-inner">
+$form	= '
 		<form action="./manage/form/edit/'.$form->formId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span1">
@@ -158,13 +156,12 @@ return '
 					'onclick'	=> "return confirm('".addslashes( $w->buttonRemoveConfirm )."');",
 				] ).'
 			</div>
-		</form>
-	</div>
-</div>
-<div class="content-panel">
-	<div class="content-panel-inner">
-		<h3>Verwendung</h3>
-		'.$listReferences.'
-	</div>
-</div>
-';
+		</form>';
+
+$panelDetails	= HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
+		$form
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
+
+return $panelDetails.$panelReferrers;

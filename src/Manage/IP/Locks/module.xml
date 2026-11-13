@@ -39,6 +39,7 @@
 		<class>Controller/Manage/IP/Lock/Transport.php</class>
 <!--		<class>Controller/Manage/IP/Lock/Whitelist.php</class>-->
 		<class>Hook/Manage/IP/Lock.php</class>
+		<class>View/Helper/Manage/IP/Lock/List.php</class>
 		<class>View/Manage/IP/Lock.php</class>
 		<class>View/Manage/IP/Lock/Filter.php</class>
 		<class>View/Manage/IP/Lock/Reason.php</class>

@@ -98,5 +98,9 @@ class Controller_Manage_IP_Lock_Transport extends Controller
 //		$logicPool				= $this->env->getLogic();
 //		$logicPoolKey			= $logicPool->getKeyFromClassName( 'Logic_IP_Lock_Transport' );
 //		$this->logicTransport	= $logicPool->get( $logicPoolKey );
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canExport', $acl->has( 'manage/ip/lock/transport', 'export' ) );
+		$this->addData( 'canImport', $acl->has( 'manage/ip/lock/transport', 'import' ) );
 	}
 }

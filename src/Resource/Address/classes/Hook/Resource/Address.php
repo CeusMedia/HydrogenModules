@@ -80,6 +80,9 @@ class Hook_Resource_Address extends Hook
 	 */
 	public function onUserRemove(): void
 	{
+		/* @todo make this configurable or dynamic or whatever */
+		$relationTypes	= ['user', 'customer'];
+
 		$data	= $this->getPayload();
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Hook_Resource_Address::onUserRemove" is missing user ID in data.';
@@ -87,14 +90,10 @@ class Hook_Resource_Address extends Hook
 			return;
 		}
 
-		$modelAddress	= new Model_Address( $this->env );
-		$indices	= ['relationId' => $data->userId];
-		$orders		= ['addressId' => 'ASC'];
-		$fields		= ['addressId'];
-		/** @var array<object{mailId: int}> $addresses */
-		$addresses	= $modelAddress->getAll( $indices, $orders, [], $fields );
+		$logicAddress	= Logic_Address::getInstance( $this->env );
+		$addresses		= $logicAddress->getAllByRelation( $relationTypes, $data->userId );
 		foreach( $addresses as $address )
-			$modelAddress->remove( $address );
+			$logicAddress->remove( $address );
 
 		if( isset( $this->payload['counts'] ) )
 			$this->payload['counts']['Resource_Address']	= (object) [

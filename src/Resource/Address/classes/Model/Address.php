@@ -17,6 +17,12 @@ class Model_Address extends Model
 	public const TYPE_BILLING		= 2;
 	public const TYPE_DELIVERY		= 4;
 
+	public const TYPES				= [
+		self::TYPE_LOCATION,
+		self::TYPE_BILLING,
+		self::TYPE_DELIVERY,
+	];
+
 	protected string $name			= 'addresses';
 
 	protected array $columns		= [
