@@ -4,9 +4,8 @@ Alle bemerkenswerten Änderungen an diesem Projekt werden in dieser Datei dokume
 
 ---
 
-## [Unreleased] — 1.0.2 (vorbereitet)
+## [Unreleased]
 
-**Release-Datum:** 13. November 2026  
 **Zeitraum:** Oktober 2025 – November 2026  
 **Commits seit 1.0.1:** 534
 
@@ -407,7 +406,6 @@ Alle bemerkenswerten Änderungen an diesem Projekt werden in dieser Datei dokume
 | 0.9.0 | 2023-05-28 | 364 | Namespace-Migration, PHP 7.4/8.x, neue Module |
 | 1.0.0 | 2025-02-11 | 355 | PHP 8.1, Entity-Migration, Hydrogen 1.0 |
 | 1.0.1 | 2025-10-10 | 194 | Resource:SMB, Server:Log:Request, InfluxDB |
-| 1.0.2 | 2026-11-13 | 534 | Security-Module, Newsletter, Shop, Entity-Migration |
 
 ---
 
