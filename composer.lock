@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa6562c0142ae4b562adcc419a47cd3c",
+    "content-hash": "c6ed2ebf9f513cd5ce23c2012da04191",
     "packages": [
         {
             "name": "ceus-media/cache",
-            "version": "0.6.x-dev",
+            "version": "0.7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Cache.git",
-                "reference": "20a95731227943c375b8c4dccc09cb5489b8a684"
+                "reference": "a171fd46054949e80fed6160322c365fb5d5654b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Cache/zipball/20a95731227943c375b8c4dccc09cb5489b8a684",
-                "reference": "20a95731227943c375b8c4dccc09cb5489b8a684",
+                "url": "https://api.github.com/repos/CeusMedia/Cache/zipball/a171fd46054949e80fed6160322c365fb5d5654b",
+                "reference": "a171fd46054949e80fed6160322c365fb5d5654b",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "~1.0.0 | 1.0.x-dev",
-                "php": "^8.1",
+                "ceus-media/common": "~1.1.0 | 1.1.x-dev",
+                "php": "^8.3",
                 "psr/cache": "^3.0",
                 "psr/simple-cache": "^3.0"
             },
@@ -67,32 +67,32 @@
                 "email": "christian.wuerker@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/Cache/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/Cache/tree/0.6.x"
+                "source": "https://github.com/CeusMedia/Cache/tree/0.7.x"
             },
-            "time": "2025-04-08T02:27:45+00:00"
+            "time": "2025-04-08T02:29:03+00:00"
         },
         {
             "name": "ceus-media/common",
-            "version": "1.0.x-dev",
+            "version": "1.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Common.git",
-                "reference": "29ed5819182c957fa847be4a8b2a20c73bb9b018"
+                "reference": "677d1cd3dcb0483ca056ee1748a14e38038af159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Common/zipball/29ed5819182c957fa847be4a8b2a20c73bb9b018",
-                "reference": "29ed5819182c957fa847be4a8b2a20c73bb9b018",
+                "url": "https://api.github.com/repos/CeusMedia/Common/zipball/677d1cd3dcb0483ca056ee1748a14e38038af159",
+                "reference": "677d1cd3dcb0483ca056ee1748a14e38038af159",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.3",
                 "psr/simple-cache": "^3.0"
             },
             "require-dev": {
-                "ceus-media/database": "0.6.* | 0.6.x-dev",
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
-                "ceus-media/php-parser": "0.4.* | 0.4.x-dev",
+                "ceus-media/database": "0.7.* | 0.7.x-dev",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
+                "ceus-media/php-parser": "0.5.* | 0.5.x-dev",
                 "ext-bz2": "*",
                 "ext-curl": "*",
                 "ext-dom": "*",
@@ -113,7 +113,7 @@
                 "php-parallel-lint/php-parallel-lint": "1.*",
                 "phpstan/phpstan": "2.*",
                 "phpstan/phpstan-strict-rules": "2.*",
-                "phpunit/phpunit": "10.* || 11.*",
+                "phpunit/phpunit": "^10.5",
                 "rector/rector": "*"
             },
             "suggest": {
@@ -156,42 +156,43 @@
                     "role": "Developer"
                 }
             ],
+            "description": "PHP library with 400+ classes for everyday tasks: file system, network and HTTP, CLI, UI and images, XML, data structures and algorithms.",
             "support": {
                 "email": "office@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/Common/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/Common/tree/1.0.x"
+                "source": "https://github.com/CeusMedia/Common/tree/1.1.x"
             },
-            "time": "2026-11-02T17:25:22+00:00"
+            "time": "2026-11-12T15:15:32+00:00"
         },
         {
             "name": "ceus-media/database",
-            "version": "0.6.x-dev",
+            "version": "0.7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Database.git",
-                "reference": "d5e89a62c4afff276fd0221b12a0fca995483152"
+                "reference": "35f3b715f3bacff6e4d64c9d2012cbbf222cb435"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Database/zipball/d5e89a62c4afff276fd0221b12a0fca995483152",
-                "reference": "d5e89a62c4afff276fd0221b12a0fca995483152",
+                "url": "https://api.github.com/repos/CeusMedia/Database/zipball/35f3b715f3bacff6e4d64c9d2012cbbf222cb435",
+                "reference": "35f3b715f3bacff6e4d64c9d2012cbbf222cb435",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/cache": "0.6.* | 0.6.x-dev",
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
+                "ceus-media/cache": "0.7.* | 0.7.x-dev",
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
                 "ext-pdo": "*",
-                "php": "^8.1"
+                "php": "^8.3"
             },
             "require-dev": {
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
                 "ext-mysqli": "*",
-                "php-parallel-lint/php-parallel-lint": "^1.3 | dev-master",
-                "phpstan/phpstan": "*",
-                "phpstan/phpstan-strict-rules": "*",
-                "phpunit/phpunit": "*",
-                "rector/rector": "*"
+                "php-parallel-lint/php-parallel-lint": "1.4.* | 1.4.x-dev",
+                "phpstan/phpstan": "^2",
+                "phpstan/phpstan-strict-rules": "^2",
+                "phpunit/phpunit": "^12",
+                "rector/rector": "^2"
             },
             "type": "library",
             "autoload": {
@@ -224,43 +225,43 @@
                 "email": "office@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/Database/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/Database/tree/0.6.x"
+                "source": "https://github.com/CeusMedia/Database/tree/0.7.x"
             },
-            "time": "2026-11-10T21:28:27+00:00"
+            "time": "2026-11-02T13:47:32+00:00"
         },
         {
             "name": "ceus-media/hydrogen-framework",
-            "version": "1.0.x-dev",
+            "version": "1.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/HydrogenFramework.git",
-                "reference": "a9fee80ff1fdafe0e01cab7fba18720b3baad935"
+                "reference": "e60c6b097fde67a8b0dc96bfed1edc4ecadf7ccc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/HydrogenFramework/zipball/a9fee80ff1fdafe0e01cab7fba18720b3baad935",
-                "reference": "a9fee80ff1fdafe0e01cab7fba18720b3baad935",
+                "url": "https://api.github.com/repos/CeusMedia/HydrogenFramework/zipball/e60c6b097fde67a8b0dc96bfed1edc4ecadf7ccc",
+                "reference": "e60c6b097fde67a8b0dc96bfed1edc4ecadf7ccc",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/cache": "0.6.* | 0.6.x-dev",
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
-                "ceus-media/database": "0.6.* | 0.6.x-dev",
-                "ceus-media/template-engine": "0.5.* | 0.5.x-dev",
+                "ceus-media/cache": "0.7.* | 0.7.x-dev",
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
+                "ceus-media/database": "0.7.* | 0.7.x-dev",
+                "ceus-media/template-engine": "0.6.x | 0.6.x-dev",
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-pdo": "*",
                 "ext-simplexml": "*",
-                "php": "^8.1",
+                "php": "^8.3",
                 "psr/log": "^3 | 3.x-dev"
             },
             "require-dev": {
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
-                "php-parallel-lint/php-parallel-lint": "1.*",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
+                "php-parallel-lint/php-parallel-lint": "1.4",
                 "phpstan/phpstan": "1.*",
                 "phpstan/phpstan-strict-rules": "1.*",
                 "phpunit/phpunit": "10.*",
-                "rector/rector": "1.*"
+                "rector/rector": "*"
             },
             "type": "library",
             "autoload": {
@@ -284,34 +285,34 @@
                 "email": "christian.wuerker@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/HydrogenFramework/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/HydrogenFramework/tree/1.0.x"
+                "source": "https://github.com/CeusMedia/HydrogenFramework/tree/1.1.x"
             },
-            "time": "2026-09-24T06:49:48+00:00"
+            "time": "2026-10-26T00:37:03+00:00"
         },
         {
             "name": "ceus-media/template-engine",
-            "version": "0.5.x-dev",
+            "version": "0.6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/TemplateEngine.git",
-                "reference": "765c9bf4e7e696238fd9ca2591546072b3947536"
+                "reference": "554d85316a4f204056797e8b552074acb37938cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/TemplateEngine/zipball/765c9bf4e7e696238fd9ca2591546072b3947536",
-                "reference": "765c9bf4e7e696238fd9ca2591546072b3947536",
+                "url": "https://api.github.com/repos/CeusMedia/TemplateEngine/zipball/554d85316a4f204056797e8b552074acb37938cc",
+                "reference": "554d85316a4f204056797e8b552074acb37938cc",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "^1.0 | 1.0.x-dev",
-                "php": "^8.1",
+                "ceus-media/common": "^1.1 | 1.1.x-dev",
+                "php": "^8.3",
                 "psr/simple-cache": "^3.0"
             },
             "require-dev": {
-                "php-parallel-lint/php-parallel-lint": "^1.3 | dev-master",
-                "phpstan/phpstan": "^1",
-                "phpstan/phpstan-strict-rules": "^1",
-                "phpunit/phpunit": "^9.5 | ^10",
+                "php-parallel-lint/php-parallel-lint": "^1.4 | dev-master",
+                "phpstan/phpstan": "^2",
+                "phpstan/phpstan-strict-rules": "^2",
+                "phpunit/phpunit": "^10",
                 "rector/rector": "*"
             },
             "suggest": {
@@ -344,9 +345,9 @@
                 "email": "office@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/TemplateEngine/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/TemplateEngine/tree/0.5.x"
+                "source": "https://github.com/CeusMedia/TemplateEngine/tree/0.6.x"
             },
-            "time": "2024-12-26T18:59:40+00:00"
+            "time": "2025-02-11T00:32:58+00:00"
         },
         {
             "name": "psr/cache",
@@ -682,25 +683,25 @@
         },
         {
             "name": "ceus-media/bootstrap",
-            "version": "0.6.x-dev",
+            "version": "0.7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Bootstrap.git",
-                "reference": "533572ac677f1eae6d4b947940f2b7fd44a86fe4"
+                "reference": "15d6f6dc23f402cd36df91241b9fcf716e1498f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Bootstrap/zipball/533572ac677f1eae6d4b947940f2b7fd44a86fe4",
-                "reference": "533572ac677f1eae6d4b947940f2b7fd44a86fe4",
+                "url": "https://api.github.com/repos/CeusMedia/Bootstrap/zipball/15d6f6dc23f402cd36df91241b9fcf716e1498f2",
+                "reference": "15d6f6dc23f402cd36df91241b9fcf716e1498f2",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
                 "nostalgiaz/bootstrap-switch": "^3.3",
-                "php": "^8.1"
+                "php": "^8.3"
             },
             "require-dev": {
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
                 "php-parallel-lint/php-parallel-lint": "1.*",
                 "phpstan/phpstan": "1.*",
                 "phpstan/phpstan-strict-rules": "1.*",
@@ -734,28 +735,28 @@
                 "email": "christian.wuerker@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/Bootstrap/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/Bootstrap/tree/0.6.x"
+                "source": "https://github.com/CeusMedia/Bootstrap/tree/0.7.x"
             },
-            "time": "2026-10-20T21:57:40+00:00"
+            "time": "2026-10-23T02:28:57+00:00"
         },
         {
             "name": "ceus-media/hydrogen-source-indexer",
-            "version": "0.3.x-dev",
+            "version": "0.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/HydrogenSourceIndexer.git",
-                "reference": "9dec417a55dc818ed521c476ff439e45031949c6"
+                "reference": "8f6207d31e5eeeb0804da531224114443f2c9c33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/HydrogenSourceIndexer/zipball/9dec417a55dc818ed521c476ff439e45031949c6",
-                "reference": "9dec417a55dc818ed521c476ff439e45031949c6",
+                "url": "https://api.github.com/repos/CeusMedia/HydrogenSourceIndexer/zipball/8f6207d31e5eeeb0804da531224114443f2c9c33",
+                "reference": "8f6207d31e5eeeb0804da531224114443f2c9c33",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
-                "ceus-media/hydrogen-framework": "1.0.* | 1.0.x-dev",
-                "php": "^8.1"
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
+                "ceus-media/hydrogen-framework": "1.1.* | 1.1.x-dev",
+                "php": "^8.3"
             },
             "require-dev": {
                 "php-parallel-lint/php-parallel-lint": "1.*",
@@ -789,27 +790,27 @@
                 "email": "cw@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/HydrogenSourceIndexer/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/HydrogenSourceIndexer/tree/0.3.x"
+                "source": "https://github.com/CeusMedia/HydrogenSourceIndexer/tree/0.4.x"
             },
-            "time": "2025-02-12T04:30:23+00:00"
+            "time": "2025-02-12T04:34:05+00:00"
         },
         {
             "name": "ceus-media/mail",
-            "version": "2.7.x-dev",
+            "version": "2.8.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Mail.git",
-                "reference": "b7630f174f9579ce70178837920545bdbc452630"
+                "reference": "9f91cf336071e002ea59c45e6939a8c90f226ac2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Mail/zipball/b7630f174f9579ce70178837920545bdbc452630",
-                "reference": "b7630f174f9579ce70178837920545bdbc452630",
+                "url": "https://api.github.com/repos/CeusMedia/Mail/zipball/9f91cf336071e002ea59c45e6939a8c90f226ac2",
+                "reference": "9f91cf336071e002ea59c45e6939a8c90f226ac2",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/cache": "0.6.* | 0.6.x-dev",
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
+                "ceus-media/cache": "0.7.* | 0.7.x-dev",
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
                 "ext-dom": "*",
                 "ext-fileinfo": "*",
                 "ext-iconv": "*",
@@ -817,12 +818,12 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ezyang/htmlpurifier": "^4.19",
-                "php": "^8.1"
+                "php": "^8.3"
             },
             "require-dev": {
                 "brianium/paratest": "7.*",
-                "ceus-media/bootstrap": "0.6.* | 0.6.x-dev",
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
+                "ceus-media/bootstrap": "0.7.* | 0.7.x-dev",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
                 "php-parallel-lint/php-parallel-lint": "1.*",
                 "phpstan/phpstan": "2.*",
                 "phpstan/phpstan-strict-rules": "2.*",
@@ -860,9 +861,9 @@
                 "email": "christian.wuerker@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/Mail/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/Mail/tree/2.7.x"
+                "source": "https://github.com/CeusMedia/Mail/tree/2.8.x"
             },
-            "time": "2026-11-10T16:48:16+00:00"
+            "time": "2026-11-11T22:58:26+00:00"
         },
         {
             "name": "ceus-media/markdown",
@@ -983,29 +984,29 @@
         },
         {
             "name": "ceus-media/php-parser",
-            "version": "0.4.x-dev",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/PHP-Parser.git",
-                "reference": "bd9a66436c28c48f1e2328883babd310cbb63635"
+                "reference": "a4092449f3e6909a066c6964273727add0c7fa7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/PHP-Parser/zipball/bd9a66436c28c48f1e2328883babd310cbb63635",
-                "reference": "bd9a66436c28c48f1e2328883babd310cbb63635",
+                "url": "https://api.github.com/repos/CeusMedia/PHP-Parser/zipball/a4092449f3e6909a066c6964273727add0c7fa7c",
+                "reference": "a4092449f3e6909a066c6964273727add0c7fa7c",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
+                "ceus-media/common": "^1.0 | 1.0@dev | dev-master",
                 "ext-zlib": "*",
                 "php": "^8.1"
             },
             "require-dev": {
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
+                "ceus-media/doc-creator": "^0.9.6 | 0.9.x-dev | dev-master",
                 "php-parallel-lint/php-parallel-lint": "^1.3 | dev-master",
-                "phpstan/phpstan": "1.*",
-                "phpstan/phpstan-strict-rules": "1.*",
-                "phpunit/phpunit": "10.*"
+                "phpstan/phpstan": "^1",
+                "phpstan/phpstan-strict-rules": "^1",
+                "phpunit/phpunit": "^9.5 | ^10"
             },
             "type": "library",
             "autoload": {
@@ -1035,36 +1036,38 @@
                 "email": "office@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/PHP-Parser/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/PHP-Parser/tree/0.4.x"
+                "source": "https://github.com/CeusMedia/PHP-Parser/tree/0.4.0"
             },
-            "time": "2025-04-18T03:49:08+00:00"
+            "time": "2024-10-24T15:25:02+00:00"
         },
         {
             "name": "ceus-media/rest",
-            "version": "0.4.x-dev",
+            "version": "0.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/REST.git",
-                "reference": "4236d8362200bf97d331a27ce1549a2b4b7cec35"
+                "reference": "cd091e7a246898bd9c33aaaab7ba15f7cc43ddc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/REST/zipball/4236d8362200bf97d331a27ce1549a2b4b7cec35",
-                "reference": "4236d8362200bf97d331a27ce1549a2b4b7cec35",
+                "url": "https://api.github.com/repos/CeusMedia/REST/zipball/cd091e7a246898bd9c33aaaab7ba15f7cc43ddc1",
+                "reference": "cd091e7a246898bd9c33aaaab7ba15f7cc43ddc1",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
-                "ceus-media/router": "0.5.* | 0.5.x-dev",
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
+                "ceus-media/router": "0.6.* | 0.6.x-dev",
+                "ext-ctype": "*",
                 "ext-curl": "*",
-                "php": "^8.1"
+                "php": "^8.3",
+                "psr/simple-cache": "^3.0"
             },
             "require-dev": {
-                "ceus-media/cache": "0.6.* | 0.6.x-dev",
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
+                "ceus-media/cache": "0.7.* | 0.7.x-dev",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
                 "php-parallel-lint/php-parallel-lint": "*",
-                "phpstan/phpstan": "1.*",
-                "phpstan/phpstan-strict-rules": "1.*",
+                "phpstan/phpstan": "2.*",
+                "phpstan/phpstan-strict-rules": "2.*",
                 "phpunit/phpunit": "10.*"
             },
             "type": "library",
@@ -1091,36 +1094,38 @@
                 "email": "christian.wuerker@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/REST/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/REST/tree/0.4.x"
+                "source": "https://github.com/CeusMedia/REST/tree/0.5.x"
             },
-            "time": "2025-02-11T15:57:44+00:00"
+            "time": "2026-11-02T01:40:23+00:00"
         },
         {
             "name": "ceus-media/router",
-            "version": "0.5.x-dev",
+            "version": "0.6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Router.git",
-                "reference": "5346b53c0229a3a7758a06dd47387f565202c318"
+                "reference": "c31f2f2155ca264f5bdfed5fa6c8d895cf879ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Router/zipball/5346b53c0229a3a7758a06dd47387f565202c318",
-                "reference": "5346b53c0229a3a7758a06dd47387f565202c318",
+                "url": "https://api.github.com/repos/CeusMedia/Router/zipball/c31f2f2155ca264f5bdfed5fa6c8d895cf879ee5",
+                "reference": "c31f2f2155ca264f5bdfed5fa6c8d895cf879ee5",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/cache": "0.6.* | 0.6.x-dev",
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
-                "ext-memcache": "*",
-                "php": "^8.1"
+                "ceus-media/cache": "0.7.* | 0.7.x-dev",
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
+                "php": "^8.3"
             },
             "require-dev": {
-                "ceus-media/doc-creator": "1.0.* | 1.0.x-dev",
+                "ceus-media/doc-creator": "1.1.* | 1.1.x-dev",
                 "php-parallel-lint/php-parallel-lint": "1.*",
                 "phpstan/phpstan": "1.*",
                 "phpstan/phpstan-strict-rules": "1.*",
                 "phpunit/phpunit": "10.*"
+            },
+            "suggest": {
+                "ext-memcache": "Needed for the Memcache route registry source"
             },
             "type": "library",
             "autoload": {
@@ -1149,28 +1154,28 @@
                 "email": "office@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/Router/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/Router/tree/0.5.x"
+                "source": "https://github.com/CeusMedia/Router/tree/0.6.x"
             },
-            "time": "2025-04-12T00:51:39+00:00"
+            "time": "2026-10-22T14:34:46+00:00"
         },
         {
             "name": "ceus-media/template-abstraction",
-            "version": "0.5.x-dev",
+            "version": "0.6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/TemplateAbstraction.git",
-                "reference": "e248127cb5138008f725a31bd6720d2a15590be4"
+                "reference": "9fab36643997a4cf6f9687d6a961070bd58d3928"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/TemplateAbstraction/zipball/e248127cb5138008f725a31bd6720d2a15590be4",
-                "reference": "e248127cb5138008f725a31bd6720d2a15590be4",
+                "url": "https://api.github.com/repos/CeusMedia/TemplateAbstraction/zipball/9fab36643997a4cf6f9687d6a961070bd58d3928",
+                "reference": "9fab36643997a4cf6f9687d6a961070bd58d3928",
                 "shasum": ""
             },
             "require": {
-                "ceus-media/common": "1.0.* | 1.0.x-dev",
-                "ceus-media/template-engine": "0.5.* | 0.5.x-dev",
-                "php": "^8.1"
+                "ceus-media/common": "1.1.* | 1.1.x-dev",
+                "ceus-media/template-engine": "0.6.* | 0.6.x-dev",
+                "php": "^8.3"
             },
             "require-dev": {
                 "blesta/h2o": "dev-master",
@@ -1221,9 +1226,9 @@
                 "email": "office@ceusmedia.de",
                 "issues": "https://github.com/CeusMedia/TemplateAbstraction/issues",
                 "jabber": "cwuerker@ceusmedia.de",
-                "source": "https://github.com/CeusMedia/TemplateAbstraction/tree/0.5.x"
+                "source": "https://github.com/CeusMedia/TemplateAbstraction/tree/0.6.0"
             },
-            "time": "2025-02-11T12:51:35+00:00"
+            "time": "2025-02-11T12:59:01+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -3826,16 +3831,16 @@
         },
         {
             "name": "php-parallel-lint/php-parallel-lint",
-            "version": "v1.4.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-parallel-lint/PHP-Parallel-Lint.git",
-                "reference": "6db563514f27e19595a19f45a4bf757b6401194e"
+                "reference": "186aee3d0c895d775d970d0352e13a0ee553173f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Parallel-Lint/zipball/6db563514f27e19595a19f45a4bf757b6401194e",
-                "reference": "6db563514f27e19595a19f45a4bf757b6401194e",
+                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Parallel-Lint/zipball/186aee3d0c895d775d970d0352e13a0ee553173f",
+                "reference": "186aee3d0c895d775d970d0352e13a0ee553173f",
                 "shasum": ""
             },
             "require": {
@@ -3847,21 +3852,22 @@
                 "jakub-onderka/php-parallel-lint": "*"
             },
             "require-dev": {
-                "nette/tester": "^1.3 || ^2.0",
+                "php-parallel-lint/php-code-style": "^2.0",
                 "php-parallel-lint/php-console-highlighter": "0.* || ^1.0",
-                "squizlabs/php_codesniffer": "^3.6"
+                "phpunit/phpunit": "^4.8.36 || ^5.7.21 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.1"
             },
             "suggest": {
                 "php-parallel-lint/php-console-highlighter": "Highlight syntax in code snippet"
             },
+            "default-branch": true,
             "bin": [
                 "parallel-lint"
             ],
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "./src/"
-                ]
+                "psr-4": {
+                    "PHP_Parallel_Lint\\PhpParallelLint\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3871,6 +3877,10 @@
                 {
                     "name": "Jakub Onderka",
                     "email": "ahoj@jakubonderka.cz"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/graphs/contributors"
                 }
             ],
             "description": "This tool checks the syntax of PHP files about 20x faster than serial check.",
@@ -3881,9 +3891,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/issues",
-                "source": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/tree/v1.4.0"
+                "source": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/tree/develop"
             },
-            "time": "2024-03-27T12:14:49+00:00"
+            "time": "2026-10-25T22:03:36+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -3891,12 +3901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "8bff5209d6641e765e179d4e968c8658dc34910c"
+                "reference": "852ad2a7e5233962b60b440f92de3068cbe27de1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/8bff5209d6641e765e179d4e968c8658dc34910c",
-                "reference": "8bff5209d6641e765e179d4e968c8658dc34910c",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/852ad2a7e5233962b60b440f92de3068cbe27de1",
+                "reference": "852ad2a7e5233962b60b440f92de3068cbe27de1",
                 "shasum": ""
             },
             "require": {
@@ -3997,7 +4007,7 @@
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
                 "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/master"
             },
-            "time": "2026-11-13T07:43:41+00:00"
+            "time": "2026-11-14T00:07:15+00:00"
         },
         {
             "name": "phpoffice/wmf",
@@ -4057,12 +4067,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "18e34dfadbfa3f9207f075ccdba74a6a447838d3"
+                "reference": "5f7118fb7d4547777830aa2b00b625fc39238d15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/18e34dfadbfa3f9207f075ccdba74a6a447838d3",
-                "reference": "18e34dfadbfa3f9207f075ccdba74a6a447838d3",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/5f7118fb7d4547777830aa2b00b625fc39238d15",
+                "reference": "5f7118fb7d4547777830aa2b00b625fc39238d15",
                 "shasum": ""
             },
             "require": {
@@ -4158,15 +4168,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-10T14:01:49+00:00"
+            "time": "2026-11-13T15:19:39+00:00"
         },
         {
             "name": "phpstan/phpstan",
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/47fa53ebd25b3c7ac376d7fd2c9a71f8b8d9cafc",
-                "reference": "47fa53ebd25b3c7ac376d7fd2c9a71f8b8d9cafc",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fef62b1deb3ad0188ca497cb68a57b19cdffab85",
+                "reference": "fef62b1deb3ad0188ca497cb68a57b19cdffab85",
                 "shasum": ""
             },
             "require": {
@@ -4223,7 +4233,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-13T10:58:41+00:00"
+            "time": "2026-11-13T23:02:58+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -4956,12 +4966,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "2b75bcd02ca997ca484148e12a4ff7c2339a12f2"
+                "reference": "0350e3305c3373617b1310096861e565eff771e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2b75bcd02ca997ca484148e12a4ff7c2339a12f2",
-                "reference": "2b75bcd02ca997ca484148e12a4ff7c2339a12f2",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/0350e3305c3373617b1310096861e565eff771e7",
+                "reference": "0350e3305c3373617b1310096861e565eff771e7",
                 "shasum": ""
             },
             "require": {
@@ -5006,7 +5016,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-12T18:09:46+00:00"
+            "time": "2026-11-13T21:48:06+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -5969,12 +5979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "f12b73018e6fa4cedcff2f5b3f7608a8582c57d0"
+                "reference": "f55afd0b9e64be39621d42e820d2b50284785c2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/f12b73018e6fa4cedcff2f5b3f7608a8582c57d0",
-                "reference": "f12b73018e6fa4cedcff2f5b3f7608a8582c57d0",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/f55afd0b9e64be39621d42e820d2b50284785c2b",
+                "reference": "f55afd0b9e64be39621d42e820d2b50284785c2b",
                 "shasum": ""
             },
             "require": {
@@ -6059,7 +6069,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-11-13T08:40:15+00:00"
+            "time": "2026-11-13T15:16:25+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -6757,7 +6767,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1",
+        "php": "^8.3",
         "ext-bz2": "*",
         "ext-curl": "*",
         "ext-dom": "*",
