@@ -1,428 +1,428 @@
 # HydrogenModules — Changelog
 
-Alle bemerkenswerten Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
+All notable changes to this project are documented in this file.
 
 ---
 
 ## [1.1.1] — 2026-11-13
 
-**Zeitraum:** November 2026  
-**Commits seit 1.1.0:** 2
+**Period:** November 2026  
+**Commits since 1.1.0:** 2
 
 ### Bugfixes
 
-- **Resource:Database:Undo** — Refactoring der `note()`-Methode: verwendet `TableReader` statt direkter PDO-Query für zuverlässigeres Datenlesen; Parameter `Model $tableWriter` in `Model $model` umbenannt für korrekte Semantik
-- **Manage:Forms** — AJAX-Controller `Controller_Manage_Form_Fill_Receive` in `Controller_Ajax_Manage_Form_Fill_Receive` umbenannt; alle `respondError()`-Aufrufe verwenden nun typisierte Error-Codes (`'form'`, `'altcha'`, `'captcha'`, `'ip'`, `'spam'`, etc.) statt `0`
-- **Security:IP:Check** — `logRequestOfRejectedIp()` akzeptiert nun `Entity_IP_Check_Result` als Parameter statt die IP aus dem Request zu lesen; Controller nutzt Entity-Eigenschaft `$result->clean` statt Array-Zugriff `$result['clean']`
+- **Resource:Database:Undo** — Refactored the `note()` method: uses `TableReader` instead of direct PDO query for more reliable data reading; renamed parameter `Model $tableWriter` to `Model $model` for correct semantics
+- **Manage:Forms** — Renamed AJAX controller `Controller_Manage_Form_Fill_Receive` to `Controller_Ajax_Manage_Form_Fill_Receive`; all `respondError()` calls now use typed error codes (`'form'`, `'altcha'`, `'captcha'`, `'ip'`, `'spam'`, etc.) instead of `0`
+- **Security:IP:Check** — `logRequestOfRejectedIp()` now accepts `Entity_IP_Check_Result` as a parameter instead of reading the IP from the request; controller uses entity property `$result->clean` instead of array access `$result['clean']`
 
 ---
 
 ## [1.0.2] — 2026-11-13
 
-**Zeitraum:** Oktober 2025 – November 2026  
-**Commits seit 1.0.1:** 534
+**Period:** October 2025 – November 2026  
+**Commits since 1.0.1:** 534
 
-### Neue Module
+### New Modules
 
-- **Security:IP:Check** (0.9.1) — IP-Prüfung mit Data-Entities für Query, Source und Result
-- **Security:Altcha** (0.2.1) — ALTCHA CAPTCHA-Integration mit JS-Modul für Client-seitige Verifikation
-- **Security:Limiter:Request** (0.2.1) — Request-Ratenbegrenzung basierend auf Server:Log:Request
-- **Server:Measurement:InfluxDB** — InfluxDB-Metriken mit SSL-Zertifikatsprüfung, Default-Tags und Exception-Hook
-- **Server:Log:Request** (0.2.8) — Request-Logging mit Session-ID, POST/PUT-Body, Logfile-Modus und Microtime-Vergleich
-- **Resource:SMB** — SMB-Dateizugriff via icewind/smb
-- **Work:Notifications** (0.3.0) — Benachrichtigungs-Modul, feature-complete zum ersten Konzept
-- **Work:Meetings** (0.2.7) — Meeting-Management mit Modal-Ansicht, Teilnehmer-Verwaltung und Job-Scheduler
+- **Security:IP:Check** (0.9.1) — IP checking with data entities for query, source, and result
+- **Security:Altcha** (0.2.1) — ALTCHA CAPTCHA integration with JS module for client-side verification
+- **Security:Limiter:Request** (0.2.1) — Request rate limiting based on Server:Log:Request
+- **Server:Measurement:InfluxDB** — InfluxDB metrics with SSL certificate validation, default tags, and exception hook
+- **Server:Log:Request** (0.2.8) — Request logging with session ID, POST/PUT body, log file mode, and microtime comparison
+- **Resource:SMB** — SMB file access via icewind/smb
+- **Work:Notifications** (0.3.0) — Notification module, feature-complete to the first concept
+- **Work:Meetings** (0.2.7) — Meeting management with modal view, participant management, and job scheduler
 
-### Manage:Forms — Major-Update (0.6.6 → 0.7.2)
+### Manage:Forms — Major Update (0.6.6 → 0.7.2)
 
-- API-Import mit Request-Limits via Server:Log:Request
-- SPAM-Check-Hook
-- AJAX-Controller für Form-Fill-Filter
-- ALTCHA-Unterstützung und Redirect on Submit
-- Fill-Token für Bestätigung
-- Form-Fill-Receiver vollständig auf AJAX migriert
-- Rejected Requests werden geloggt
+- API import with request limits via Server:Log:Request
+- SPAM check hook
+- AJAX controller for form fill filters
+- ALTCHA support and redirect on submit
+- Fill token for confirmation
+- Form fill receiver fully migrated to AJAX
+- Rejected requests are logged
 
-### Newsletter — Major-Überarbeitung
+### Newsletter — Major Overhaul
 
 #### Resource:Newsletter (0.5.3 → 0.6.2)
 
-- Link-Click-Tracking für Reader-Letter
-- Tester-Flag im Reader-Modell
-- Mail-Template um Newsletter-Template herum
-- Reader-Letter können in der Zukunft versendet werden
-- Theme/Template-Snapshot mit Mail-Template-ID
-- Vollständige Entity-Implementierung
-- Englische Sprachdatei
+- Link click tracking for reader letters
+- Tester flag in reader model
+- Mail template wrapping newsletter template
+- Reader letters can be sent in the future
+- Theme/template snapshot with mail template ID
+- Complete entity implementation
+- English language file
 
 #### Work:Newsletter (1.4.4 → 1.5.6)
 
-- Import-Strategien mit Deduplizierung
-- Link-Views und responsives Design
-- Queue-basierter Versand für zukünftige Reader-Letter
-- Template-Snapshot (Theme) verbessert
-- Group-Relations-Unterstützung
-- Module-Assets on-demand laden
+- Import strategies with deduplication
+- Link views and responsive design
+- Queue-based sending for future reader letters
+- Improved template snapshot (theme)
+- Group relations support
+- Module assets loaded on demand
 
 #### Info:Newsletter (0.7.3 → 0.7.6)
 
-- Verbesserte Vorschau des neuesten Newsletters
-- Link-Click-Tracking
-- Queue-Job ohne Limit
+- Improved preview of latest newsletter
+- Link click tracking
+- Queue job without limit
 
 ### Resource:Mail — Refactoring (1.1.3 → 1.1.7)
 
-- Mail-Priorität auf Mail-Objekt und Queue
-- HTML-Mail-Rendering mit modulbasierten Placeholdern
-- Statischer Konstruktor auf abstrakter Mail-Klasse
-- Mail-Sprache-Unterstützung
-- Timestamp-Spalte für gesendete Mails
-- Hook `Mail::onSent` nach Transport
-- Queue-Pagination Performance verbessert
+- Mail priority on mail object and queue
+- HTML mail rendering with module-based placeholders
+- Static constructor on abstract mail class
+- Mail language support
+- Timestamp column for sent mails
+- `Mail::onSent` hook after transport
+- Improved queue pagination performance
 
 #### Admin:Mail (1.0.4 → 1.0.5)
 
-- Mehr Bulk-Aktionen in Queue-Liste
-- Autocomplete-E-Mail-Filter in Queue
-- Verbesserte Spalten und Page-Handling bei Bulk-Aktionen
+- More bulk actions in queue list
+- Autocomplete email filter in queue
+- Improved columns and page handling for bulk actions
 
 ### Security & CSRF
 
-- **Security:CSRF** (0.3.5) — Refresh und Hints im View-Helper, Hauptschalter
-- **Manage:My:User** (0.6.3) — CSRF-Schutz aktiviert
-- **UI:LanguageSelector** (0.2.7) — Hauptschalter
+- **Security:CSRF** (0.3.5) — Refresh and hints in view helper, main switch
+- **Manage:My:User** (0.6.3) — CSRF protection enabled
+- **UI:LanguageSelector** (0.2.7) — Main switch
 
-### User-Management
+### User Management
 
 #### Resource:Users (0.4.6 → 0.4.9)
 
-- Logic-Klassen für Group-Relations und Roles
-- Language-Spalte im User-Modell
-- Password-Status „update"
-- Methoden: `countRoleUsers`, `getRoles`, `getRoleUsers`, `getUser`, `getGroupUsers`
+- Logic classes for group relations and roles
+- Language column in user model
+- Password status "update"
+- Methods: `countRoleUsers`, `getRoles`, `getRoleUsers`, `getUser`, `getGroupUsers`
 
 #### Manage:Users (0.8.2 → 0.8.3)
 
-- Role-Rights-Indikator auf Index
-- Helper für Module-Entity-Group-Relations
-- E-Mail-Filter
+- Role rights indicator on index
+- Helper for module entity group relations
+- Email filter
 
 #### Manage:My:User
 
-- Passwort-Verwaltung in eigenem Tab
-- Benutzer-sprache änderbar
-- Leere E-Mail erlaubt
+- Password management in separate tab
+- User language changeable
+- Empty email allowed
 
 #### Resource:Authentication
 
-- User-Logic-Extensions in allen Backends (Local, JSON, OAuth, OAuth2, REST)
-- Password-Status „update"
+- User logic extensions in all backends (Local, JSON, OAuth, OAuth2, REST)
+- Password status "update"
 
 ### Admin:Log:Exception (0.6.6 → 0.7.0)
 
-- Rechte, Index und View implementiert
-- Öffentliche Statistiken (als JSON)
-- ID-Filter
-- View mit View-Helper und Style refaktoriert
-- IO und Logic Exception Extra-Data
+- Rights, index, and view implemented
+- Public statistics (as JSON)
+- ID filter
+- View refactored with view helper and style
+- IO and Logic exception extra data
 
 ### Shop & Catalog
 
-- **Catalog:Bookstore** — Entities und Messungen
-- **Shop:Payment:PayPal** — Strategien, Payment-Request/Response speichern, Billing-Address statt User
-- **Shop:Payment:Stripe** — Giropay und Sofort deaktiviert
-- Order-Entity, Shipping-View-Helper
-- Cart-Positions-Strategien und Quantity-Buttons extrahiert
-- Abstrakte Shop-Mail-Klasse
-- Payment-Backend-Refactoring
+- **Catalog:Bookstore** — Entities and measurements
+- **Shop:Payment:PayPal** — Strategies, store payment request/response, billing address instead of user
+- **Shop:Payment:Stripe** — Giropay and Sofort disabled
+- Order entity, shipping view helper
+- Cart positions strategies and quantity buttons extracted
+- Abstract shop mail class
+- Payment backend refactoring
 
 ### Resource:Jobs (0.9.0)
 
-- Job-Discovery per Config: by request (always) oder by job call (job)
-- Result-Entity
-- Scheduler: Job-Definition von XML auf Module-Config migriert
-- Strikte Entity-Nutzung
+- Job discovery via config: by request (always) or by job call (job)
+- Result entity
+- Scheduler: job definition migrated from XML to module config
+- Strict entity usage
 
-### Entity-Migration (großflächig)
+### Entity Migration (widespread)
 
-- **Catalog:\***, **Manage:Catalog:\*** — Entity-Migration
-- **Resource:Downloads** — Model-Entities
-- **Resource:Payment** — Payment-Entity
-- **Resource:Sitemap** — Sitemap-Links-Entity
-- **UI:Helper:Relations** — Entities für Module-Relation
-- **UI:Navigation** — Menu-Item und Pages Entities
-- **Server:IP:Lock** — Entity-Klassen mit Unlock- und Cleanup-Jobs
-- **Resource:Address** (0.3.0) — Logic-Klasse mit ersten Methoden
+- **Catalog:\***, **Manage:Catalog:\*** — Entity migration
+- **Resource:Downloads** — Model entities
+- **Resource:Payment** — Payment entity
+- **Resource:Sitemap** — Sitemap links entity
+- **UI:Helper:Relations** — Entities for module relation
+- **UI:Navigation** — Menu item and pages entities
+- **Server:IP:Lock** — Entity classes with unlock and cleanup jobs
+- **Resource:Address** (0.3.0) — Logic class with first methods
 
 ### Info:News / Manage:News
 
-- Neuer Status: **outdated** (veraltet)
+- New status: **outdated**
 
 ### Manage:Relocation
 
-- CSV-Export
+- CSV export
 
 ### UI & Frontend
 
-- **UI:Bootstrap** — v4.6.2 und v5.3.3 hinzugefügt
-- **JS:TinyMCE** — Version 8.2.2 unterstützt
-- **UI:Helper:Forms** — ALTCHA-Unterstützung
-- **TimePhraser** — unterstützt nun Kasus (Dativ etc.) neben Nominativ
+- **UI:Bootstrap** — v4.6.2 and v5.3.3 added
+- **JS:TinyMCE** — Version 8.2.2 supported
+- **UI:Helper:Forms** — ALTCHA support
+- **TimePhraser** — Now supports cases (dative, etc.) in addition to nominative
 
 ### Work:Mail
 
-- **Work:Mail:Check** (0.3.7) — Datenbank-Tabellen und Primary Keys umbenannt
-- **Work:Mail:Sync** — Hook extrahiert
+- **Work:Mail:Check** (0.3.7) — Database tables and primary keys renamed
+- **Work:Mail:Sync** — Hook extracted
 
 ### Work:FTP (0.2.5)
 
-- AJAX-Controller extrahiert
+- AJAX controller extracted
 
-### Lokalisierung (großflächig)
+### Localization (widespread)
 
-- Admin:\*, Catalog:\*, Info:\*, Manage:\*, Resource:\*, Server:\*, UI:\*, Work:\* — Lokalisierung abgeschlossen
+- Admin:\*, Catalog:\*, Info:\*, Manage:\*, Resource:\*, Server:\*, UI:\*, Work:\* — Localization completed
 
-### Infrastruktur & Code-Qualität
+### Infrastructure & Code Quality
 
-- Hooks von `App:response` auf `Page::render` geändert
-- Module-XML auf neues Schema `module-1.0.0.xsd` aktualisiert
-- PHPStan von 1 auf 2 aktualisiert
-- Auth-Session-Keys durch Konstanten ersetzt
-- Singleton-Fixes
-- Deprecated Module entfernt
-- Code-Style und Strictness verbessert
+- Hooks changed from `App:response` to `Page::render`
+- Module XML updated to new schema `module-1.0.0.xsd`
+- PHPStan upgraded from 1 to 2
+- Auth session keys replaced by constants
+- Singleton fixes
+- Deprecated modules removed
+- Code style and strictness improved
 
 ---
 
 ## [1.0.1] — 2025-10-10
 
-**Zeitraum:** Februar 2025 – Oktober 2025  
+**Period:** February 2025 – October 2025  
 **Commits:** 194
 
-### Neue Module
+### New Modules
 
-- **Resource:SMB** — SMB-Dateizugriff via icewind/smb
-- **Server:Log:Request** — Request-Logging mit Session-ID, POST/PUT-Body, Logfile-Modus
-- **Server:Measurement:InfluxDB** — InfluxDB-Metriken mit SSL-Zertifikatsprüfung, Default-Tags und Exception-Hook
+- **Resource:SMB** — SMB file access via icewind/smb
+- **Server:Log:Request** — Request logging with session ID, POST/PUT body, log file mode
+- **Server:Measurement:InfluxDB** — InfluxDB metrics with SSL certificate validation, default tags, and exception hook
 
-### Entity-Migration
+### Entity Migration
 
-- **Server:IP:Lock** — Entity-Klassen mit Unlock- und Cleanup-Jobs
-- **UI:Navigation** — Menu-Item und Pages Entities
-- **UI:Helper:Relations** — Entities für Module-Relation
-- **Resource:Downloads** — Model-Entities
-- **Resource:Sitemap** — Sitemap-Links-Entity
-- **Resource:Payment** — Payment-Entity
-- **Shop:Payment** — Entity für Payment-Backend
+- **Server:IP:Lock** — Entity classes with unlock and cleanup jobs
+- **UI:Navigation** — Menu item and pages entities
+- **UI:Helper:Relations** — Entities for module relation
+- **Resource:Downloads** — Model entities
+- **Resource:Sitemap** — Sitemap links entity
+- **Resource:Payment** — Payment entity
+- **Shop:Payment** — Entity for payment backend
 - **Shop:Bridge** — Entities
-- **Catalog:Bookstore** — Entities und Messungen
-- **Shop** — Order-Entity, Order-Positions-Entity
-- **Resource:Jobs** — Result-Entity
+- **Catalog:Bookstore** — Entities and measurements
+- **Shop** — Order entity, order positions entity
+- **Resource:Jobs** — Result entity
 
 ### Shop & Payment
 
-- Shop-Module refaktoriert
-- Payment-Backend-Handling refaktoriert
-- PayPal: Strategien, Payment-Request/Response speichern, Billing-Address statt User
-- Stripe: Giropay und Sofort deaktiviert
-- Abstrakte Shop-Mail-Klasse
-- Cart-Positions-Strategien und Quantity-Buttons extrahiert
-- Shipping-View-Helper
-- Payment-Backend-Register
+- Shop modules refactored
+- Payment backend handling refactored
+- PayPal: strategies, store payment request/response, billing address instead of user
+- Stripe: Giropay and Sofort disabled
+- Abstract shop mail class
+- Cart positions strategies and quantity buttons extracted
+- Shipping view helper
+- Payment backend register
 
 ### Resource:Jobs
 
-- Scheduler: Job-Definition von XML auf Module-Config migriert
-- Job-Discovery per Config (by request / by job call)
-- Strikte Entity-Nutzung
+- Scheduler: job definition migrated from XML to module config
+- Job discovery via config (by request / by job call)
+- Strict entity usage
 
 ### Work:Meetings
 
-- Initialer Prototype bis 0.2.4
-- Job-Scheduler statt crond
+- Initial prototype through 0.2.4
+- Job scheduler instead of crond
 
 ### Work:Notifications
 
-- Initial commit 0.2.0 bis 0.3.0 (feature-complete)
+- Initial commit 0.2.0 through 0.3.0 (feature-complete)
 
 ### Resource:Mail
 
-- Mail-Queue-Pagination Performance verbessert
+- Improved mail queue pagination performance
 
 ### UI
 
-- **TimePhraser** — unterstützt nun Kasus (Dativ etc.) neben Nominativ
+- **TimePhraser** — Now supports cases (dative, etc.) in addition to nominative
 
-### Code-Qualität
+### Code Quality
 
-- Auth-Session-Keys durch Konstanten ersetzt
-- Hooks von `App:response` auf `Page::render` geändert
-- Code-Style und Strictness verbessert
+- Auth session keys replaced by constants
+- Hooks changed from `App:response` to `Page::render`
+- Code style and strictness improved
 - Numerous hook extractions (Manage:Shop, Manage:Catalog, Manage:Customer, Work:Mail:Sync, etc.)
 
 ---
 
 ## [1.0.0] — 2025-02-11
 
-**Zeitraum:** Mai 2023 – Februar 2025  
+**Period:** May 2023 – February 2025  
 **Commits:** 355
 
 ### PHP 8.1 Migration
 
-- Vollständige Migration aller Module zu PHP 8.1 mit strict types
-- Mindestens PHP 8.1 erforderlich (Support für ältere Versionen entfernt)
-- PHPStan Level 0 erreicht, Arbeit an Level 1 begonnen
+- Complete migration of all modules to PHP 8.1 with strict types
+- PHP 8.1 minimum required (support for older versions removed)
+- PHPStan Level 0 achieved, work on Level 1 begun
 
-### Neue Module
+### New Modules
 
-- **Resource:Mail:Sent** — Speichert gesendete Mails auf IMAP-Server
-- **Resource:Downloads** — Aus Info:Downloads und Info:Files extrahiert
+- **Resource:Mail:Sent** — Saves sent mails to IMAP server
+- **Resource:Downloads** — Extracted from Info:Downloads and Info:Files
 
-### Entity-Migration (großflächig)
+### Entity Migration (widespread)
 
-- Erste Model-Entity-Klassen in Resource:Users und Work:Missions
-- **Resource:Mail** — Entity für Mail-, Attachment- und Template-Modelle
-- **Security:CSRF** — Model-Entity
-- **UI:Image:Slider** — Model-Entity-Klassen
-- **Resource:Pages** — Page-Entity
-- **Resource:Shares** — Model-Entity
-- **Resource:FileBucket** — Model-Entity
-- **Resource:Database:Lock** — Model-Entity
-- **Resource:Forms** — Entities für alle Modelle
-- **Resource:Import** — Model-Entity-Klassen
-- **Resource:Jobs** — Model-Entity-Klassen
-- **Manage:Projects** — Model-Entity-Klassen
-- **Info:Manual** — Model-Entities
+- First model entity classes in Resource:Users and Work:Missions
+- **Resource:Mail** — Entity for mail, attachment, and template models
+- **Security:CSRF** — Model entity
+- **UI:Image:Slider** — Model entity classes
+- **Resource:Pages** — Page entity
+- **Resource:Shares** — Model entity
+- **Resource:FileBucket** — Model entity
+- **Resource:Database:Lock** — Model entity
+- **Resource:Forms** — Entities for all models
+- **Resource:Import** — Model entity classes
+- **Resource:Jobs** — Model entity classes
+- **Manage:Projects** — Model entity classes
+- **Info:Manual** — Model entities
 
 ### Shop & Payment
 
-- Payment-Registration refaktoriert
-- Payment-Method-Kosten unterstützt
-- Unified payment fee calculation mit Logic-Klasse
+- Payment registration refactored
+- Payment method costs supported
+- Unified payment fee calculation with logic class
 
 ### Resource:Import
 
-- Import-Logik extrahiert
-- Connector-Model mit Type und MIME Types erweitert
+- Import logic extracted
+- Connector model extended with type and MIME types
 
 ### UI
 
-- **UI:Helper:StatusBadge** — Bootstrap-Badge für Entity-Status-Informationen
-- **UI:Bootstrap:Switch** — Hook extrahiert
-- **UI:Bootstrap:Datepicker** — Hook extrahiert
-- **UI:ContextHelp** — Hook extrahiert
-- **UI:Panel** — Hook extrahiert
-- **Manage:Content:Styles** — JS:Ace-Unterstützung
+- **UI:Helper:StatusBadge** — Bootstrap badge for entity status information
+- **UI:Bootstrap:Switch** — Hook extracted
+- **UI:Bootstrap:Datepicker** — Hook extracted
+- **UI:ContextHelp** — Hook extracted
+- **UI:Panel** — Hook extracted
+- **Manage:Content:Styles** — JS:Ace support
 
 ### Resource:Mail
 
-- Connection von Resource getrennt (Connection-Pool-Vorbereitung)
-- Limit und Order auf Job Mail.Archive.dump
-- Ältere Mail-Libraries entfernt
+- Connection separated from Resource (connection pool preparation)
+- Limit and order on job Mail.Archive.dump
+- Older mail libraries removed
 
-### Infrastruktur
+### Infrastructure
 
-- Common 1.0.x und HydrogenFramework 1.0.x Unterstützung
-- Neuer Autoloader-Syntax
-- Database table IDs können integer oder string sein
-- Rector: Elvis-Operator, null-coalescing operator
-- Tool-Config-Dateien in eigenen Ordner verschoben
-- Unit-Tests hinzugefügt
-- HTTP-Links zu HTTPS aktualisiert
+- Common 1.0.x and HydrogenFramework 1.0.x support
+- New autoloader syntax
+- Database table IDs can be integer or string
+- Rector: Elvis operator, null-coalescing operator
+- Tool config files moved to their own folder
+- Unit tests added
+- HTTP links updated to HTTPS
 
 ---
 
 ## [0.9.0] — 2023-05-28
 
-**Zeitraum:** Februar 2021 – Mai 2023  
+**Period:** February 2021 – May 2023  
 **Commits:** 364
 
-### Namespace-Migration
+### Namespace Migration
 
-- Vollständige Migration zu CeusMedia/Common 0.9 und Hydrogen 0.9 mit Namespaces
-- Alle `CMF_Hydrogen_*` Klassen durch namespaced Klassen ersetzt
-- Alle `ADT_*` Klassen migriert
-- Dateiendungen von `.php5` auf `.php` geändert
-- Module-Ordner in neuen `src`-Ordner verschoben
+- Complete migration to CeusMedia/Common 0.9 and Hydrogen 0.9 with namespaces
+- All `CMF_Hydrogen_*` classes replaced by namespaced classes
+- All `ADT_*` classes migrated
+- File extensions changed from `.php5` to `.php`
+- Module folders moved to new `src` folder
 
-### PHP-Support
+### PHP Support
 
-- PHP 7.4 Support hinzugefügt
-- PHP 8.0 Support (Match ist reserviert)
-- PHP 8.1 Support in separater Branch
-- PHPStan hinzugefügt
-- Short array syntax durchgängig angewendet
+- PHP 7.4 support added
+- PHP 8.0 support (match is reserved)
+- PHP 8.1 support in separate branch
+- PHPStan added
+- Short array syntax applied consistently
 
-### Neue Module
+### New Modules
 
-- **Resource:Import** — Import-Regeln, Transfer-Targets, Job-Definition
-- **Manage:Import** — Import-Regel-Management
-- **Resource:Disclosure** — Datenschutz-Disklosure
-- **Server:Log:Sentry** — Sentry-Fehlerprotokollierung mit Environment und Release
-- **UI:Font:Muli** — Muli-Schriftart
-- **UI:Font:Signika** — Signika-Schriftart
+- **Resource:Import** — Import rules, transfer targets, job definition
+- **Manage:Import** — Import rule management
+- **Resource:Disclosure** — Privacy disclosure
+- **Server:Log:Sentry** — Sentry error logging with environment and release
+- **UI:Font:Muli** — Muli font
+- **UI:Font:Signika** — Signika font
 
 ### Resource:Mail
 
-- Attachment-Regeln und Attachment-Folders
-- File-Path auf Attachments und Rules
-- Mail-Objekte aus Raw regenerieren (Job)
-- Attachments in Mail-Liste anzeigen
-- Strikte Mail-Generierung
+- Attachment rules and attachment folders
+- File path on attachments and rules
+- Regenerate mail objects from raw (job)
+- Show attachments in mail list
+- Strict mail generation
 
 ### Resource:Forms
 
-- Form-Transfer-Data-Processor neben Data-Mapper
-- Transfer-Target-Management
-- Fill-Filter mit ID
-- Multiple Forms in Fill-Filter, Liste und Export
-- Fill-Transfer-Fail-Report
+- Form transfer data processor alongside data mapper
+- Transfer target management
+- Fill filter with ID
+- Multiple forms in fill filter, list, and export
+- Fill transfer fail report
 
 ### UI
 
-- Bootstrap-Bibliothek unterstützt
-- Font Awesome unterstützt
-- Submenu-Divider (via Page-Chapters) in Dropdown-Menü
-- Module-Source-Indexer für Index-Dateien
+- Bootstrap library supported
+- Font Awesome supported
+- Submenu divider (via page chapters) in dropdown menu
+- Module source indexer for index files
 
 ### Work:Missions
 
-- ICal-Export in View-Helper extrahiert
+- ICal export extracted to view helper
 
-### Infrastruktur
+### Infrastructure
 
-- Migration-Skript für Transition zu v0.9
-- Module-Index als Composer-Scripts
-- ACL-Handler für Hydrogen Framework 0.8.7.8
-- Module-XML-Dateien aktualisiert
-- Composer-Datei und PHPStan-Config aktualisiert, Rector hinzugefügt
+- Migration script for transition to v0.9
+- Module index as Composer scripts
+- ACL handler for Hydrogen Framework 0.8.7.8
+- Module XML files updated
+- Composer file and PHPStan config updated, Rector added
 
 ---
 
 ## [0.8] — 2017-11-08
 
-**Erste getaggte Version.**
+**First tagged version.**
 
 ### Highlights
 
-- SVG-Bilder im Thumbnail-Helper unterstützt
-- Thumbnailer-Style verbessert
-- Filebrowser verbessert
+- SVG images supported in thumbnail helper
+- Thumbnailer style improved
+- File browser improved
 
 ---
 
-## Versionsübersicht
+## Version Overview
 
-| Version | Datum | Commits | Meilenstein |
+| Version | Date | Commits | Milestone |
 |---------|-------|---------|-------------|
-| 0.8 | 2017-11-08 | — | Erste getaggte Version |
-| 0.9.0 | 2023-05-28 | 364 | Namespace-Migration, PHP 7.4/8.x, neue Module |
-| 1.0.0 | 2025-02-11 | 355 | PHP 8.1, Entity-Migration, Hydrogen 1.0 |
+| 0.8 | 2017-11-08 | — | First tagged version |
+| 0.9.0 | 2023-05-28 | 364 | Namespace migration, PHP 7.4/8.x, new modules |
+| 1.0.0 | 2025-02-11 | 355 | PHP 8.1, entity migration, Hydrogen 1.0 |
 | 1.0.1 | 2025-10-10 | 194 | Resource:SMB, Server:Log:Request, InfluxDB |
-| 1.0.2 | 2026-11-13 | 534 | Security-Module, Newsletter, Shop, Entity-Migration |
-| 1.1.0 | 2026-05-01 | — | Branch-Abspaltung von 1.0.x, Refactoring-Vorbereitung |
-| 1.1.1 | 2026-11-13 | 2 | Bugfixes: Undo, Forms AJAX, IP-Check Entity |
+| 1.0.2 | 2026-11-13 | 534 | Security modules, newsletter, shop, entity migration |
+| 1.1.0 | 2026-05-01 | — | Branch split from 1.0.x, refactoring preparation |
+| 1.1.1 | 2026-11-13 | 2 | Bugfixes: Undo, Forms AJAX, IP check entity |
 
 ---
 
-*Die Versionsnummern der einzelnen Module können von der Repository-Version abweichen, da Module eigenständig versioniert werden.*
+*The version numbers of individual modules may differ from the repository version, as modules are versioned independently.*
