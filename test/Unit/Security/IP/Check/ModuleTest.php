@@ -2,6 +2,8 @@
 namespace CeusMedia\HydrogenModulesUnitTest\Security\IP\Check;
 
 use CeusMedia\HydrogenModulesUnitTest\BaseTestCase;
+use Entity_IP_Check_Result;
+use Entity_IP_Check_Source;
 use Logic_IP_Check;
 use ReflectionClass;
 
@@ -414,20 +416,20 @@ class ModuleTest extends BaseTestCase
 	{
 		$result	= $this->logic->checkIp('8.8.8.8');
 		self::assertArrayHasKey('ip', $result);
-		self::assertArrayHasKey('ip_version', $result);
+		self::assertArrayHasKey('ipVersion', $result);
 		self::assertArrayHasKey('checked', $result);
 		self::assertArrayHasKey('clean', $result);
 		self::assertArrayHasKey('score', $result);
 		self::assertArrayHasKey('sources', $result);
 		self::assertSame('8.8.8.8', $result['ip']);
-		self::assertSame(4, $result['ip_version']);
+		self::assertSame(4, $result['ipVersion']);
 		self::assertTrue($result['checked']);
 	}
 
 	public function testCheckIp_public_ipv6_structure(): void
 	{
 		$result	= $this->logic->checkIp('2607:f8b0:4004:800::200e');
-		self::assertSame(6, $result['ip_version']);
+		self::assertSame(6, $result['ipVersion']);
 	}
 
 	public function testCheckIp_bogon_ipv4_penalized(): void
@@ -646,9 +648,11 @@ class ModuleTest extends BaseTestCase
 		self::assertFalse($logRejected);
 
 		// logRejectedIp should return FALSE when disabled
+		$source	= new Entity_IP_Check_Source( [ 'listed' => TRUE, 'description' => 'Test' ] );
+		$resultEntity	= new Entity_IP_Check_Result( [ 'ipVersion' => 4, 'score' => -50, 'sources' => [ 'bogons' => $source ] ] );
 		$result	= $logic->logRejectedIp(
 			'1.2.3.4',
-			[ 'ip_version' => 4, 'score' => -50, 'sources' => [ 'bogons' => [ 'listed' => TRUE, 'description' => 'Test' ] ] ],
+			$resultEntity,
 			'POST',
 			'/test',
 			[ 'key' => 'value' ],
@@ -660,9 +664,11 @@ class ModuleTest extends BaseTestCase
 	public function testLogRejectedIp_no_database(): void
 	{
 		// Without a database connection, logRejectedIp should return FALSE gracefully
+		$source	= new Entity_IP_Check_Source( [ 'listed' => TRUE, 'description' => 'Test' ] );
+		$resultEntity	= new Entity_IP_Check_Result( [ 'ipVersion' => 4, 'score' => -50, 'sources' => [ 'bogons' => $source ] ] );
 		$result	= $this->logic->logRejectedIp(
 			'1.2.3.4',
-			[ 'ip_version' => 4, 'score' => -50, 'sources' => [ 'bogons' => [ 'listed' => TRUE, 'description' => 'Test' ] ] ],
+			$resultEntity,
 			'POST',
 			'/test',
 			[ 'key' => 'value' ],

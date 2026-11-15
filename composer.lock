@@ -2700,12 +2700,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "3bed304b1905fed5c30d172872f4d890cbb03c6a"
+                "reference": "39694a742e56fb249cd5809f6bb685b99bc66047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/3bed304b1905fed5c30d172872f4d890cbb03c6a",
-                "reference": "3bed304b1905fed5c30d172872f4d890cbb03c6a",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/39694a742e56fb249cd5809f6bb685b99bc66047",
+                "reference": "39694a742e56fb249cd5809f6bb685b99bc66047",
                 "shasum": ""
             },
             "require": {
@@ -2798,7 +2798,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-05T13:02:04+00:00"
+            "time": "2026-11-15T13:40:34+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3707,12 +3707,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/promise.git",
-                "reference": "139f40d45c25fd4192489c199df598421440821f"
+                "reference": "959020cecdea4611b4d89544fbcd2fd1726b8659"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/promise/zipball/139f40d45c25fd4192489c199df598421440821f",
-                "reference": "139f40d45c25fd4192489c199df598421440821f",
+                "url": "https://api.github.com/repos/php-http/promise/zipball/959020cecdea4611b4d89544fbcd2fd1726b8659",
+                "reference": "959020cecdea4611b4d89544fbcd2fd1726b8659",
                 "shasum": ""
             },
             "require": {
@@ -3752,7 +3752,7 @@
                 "issues": "https://github.com/php-http/promise/issues",
                 "source": "https://github.com/php-http/promise/tree/1.x"
             },
-            "time": "2025-11-11T12:22:40+00:00"
+            "time": "2026-11-14T09:16:44+00:00"
         },
         {
             "name": "php-imap/php-imap",
@@ -3891,12 +3891,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "8bff5209d6641e765e179d4e968c8658dc34910c"
+                "reference": "852ad2a7e5233962b60b440f92de3068cbe27de1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/8bff5209d6641e765e179d4e968c8658dc34910c",
-                "reference": "8bff5209d6641e765e179d4e968c8658dc34910c",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/852ad2a7e5233962b60b440f92de3068cbe27de1",
+                "reference": "852ad2a7e5233962b60b440f92de3068cbe27de1",
                 "shasum": ""
             },
             "require": {
@@ -3997,7 +3997,7 @@
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
                 "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/master"
             },
-            "time": "2026-11-13T07:43:41+00:00"
+            "time": "2026-11-14T00:07:15+00:00"
         },
         {
             "name": "phpoffice/wmf",
@@ -4057,12 +4057,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "18e34dfadbfa3f9207f075ccdba74a6a447838d3"
+                "reference": "5f7118fb7d4547777830aa2b00b625fc39238d15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/18e34dfadbfa3f9207f075ccdba74a6a447838d3",
-                "reference": "18e34dfadbfa3f9207f075ccdba74a6a447838d3",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/5f7118fb7d4547777830aa2b00b625fc39238d15",
+                "reference": "5f7118fb7d4547777830aa2b00b625fc39238d15",
                 "shasum": ""
             },
             "require": {
@@ -4158,15 +4158,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-10T14:01:49+00:00"
+            "time": "2026-11-13T15:19:39+00:00"
         },
         {
             "name": "phpstan/phpstan",
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/47fa53ebd25b3c7ac376d7fd2c9a71f8b8d9cafc",
-                "reference": "47fa53ebd25b3c7ac376d7fd2c9a71f8b8d9cafc",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/231807a43b5bc05c0d53c1ecfa27ecb80301ea61",
+                "reference": "231807a43b5bc05c0d53c1ecfa27ecb80301ea61",
                 "shasum": ""
             },
             "require": {
@@ -4223,7 +4223,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-13T10:58:41+00:00"
+            "time": "2026-11-15T15:07:31+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -4605,12 +4605,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1f3e67dd433817bddfc64afab63977cc4b011374"
+                "reference": "3e7ce1242bbdfcba8e87962d0d596de31bdef9ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1f3e67dd433817bddfc64afab63977cc4b011374",
-                "reference": "1f3e67dd433817bddfc64afab63977cc4b011374",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3e7ce1242bbdfcba8e87962d0d596de31bdef9ad",
+                "reference": "3e7ce1242bbdfcba8e87962d0d596de31bdef9ad",
                 "shasum": ""
             },
             "require": {
@@ -4682,7 +4682,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.67"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5"
             },
             "funding": [
                 {
@@ -4690,7 +4690,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-11-13T11:07:03+00:00"
+            "time": "2026-11-14T06:55:04+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -4956,12 +4956,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "2b75bcd02ca997ca484148e12a4ff7c2339a12f2"
+                "reference": "de26d6a141c94acfd7cbdb7a16a07e23b5392a76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2b75bcd02ca997ca484148e12a4ff7c2339a12f2",
-                "reference": "2b75bcd02ca997ca484148e12a4ff7c2339a12f2",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/de26d6a141c94acfd7cbdb7a16a07e23b5392a76",
+                "reference": "de26d6a141c94acfd7cbdb7a16a07e23b5392a76",
                 "shasum": ""
             },
             "require": {
@@ -5006,7 +5006,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-12T18:09:46+00:00"
+            "time": "2026-11-14T23:59:30+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -5969,12 +5969,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "f12b73018e6fa4cedcff2f5b3f7608a8582c57d0"
+                "reference": "f55afd0b9e64be39621d42e820d2b50284785c2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/f12b73018e6fa4cedcff2f5b3f7608a8582c57d0",
-                "reference": "f12b73018e6fa4cedcff2f5b3f7608a8582c57d0",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/f55afd0b9e64be39621d42e820d2b50284785c2b",
+                "reference": "f55afd0b9e64be39621d42e820d2b50284785c2b",
                 "shasum": ""
             },
             "require": {
@@ -6059,7 +6059,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-11-13T08:40:15+00:00"
+            "time": "2026-11-13T15:16:25+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
