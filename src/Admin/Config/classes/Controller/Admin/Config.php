@@ -153,6 +153,7 @@ class Controller_Admin_Config extends Controller
 			$version	= is_int( $version ) ? $version + 1 : 0;
 			$versions[]	= $version;
 			$this->addData( 'module', $module );
+			$this->addData( 'version', $version );
 			$this->addData( 'versions', $versions );
 		}
 		$this->addData( 'moduleId', $moduleId );

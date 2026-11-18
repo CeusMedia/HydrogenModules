@@ -295,12 +295,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/TemplateEngine.git",
-                "reference": "554d85316a4f204056797e8b552074acb37938cc"
+                "reference": "f1202cf8b1d675042d7416e18fd703d18a292334"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/TemplateEngine/zipball/554d85316a4f204056797e8b552074acb37938cc",
-                "reference": "554d85316a4f204056797e8b552074acb37938cc",
+                "url": "https://api.github.com/repos/CeusMedia/TemplateEngine/zipball/f1202cf8b1d675042d7416e18fd703d18a292334",
+                "reference": "f1202cf8b1d675042d7416e18fd703d18a292334",
                 "shasum": ""
             },
             "require": {
@@ -313,7 +313,7 @@
                 "phpstan/phpstan": "^2",
                 "phpstan/phpstan-strict-rules": "^2",
                 "phpunit/phpunit": "^10",
-                "rector/rector": "*"
+                "rector/rector": "^2"
             },
             "suggest": {
                 "ceus-media/cache": "*"
@@ -347,7 +347,7 @@
                 "jabber": "cwuerker@ceusmedia.de",
                 "source": "https://github.com/CeusMedia/TemplateEngine/tree/0.6.x"
             },
-            "time": "2025-02-11T00:32:58+00:00"
+            "time": "2026-11-14T10:45:03+00:00"
         },
         {
             "name": "psr/cache",
@@ -2705,12 +2705,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "3bed304b1905fed5c30d172872f4d890cbb03c6a"
+                "reference": "39694a742e56fb249cd5809f6bb685b99bc66047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/3bed304b1905fed5c30d172872f4d890cbb03c6a",
-                "reference": "3bed304b1905fed5c30d172872f4d890cbb03c6a",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/39694a742e56fb249cd5809f6bb685b99bc66047",
+                "reference": "39694a742e56fb249cd5809f6bb685b99bc66047",
                 "shasum": ""
             },
             "require": {
@@ -2803,7 +2803,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-05T13:02:04+00:00"
+            "time": "2026-11-15T13:40:34+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3712,12 +3712,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/promise.git",
-                "reference": "139f40d45c25fd4192489c199df598421440821f"
+                "reference": "959020cecdea4611b4d89544fbcd2fd1726b8659"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/promise/zipball/139f40d45c25fd4192489c199df598421440821f",
-                "reference": "139f40d45c25fd4192489c199df598421440821f",
+                "url": "https://api.github.com/repos/php-http/promise/zipball/959020cecdea4611b4d89544fbcd2fd1726b8659",
+                "reference": "959020cecdea4611b4d89544fbcd2fd1726b8659",
                 "shasum": ""
             },
             "require": {
@@ -3757,7 +3757,7 @@
                 "issues": "https://github.com/php-http/promise/issues",
                 "source": "https://github.com/php-http/promise/tree/1.x"
             },
-            "time": "2025-11-11T12:22:40+00:00"
+            "time": "2026-11-14T09:16:44+00:00"
         },
         {
             "name": "php-imap/php-imap",
@@ -4175,8 +4175,8 @@
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fef62b1deb3ad0188ca497cb68a57b19cdffab85",
-                "reference": "fef62b1deb3ad0188ca497cb68a57b19cdffab85",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e0529cbda594268eb7f6483ee1566c4e42add928",
+                "reference": "e0529cbda594268eb7f6483ee1566c4e42add928",
                 "shasum": ""
             },
             "require": {
@@ -4233,7 +4233,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-13T23:02:58+00:00"
+            "time": "2026-11-15T15:34:20+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -4615,12 +4615,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1f3e67dd433817bddfc64afab63977cc4b011374"
+                "reference": "3e7ce1242bbdfcba8e87962d0d596de31bdef9ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1f3e67dd433817bddfc64afab63977cc4b011374",
-                "reference": "1f3e67dd433817bddfc64afab63977cc4b011374",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3e7ce1242bbdfcba8e87962d0d596de31bdef9ad",
+                "reference": "3e7ce1242bbdfcba8e87962d0d596de31bdef9ad",
                 "shasum": ""
             },
             "require": {
@@ -4692,7 +4692,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.67"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5"
             },
             "funding": [
                 {
@@ -4700,7 +4700,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-11-13T11:07:03+00:00"
+            "time": "2026-11-14T06:55:04+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -4966,12 +4966,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "0350e3305c3373617b1310096861e565eff771e7"
+                "reference": "de26d6a141c94acfd7cbdb7a16a07e23b5392a76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/0350e3305c3373617b1310096861e565eff771e7",
-                "reference": "0350e3305c3373617b1310096861e565eff771e7",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/de26d6a141c94acfd7cbdb7a16a07e23b5392a76",
+                "reference": "de26d6a141c94acfd7cbdb7a16a07e23b5392a76",
                 "shasum": ""
             },
             "require": {
@@ -5016,7 +5016,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-13T21:48:06+00:00"
+            "time": "2026-11-14T23:59:30+00:00"
         },
         {
             "name": "sebastian/cli-parser",

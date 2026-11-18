@@ -106,7 +106,7 @@ class Controller_Manage_Group extends Controller
 		$this->addData( 'groupId', $groupId );
 		$this->addData( 'group', $group );
 		$this->addData( 'words', $words );
-		$this->addData( 'userCount', $this->modelUser->countByIndex( 'groupId', $groupId ) );
+		$this->addData( 'userCount', $this->modelGroupUser->countByIndex( 'groupId', $groupId ) );
 
 /*		$disclosure	= new Disclosure( $this->env );
 		$options	= ['classPrefix' => 'Controller_', 'readParameters' => FALSE];

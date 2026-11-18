@@ -10,7 +10,8 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var object $module */
 /** @var string $moduleId */
 
-/** @var string $versions */
+/** @var int $version */
+/** @var array $versions */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
@@ -60,8 +61,8 @@ $table	= HtmlTag::create( 'table', [$cols, $tbody], ['class' => 'table table-str
 [$textTop, $textBottom] = array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' ) );
 
 $buttonRestore	= '';
-if( $versions ){
-	$buttonRestore	= HtmlTag::create( 'a', $w->buttonRestore.' <small class="not-muted">('.$versions.')</small>', [
+if( 0 !== $version ){
+	$buttonRestore	= HtmlTag::create( 'a', $w->buttonRestore.' <small class="not-muted">('.$version.')</small>', [
 		'href'	=> './admin/config/restore/'.$moduleId,
 		'class'	=> 'btn btn-inverse btn-mini'
 	] );

@@ -229,9 +229,13 @@ class Controller_Work_Newsletter extends Controller
 			'preview'		=> TRUE,
 		];
 
-		$envClone	= $this->env->getModules()->has( 'Resource_Frontend' ) ?
-			Logic_Frontend::getInstance( $this->env )->getEnv() :
-			clone( $this->env );
+		$envClone	= clone( $this->env );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			/** @var ModuleDefinition $module */
+			$module	= $this->env->getModules()->get( 'Resource_Frontend' );
+			if( './' !== $module->getConfigAsDictionary()->get( 'path' ) )
+				$envClone	= Logic_Frontend::getInstance( $this->env )->getEnv();
+		}
 
 		$mail		= new Mail_Newsletter( $envClone, $data );
 		$response	= $this->env->getResponse();

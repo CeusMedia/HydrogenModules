@@ -94,6 +94,7 @@ class Logic_Frontend extends Logic
 			'configFile'	=> 'config.ini',
 			'pathApp' 		=> $this->path,
 			'uri'			=> $uri,
+			'url'			=> $this->env->url,
 			'parentEnv'		=> $this->env,
 		] );
 	}

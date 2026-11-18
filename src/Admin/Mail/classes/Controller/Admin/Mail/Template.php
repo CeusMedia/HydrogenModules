@@ -99,7 +99,7 @@ class Controller_Admin_Mail_Template extends Controller
 		$words			= (object) $this->getWords( 'msg' );
 		$modelMail		= new Model_Mail( $this->env );
 		$template		= $this->checkTemplate( $templateId );
-		$template->used	= $modelMail->countByIndex( 'mailTemplateId', $templateId );
+		$template->used	= $modelMail->countByIndex( 'templateId', $templateId );
 		$tabId			= $this->env->getSession()->get( 'admin-mail-template-edit-tab' );
 		$this->addData( 'tabId', $tabId );
 
